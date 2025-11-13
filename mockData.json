@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Surdejsbrød",
+    "price": 32.50,
+    "ingredients": "Hvedemel, vand, surdej (hvede), salt",
+    "nutrition": {
+      "Energy_kcal": 240,
+      "Energy_kJ": 1000,
+      "Fat": 1.2,
+      "Saturated_fatty_acids": 0.2,
+      "Carbohydrates": 47.0,
+      "Sugars": 1.0,
+      "Dietary_fiber": 3.5,
+      "Protein": 8.5,
+      "Salt": 1.4,
+      "Water_content": 37.0
+    },
+    "image": "https://example.com/images/surdejsbroed.jpg",
+    "category": "Brød",
+    "active": true
+  },
+  {
+    "name": "Kanelstang",
+    "price": 24.95,
+    "ingredients": "Hvedemel, smør, sukker, gær, kanel, mælk, æg",
+    "nutrition": {
+      "Energy_kcal": 410,
+      "Energy_kJ": 1710,
+      "Fat": 18.0,
+      "Saturated_fatty_acids": 10.0,
+      "Carbohydrates": 55.0,
+      "Sugars": 25.0,
+      "Dietary_fiber": 1.8,
+      "Protein": 6.0,
+      "Salt": 0.8,
+      "Water_content": 20.0
+    },
+    "image": "https://example.com/images/kanelstang.jpg",
+    "category": "Kage",
+    "active": true
+  },
+  {
+    "name": "Rugbrød med kerner",
+    "price": 28.00,
+    "ingredients": "Rugmel, solsikkekerner, hørfrø, vand, salt, surdej (rug)",
+    "nutrition": {
+      "Energy_kcal": 200,
+      "Energy_kJ": 840,
+      "Fat": 3.5,
+      "Saturated_fatty_acids": 0.4,
+      "Carbohydrates": 34.0,
+      "Sugars": 3.0,
+      "Dietary_fiber": 8.0,
+      "Protein": 6.5,
+      "Salt": 1.1,
+      "Water_content": 45.0
+    },
+    "image": "https://example.com/images/rugbroed.jpg",
+    "category": "Brød",
+    "active": true
+  }
+]
