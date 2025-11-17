@@ -55,7 +55,7 @@
       "Salt": 1.1,
       "Water_content": 45.0
     },
-    "image": "https://example.com/images/rugbroed.jpg",
+    "image": "/assets/kage.webp",
     "category": "Brød",
     "active": true
   }
