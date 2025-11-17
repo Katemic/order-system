@@ -1,5 +1,6 @@
 [
   {
+    "id": 2,
     "name": "Surdejsbrød",
     "price": 32.5,
     "ingredients": "Hvedemel, vand, surdej (hvede), salt",
@@ -20,7 +21,8 @@
     "active": true
   },
   {
-    "name": "Kanelstang",
+    "id": 3,
+    "name": "Kanelstangg",
     "price": 24.95,
     "ingredients": "Hvedemel, smør, sukker, gær, kanel, mælk, æg",
     "nutrition": {
@@ -35,11 +37,12 @@
       "Salt": 0.8,
       "Water_content": 20
     },
-    "image": "/assets/defaultBillede.jpg",
+    "image": "/assets/1763385620234-Stephen-Lang-Headshot-Matt-Sayles-e1605093774374.webp",
     "category": "Kage",
     "active": true
   },
   {
+    "id": 4,
     "name": "Rugbrød med kerner",
     "price": 28,
     "ingredients": "Rugmel, solsikkekerner, hørfrø, vand, salt, surdej (rug)",
@@ -60,7 +63,7 @@
     "active": true
   },
   {
-    "id": "kage",
+    "id": 5,
     "name": "Kage",
     "price": 100,
     "ingredients": "meget mel og sukker",
