@@ -25,7 +25,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
+/* --------------------------------------------- */
+/*              COMPONENT CLASSES                */
+/* --------------------------------------------- */
+
 @layer components {
+
+  /* ------------------------- */
+  /*        PAGE ELEMENTS      */
+  /* ------------------------- */
+
   .page-title {
     font-size: 1.875rem;
     line-height: 2.25rem;
@@ -33,4 +43,53 @@ body {
     color: #000000;
     letter-spacing: -0.02em;
   }
+
+
+  /* ------------------------- */
+  /*           MODAL           */
+  /* ------------------------- */
+  .modal-title {
+    @apply text-xl font-bold text-neutral-900;
+  }
+
+  .modal-subtitle {
+    @apply text-sm font-semibold text-neutral-800 mb-1;
+  }
+
+  .modal-section-title {
+    @apply text-sm font-semibold text-neutral-800 mb-2;
+  }
+
+  .modal-description {
+    @apply text-sm text-neutral-700 leading-relaxed;
+  }
+
+  .modal-category {
+    @apply text-sm text-neutral-500 mt-1;
+  }
+
+  .modal-price {
+    @apply text-lg font-semibold text-emerald-700 mb-3;
+  }
+
+  .modal-label {
+    @apply text-neutral-500;
+  }
+
+  .modal-value {
+    @apply font-medium;
+  }
+
+  .modal-image-wrapper {
+    @apply w-full md:w-64 flex items-center justify-center;
+  }
+
+  .modal-close-button {
+    @apply absolute top-3 right-3 
+           text-neutral-500 hover:text-neutral-800 
+           text-xl leading-none 
+           p-1 rounded-full 
+           hover:bg-neutral-100 transition;
+  }
+
 }
