@@ -1,5 +1,5 @@
 import { getAllProducts } from "@/lib/products";
-import ProductCard from "@/components/ProductCard";
+import ProductsGrid from "@/components/ProductsGrid";
 import Link from "next/link";
 import CreatedModal from "@/components/CreatedProductModal";
 
@@ -22,21 +22,11 @@ export default async function ProductsPage() {
                     + Opret produkt
                 </Link>
             {products.length === 0 ? (
-                <p className="text-center text-neutral-600">Ingen produkter fundet.</p>
+                <p className="text-center text-neutral-600">
+                    Ingen produkter fundet.
+                </p>
             ) : (
-                <section
-                    className="
-            grid 
-            grid-cols-1
-            sm:grid-cols-3
-            gap-6 
-            justify-items-center
-          "
-                >
-                    {products.map((p, i) => (
-                        <ProductCard key={i} product={p} />
-                    ))}
-                </section>
+                <ProductsGrid products={products} />
             )}
 
             <CreatedModal />
