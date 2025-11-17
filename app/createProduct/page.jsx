@@ -1,0 +1,224 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createProductAction } from "@/actions/createProductAction";
+
+export default function CreateProductPage() {
+  const router = useRouter();
+  const [imagePreview, setImagePreview] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+ function handleImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const MAX_SIZE_MB = 5; // vælg selv
+  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    alert("Kun JPEG, PNG og WEBP billeder er tilladt.");
+    e.target.value = "";
+    return;
+  }
+
+  if (file.size > MAX_SIZE_BYTES) {
+    alert(`Billedet er for stort. Max størrelse er ${MAX_SIZE_MB}MB.`);
+    e.target.value = "";
+    return;
+  }
+
+  setImagePreview(URL.createObjectURL(file));
+}
+
+
+  async function handleSubmit(formData) {
+    const name = formData.get("name");
+    const price = formData.get("price");
+
+    let newErrors = {};
+    if (!name) newErrors.name = "Skal udfyldes";
+    if (!price) newErrors.price = "Skal udfyldes";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    const result = await createProductAction(formData);
+    setIsSubmitting(false);
+
+
+console.log("ACTION RESULT:", result);
+
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Opret produkt
+          </h1>
+          <button
+            type="button"
+            onClick={() => router.push("/products")}
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            Tilbage til produkter
+          </button>
+        </div>
+
+        <form
+          className="space-y-6"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            await handleSubmit(formData);
+          }}
+        >
+          {/* Navn + Pris */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Produktnavn <span className="text-red-500">*</span>
+              </label>
+              <input
+                name="name"
+                type="text"
+                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                  errors.name ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {errors.name && (
+                <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Pris <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  name="price"
+                  type="number"
+                  step="0.50"
+                  className={`w-full rounded-lg border px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                    errors.price ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                <span className="absolute inset-y-0 right-3 flex items-center text-gray-400 text-sm">
+                  kr
+                </span>
+              </div>
+              {errors.price && (
+                <p className="mt-1 text-xs text-red-500">{errors.price}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Ingredienser */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Ingredienser
+            </label>
+            <textarea
+              name="ingredients"
+              rows={3}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              placeholder="Hvedemel, vand, surdej (hvede), salt..."
+            />
+          </div>
+
+          {/* Næringsindhold */}
+          <div className="border-t border-gray-200 pt-4">
+            <h2 className="text-sm font-semibold text-gray-900 mb-3">
+              Næringsindhold pr. 100 g
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              {[
+                ["Energy_kcal", "Energi (kcal)"],
+                ["Energy_kJ", "Energi (kJ)"],
+                ["Fat", "Fedt (g)"],
+                ["Saturated_fatty_acids", "Heraf mættede fedtsyrer (g)"],
+                ["Carbohydrates", "Kulhydrat (g)"],
+                ["Sugars", "Heraf sukkerarter (g)"],
+                ["Dietary_fiber", "Kostfibre (g)"],
+                ["Protein", "Protein (g)"],
+                ["Salt", "Salt (g)"],
+                ["Water_content", "Vandindhold (g)"],
+              ].map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    {label}
+                  </label>
+                  <input
+                    name={key}
+                    type="number"
+                    step="0.1"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Billedeupload + preview */}
+          <div className="border-t border-gray-200 pt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Billedeupload
+            </label>
+            <div className="flex flex-col md:flex-row items-start gap-4">
+              <label className="cursor-pointer inline-flex items-center justify-center rounded-lg border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-600 hover:border-emerald-500 hover:text-emerald-600">
+                <span>Vælg billede</span>
+                <input
+                  name="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImage}
+                  className="hidden"
+                />
+              </label>
+
+              {imagePreview && (
+                <div className="mt-2 md:mt-0">
+                  <p className="text-xs text-gray-500 mb-1">
+                    Forhåndsvisning:
+                  </p>
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-32 w-32 rounded-lg object-cover border border-gray-200"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Knapper */}
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+            <button
+              type="button"
+              onClick={() => router.push("/products")}
+              className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Annuller
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-lg bg-emerald-600 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? "Opretter..." : "Opret"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
