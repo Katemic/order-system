@@ -1,21 +1,21 @@
 [
   {
     "name": "Surdejsbrød",
-    "price": 32.50,
+    "price": 32.5,
     "ingredients": "Hvedemel, vand, surdej (hvede), salt",
     "nutrition": {
       "Energy_kcal": 240,
       "Energy_kJ": 1000,
       "Fat": 1.2,
       "Saturated_fatty_acids": 0.2,
-      "Carbohydrates": 47.0,
-      "Sugars": 1.0,
+      "Carbohydrates": 47,
+      "Sugars": 1,
       "Dietary_fiber": 3.5,
       "Protein": 8.5,
       "Salt": 1.4,
-      "Water_content": 37.0
+      "Water_content": 37
     },
-    "image": "https://example.com/images/surdejsbroed.jpg",
+    "image": "/assets/defaultBillede.jpg",
     "category": "Brød",
     "active": true
   },
@@ -26,37 +26,100 @@
     "nutrition": {
       "Energy_kcal": 410,
       "Energy_kJ": 1710,
-      "Fat": 18.0,
-      "Saturated_fatty_acids": 10.0,
-      "Carbohydrates": 55.0,
-      "Sugars": 25.0,
+      "Fat": 18,
+      "Saturated_fatty_acids": 10,
+      "Carbohydrates": 55,
+      "Sugars": 25,
       "Dietary_fiber": 1.8,
-      "Protein": 6.0,
+      "Protein": 6,
       "Salt": 0.8,
-      "Water_content": 20.0
+      "Water_content": 20
     },
-    "image": "https://example.com/images/kanelstang.jpg",
+    "image": "/assets/defaultBillede.jpg",
     "category": "Kage",
     "active": true
   },
   {
     "name": "Rugbrød med kerner",
-    "price": 28.00,
+    "price": 28,
     "ingredients": "Rugmel, solsikkekerner, hørfrø, vand, salt, surdej (rug)",
     "nutrition": {
       "Energy_kcal": 200,
       "Energy_kJ": 840,
       "Fat": 3.5,
       "Saturated_fatty_acids": 0.4,
-      "Carbohydrates": 34.0,
-      "Sugars": 3.0,
-      "Dietary_fiber": 8.0,
+      "Carbohydrates": 34,
+      "Sugars": 3,
+      "Dietary_fiber": 8,
       "Protein": 6.5,
       "Salt": 1.1,
-      "Water_content": 45.0
+      "Water_content": 45
     },
     "image": "/assets/kage.webp",
     "category": "Brød",
+    "active": true
+  },
+  {
+    "id": "kage",
+    "name": "Kage",
+    "price": 100,
+    "ingredients": "meget mel og sukker",
+    "nutrition": {
+      "Energy_kcal": 1,
+      "Energy_kJ": 2,
+      "Fat": 3,
+      "Saturated_fatty_acids": 4,
+      "Carbohydrates": 5,
+      "Sugars": 6,
+      "Dietary_fiber": 7,
+      "Protein": 8,
+      "Salt": 9,
+      "Water_content": 10
+    },
+    "image": "/assets/kaaaaaage.webp",
+    "category": "Ukendt",
+    "active": true
+  },
+  {
+    "id": 6,
+    "name": "Kage",
+    "price": 60,
+    "ingredients": "",
+    "nutrition": {
+      "Energy_kcal": 0,
+      "Energy_kJ": 0,
+      "Fat": 0,
+      "Saturated_fatty_acids": 0,
+      "Carbohydrates": 0,
+      "Sugars": 0,
+      "Dietary_fiber": 0,
+      "Protein": 0,
+      "Salt": 0,
+      "Water_content": 0
+    },
+    "image": "/assets/defaultBillede.jpg",
+    "category": "Ukendt",
+    "active": true
+  },
+  {
+    "id": 7,
+    "name": "test2",
+    "price": 99,
+    "ingredients": "",
+    "nutrition": {
+      "Energy_kcal": 0,
+      "Energy_kJ": 0,
+      "Fat": 0,
+      "Saturated_fatty_acids": 0,
+      "Carbohydrates": 0,
+      "Sugars": 0,
+      "Dietary_fiber": 0,
+      "Protein": 0,
+      "Salt": 0,
+      "Water_content": 0
+    },
+    "image": "/assets/defaultBillede.jpg",
+    "category": "Ukendt",
     "active": true
   }
 ]
