@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateProductAction } from "@/actions/updateProductAction";
 import Image from "next/image";
+import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 
 export default function EditProductForm({ product }) {
   const router = useRouter();
@@ -40,6 +41,7 @@ export default function EditProductForm({ product }) {
     let newErrors = {};
     if (!fd.get("name")) newErrors.name = "Skal udfyldes";
     if (!fd.get("price")) newErrors.price = "Skal udfyldes";
+    if (!fd.get("category")) newErrors.category = "Vælg en kategori";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -49,11 +51,11 @@ export default function EditProductForm({ product }) {
 
     setIsSubmitting(true);
     await updateProductAction(fd);
+    // redirect sker i server action
   }
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
-
       {/* NAVN + PRIS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -93,6 +95,31 @@ export default function EditProductForm({ product }) {
             <p className="mt-1 text-xs text-red-500">{errors.price}</p>
           )}
         </div>
+      </div>
+
+      {/* KATEGORI – samme stil som create */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Kategori <span className="text-red-500">*</span>
+        </label>
+        <select
+          name="category"
+          defaultValue={product.category || ""}
+          className={`w-full rounded-lg border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.category ? "border-red-500" : "border-gray-300"
+            }`}
+        >
+          <option value="" disabled>
+            Vælg kategori
+          </option>
+          {PRODUCT_CATEGORIES.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+        {errors.category && (
+          <p className="mt-1 text-xs text-red-500">{errors.category}</p>
+        )}
       </div>
 
       {/* INGREDIENSER */}
@@ -163,8 +190,6 @@ export default function EditProductForm({ product }) {
           )}
         </div>
       </div>
-
-
 
       {/* HANDLING KNAPPER */}
       <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">

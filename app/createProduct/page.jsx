@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createProductAction } from "@/actions/createProductAction";
+import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 
 export default function CreateProductPage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function CreateProductPage() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const MAX_SIZE_MB = 5; // vælg selv
+    const MAX_SIZE_MB = 5;
     const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -34,14 +35,15 @@ export default function CreateProductPage() {
     setImagePreview(URL.createObjectURL(file));
   }
 
-
   async function handleSubmit(formData) {
     const name = formData.get("name");
     const price = formData.get("price");
+    const category = formData.get("category");
 
     let newErrors = {};
     if (!name) newErrors.name = "Skal udfyldes";
     if (!price) newErrors.price = "Skal udfyldes";
+    if (!category) newErrors.category = "Vælg en kategori";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -122,7 +124,30 @@ export default function CreateProductPage() {
             </div>
           </div>
 
-          {/* Ingredienser */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Kategori <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="category"
+              className={`w-full rounded-lg border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.category ? "border-red-500" : "border-gray-300"
+                }`}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Vælg kategori
+              </option>
+              {PRODUCT_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+            {errors.category && (
+              <p className="mt-1 text-xs text-red-500">{errors.category}</p>
+            )}
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Ingredienser
