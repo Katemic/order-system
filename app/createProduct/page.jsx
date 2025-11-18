@@ -25,17 +25,7 @@ export default function CreateProductPage() {
       e.target.value = "";
       return;
     }
-    if (!allowedTypes.includes(file.type)) {
-      alert("Kun JPEG, PNG og WEBP billeder er tilladt.");
-      e.target.value = "";
-      return;
-    }
 
-    if (file.size > MAX_SIZE_BYTES) {
-      alert(`Billedet er for stort. Max størrelse er ${MAX_SIZE_MB}MB.`);
-      e.target.value = "";
-      return;
-    }
     if (file.size > MAX_SIZE_BYTES) {
       alert(`Billedet er for stort. Max størrelse er ${MAX_SIZE_MB}MB.`);
       e.target.value = "";
