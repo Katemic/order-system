@@ -2,6 +2,7 @@ import { getAllProducts } from "@/lib/products";
 import ProductsGrid from "@/components/ProductsGrid";
 import Link from "next/link";
 import CreatedModal from "@/components/CreatedProductModal";
+import UpdatedModal from "@/components/UpdatedModal";
 
 export const dynamic = "force-static";
 
@@ -30,6 +31,7 @@ export default async function ProductsPage() {
             )}
 
             <CreatedModal />
+            <UpdatedModal />
         </main>
     );
 }
