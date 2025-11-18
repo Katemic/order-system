@@ -1,5 +1,6 @@
 [
   {
+    "id": 2,
     "name": "Surdejsbrød",
     "price": 32.5,
     "ingredients": "Hvedemel, vand, surdej (hvede), salt",
@@ -20,8 +21,9 @@
     "active": true
   },
   {
-    "name": "Kanelstang",
-    "price": 24.95,
+    "id": 3,
+    "name": "Kanelstanggg",
+    "price": 45,
     "ingredients": "Hvedemel, smør, sukker, gær, kanel, mælk, æg",
     "nutrition": {
       "Energy_kcal": 410,
@@ -35,11 +37,12 @@
       "Salt": 0.8,
       "Water_content": 20
     },
-    "image": "/assets/defaultBillede.jpg",
+    "image": "/assets/1763453787903-Cute_dog.jpg",
     "category": "Kage",
     "active": true
   },
   {
+    "id": 4,
     "name": "Rugbrød med kerner",
     "price": 28,
     "ingredients": "Rugmel, solsikkekerner, hørfrø, vand, salt, surdej (rug)",
@@ -60,7 +63,7 @@
     "active": true
   },
   {
-    "id": "kage",
+    "id": 5,
     "name": "Kage",
     "price": 100,
     "ingredients": "meget mel og sukker",
@@ -103,9 +106,9 @@
   },
   {
     "id": 7,
-    "name": "test2",
-    "price": 99,
-    "ingredients": "",
+    "name": "test33",
+    "price": 100,
+    "ingredients": "meget mel",
     "nutrition": {
       "Energy_kcal": 0,
       "Energy_kJ": 0,

@@ -14,10 +14,14 @@ export default function CreateProductPage() {
   function handleImage(e) {
     const file = e.target.files[0];
     if (!file) return;
+  function handleImage(e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
     const MAX_SIZE_MB = 5;
     const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
     if (!allowedTypes.includes(file.type)) {
@@ -25,7 +29,17 @@ export default function CreateProductPage() {
       e.target.value = "";
       return;
     }
+    if (!allowedTypes.includes(file.type)) {
+      alert("Kun JPEG, PNG og WEBP billeder er tilladt.");
+      e.target.value = "";
+      return;
+    }
 
+    if (file.size > MAX_SIZE_BYTES) {
+      alert(`Billedet er for stort. Max størrelse er ${MAX_SIZE_MB}MB.`);
+      e.target.value = "";
+      return;
+    }
     if (file.size > MAX_SIZE_BYTES) {
       alert(`Billedet er for stort. Max størrelse er ${MAX_SIZE_MB}MB.`);
       e.target.value = "";
@@ -50,9 +64,15 @@ export default function CreateProductPage() {
       return;
     }
 
+    setErrors({});
+
     setIsSubmitting(true);
     const result = await createProductAction(formData);
     setIsSubmitting(false);
+
+
+    console.log("ACTION RESULT:", result);
+
   }
 
   return (
@@ -90,6 +110,8 @@ export default function CreateProductPage() {
                 type="text"
                 className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.name ? "border-red-500" : "border-gray-300"
                   }`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.name ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.name && (
                 <p className="mt-1 text-xs text-red-500">{errors.name}</p>
@@ -104,7 +126,7 @@ export default function CreateProductPage() {
                 <input
                   name="price"
                   type="number"
-                  step="0.50"
+                  step="any"
                   className={`w-full rounded-lg border px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.price ? "border-red-500" : "border-gray-300"
                     }`}
                 />
@@ -220,7 +242,17 @@ export default function CreateProductPage() {
           </div>
 
           {/* Knapper */}
+
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+
+            {Object.keys(errors).length > 0 && (
+              <div className="pt-2 -mt-4 text-left">
+                <p className="text-red-600 text-sm font-medium">
+                  Udfyld venligst alle påkrævede felter.
+                </p>
+              </div>
+            )}
+
             <button
               type="button"
               onClick={() => router.push("/products")}

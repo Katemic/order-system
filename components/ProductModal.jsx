@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ProductModal({ product, onClose }) {
   if (!product) return null;
 
-  const { name, price, ingredients, nutrition, category, image } = product;
+  const { id, name, price, ingredients, nutrition, category, image } = product;
 
   const nutritionLabels = {
     Energy_kcal: "Energi (kcal)",
@@ -75,7 +76,7 @@ export default function ProductModal({ product, onClose }) {
           </div>
 
           {image && (
-            <div className="modal-image-wrapper">
+            <div className="modal-image-wrapper flex flex-col items-center gap-4">
               <div className="w-full aspect-square rounded-xl bg-neutral-100 overflow-hidden flex items-center justify-center">
                 <Image
                   src={image}
@@ -85,8 +86,16 @@ export default function ProductModal({ product, onClose }) {
                   className="object-contain w-full h-full"
                 />
               </div>
+
+              <Link
+                href={`/products/${id}/edit`}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
+              >
+                Rediger produkt
+              </Link>
             </div>
           )}
+
         </div>
       </div>
     </div>

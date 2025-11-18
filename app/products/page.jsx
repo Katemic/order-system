@@ -1,6 +1,9 @@
 import { getAllProducts } from "@/lib/products";
 import ProductsGrid from "@/components/ProductsGrid";
 import CreatedModal from "@/components/CreatedProductModal";
+import UpdatedModal from "@/components/UpdatedModal";
+
+export const dynamic = "force-static";
 
 export default async function ProductsPage() {
   const products = await getAllProducts();
@@ -13,7 +16,8 @@ export default async function ProductsPage() {
 
       <ProductsGrid products={products} />
 
-      <CreatedModal />
-    </main>
-  );
+            <CreatedModal />
+            <UpdatedModal />
+        </main>
+    );
 }
