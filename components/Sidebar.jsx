@@ -12,7 +12,28 @@ export default function Sidebar({ selectedCategory, onItemClick }) {
     return (
         <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
             <div className="flex-1 min-h-0 flex flex-col">
-                <div className="mb-4 px-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <form
+                    action="/products"
+                    method="GET"
+                    onSubmit={onItemClick}
+                    className="mb-4 grid grid-cols-[1fr_auto] gap-2 overflow-hidden"
+                >
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Søg produkter…"
+                        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm 
+                                   focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                    <button
+                        type="submit"
+                        className="px-4 py-2 text-sm font-medium rounded-md 
+                                   bg-emerald-600 text-white hover:bg-emerald-700 transition"
+                    >
+                        Søg
+                    </button>
+                </form>
+                <div className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
                     Kategorier
                 </div>
 
@@ -40,15 +61,12 @@ export default function Sidebar({ selectedCategory, onItemClick }) {
                     })}
                 </div>
             </div>
-
             <div className="mt-6 pt-6 border-t border-neutral-200">
                 <Link
                     href="/createProduct"
-                    className="
-            block w-full text-center px-4 py-2 
-            bg-emerald-600 text-white rounded-lg 
-            hover:bg-emerald-700 transition
-          "
+                    className="block w-full text-center px-4 py-2 
+                               bg-emerald-600 text-white rounded-lg 
+                               hover:bg-emerald-700 transition"
                     onClick={onItemClick}
                 >
                     + Opret produkt
