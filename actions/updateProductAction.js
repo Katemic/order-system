@@ -2,6 +2,7 @@
 
 import fs from "fs";
 import path from "path";
+import { redirect } from "next/navigation";
 
 export async function updateProductAction(formData) {
   const id = Number(formData.get("id"));
@@ -26,20 +27,21 @@ export async function updateProductAction(formData) {
     updated.nutrition[key] = Number(formData.get(key));
   }
 
-  // billede
+  // Billedehåndtering
   const image = formData.get("image");
   if (image && image.size > 0) {
     const safe = image.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const unique = `${Date.now()}-${safe}`;
+
     const bytes = Buffer.from(await image.arrayBuffer());
     const out = path.join(process.cwd(), "public", "assets", unique);
+
     fs.writeFileSync(out, bytes);
     updated.image = `/assets/${unique}`;
   }
 
   all[index] = updated;
-
   fs.writeFileSync(filePath, JSON.stringify(all, null, 2));
 
-  return { success: true };
+  redirect(`/products?updated=true&productId=${id}`);
 }

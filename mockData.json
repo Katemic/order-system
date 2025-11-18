@@ -22,8 +22,8 @@
   },
   {
     "id": 3,
-    "name": "Kanelstangg",
-    "price": 24.95,
+    "name": "Kanelstanggg",
+    "price": 45,
     "ingredients": "Hvedemel, smør, sukker, gær, kanel, mælk, æg",
     "nutrition": {
       "Energy_kcal": 410,
@@ -37,7 +37,7 @@
       "Salt": 0.8,
       "Water_content": 20
     },
-    "image": "/assets/1763385773770-Cute_dog.jpg",
+    "image": "/assets/1763453787903-Cute_dog.jpg",
     "category": "Kage",
     "active": true
   },
@@ -106,9 +106,9 @@
   },
   {
     "id": 7,
-    "name": "test2",
-    "price": 99,
-    "ingredients": "",
+    "name": "test33",
+    "price": 100,
+    "ingredients": "meget mel",
     "nutrition": {
       "Energy_kcal": 0,
       "Energy_kJ": 0,
