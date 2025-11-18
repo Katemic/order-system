@@ -4,11 +4,13 @@ import fs from "fs";
 import path from "path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getMockFilePath } from "@/lib/products";
 
 export async function updateProductAction(formData) {
   const id = Number(formData.get("id"));
 
-  const filePath = path.join(process.cwd(), "mockdata.json");
+  //const filePath = path.join(process.cwd(), "mockdata.json");
+  const filePath = getMockFilePath();
   const all = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
   const index = all.findIndex((p) => p.id === id);

@@ -124,5 +124,68 @@
     "image": "/assets/defaultBillede.jpg",
     "category": "Ukendt",
     "active": true
+  },
+  {
+    "id": 8,
+    "name": "kage",
+    "price": 45,
+    "ingredients": "",
+    "nutrition": {
+      "Energy_kcal": 0,
+      "Energy_kJ": 0,
+      "Fat": 0,
+      "Saturated_fatty_acids": 0,
+      "Carbohydrates": 0,
+      "Sugars": 0,
+      "Dietary_fiber": 0,
+      "Protein": 0,
+      "Salt": 0,
+      "Water_content": 0
+    },
+    "image": "/assets/defaultBillede.jpg",
+    "category": "Ukendt",
+    "active": true
+  },
+  {
+    "id": 9,
+    "name": "Kaaaage",
+    "price": 45,
+    "ingredients": "",
+    "nutrition": {
+      "Energy_kcal": 0,
+      "Energy_kJ": 0,
+      "Fat": 0,
+      "Saturated_fatty_acids": 0,
+      "Carbohydrates": 0,
+      "Sugars": 0,
+      "Dietary_fiber": 0,
+      "Protein": 0,
+      "Salt": 0,
+      "Water_content": 0
+    },
+    "image": "/assets/defaultBillede.jpg",
+    "category": "Ukendt",
+    "active": true
+  },
+  {
+    "id": 10,
+    "name": "Kaaaage",
+    "price": 45,
+    "ingredients": "",
+    "nutrition": {
+      "Energy_kcal": 0,
+      "Energy_kJ": 0,
+      "Fat": 0,
+      "Saturated_fatty_acids": 0,
+      "Carbohydrates": 0,
+      "Sugars": 0,
+      "Dietary_fiber": 0,
+      "Protein": 0,
+      "Salt": 0,
+      "Water_content": 0
+    },
+    "image": "/assets/defaultBillede.jpg",
+    "category": "Ukendt",
+    "active": true
   }
 ]
