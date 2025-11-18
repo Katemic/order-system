@@ -2,6 +2,115 @@ import fs from "fs";
 import path from "path";
 
 export function resetMockData() {
-  const testFile = path.join(process.cwd(), "mockdata.test.json");
-  fs.writeFileSync(testFile, "[]", "utf8");
+    const testFile = path.join(process.cwd(), "mockdata.test.json");
+    const defaultData = [
+        {
+            id: 1,
+            name: "Hvedebrød",
+            price: 28.5,
+            ingredients: "Hvedemel, vand, gær, salt",
+            nutrition: {
+                Energy_kcal: 250,
+                Energy_kJ: 1046,
+                Fat: 2.0,
+                Saturated_fatty_acids: 0.3,
+                Carbohydrates: 48,
+                Sugars: 2,
+                Dietary_fiber: 3,
+                Protein: 9,
+                Salt: 1.2,
+                Water_content: 36
+            },
+            image: "/assets/defaultBillede.jpg",
+            category: "Brød",
+            active: true
+        },
+        {
+            id: 2,
+            name: "Surdejsbrød",
+            price: 32.5,
+            ingredients: "Hvedemel, vand, surdej (hvede), salt",
+            nutrition: {
+                Energy_kcal: 240,
+                Energy_kJ: 1000,
+                Fat: 1.2,
+                Saturated_fatty_acids: 0.2,
+                Carbohydrates: 47,
+                Sugars: 1,
+                Dietary_fiber: 3.5,
+                Protein: 8.5,
+                Salt: 1.4,
+                Water_content: 37
+            },
+            image: "/assets/defaultBillede.jpg",
+            category: "Brød",
+            active: true
+        },
+        {
+            id: 3,
+            name: "Hindbærtærte",
+            price: 45,
+            ingredients: "Hvedemel, smør, sukker, æg, hindbær",
+            nutrition: {
+                Energy_kcal: 350,
+                Energy_kJ: 1464,
+                Fat: 18,
+                Saturated_fatty_acids: 10,
+                Carbohydrates: 42,
+                Sugars: 24,
+                Dietary_fiber: 2,
+                Protein: 5,
+                Salt: 0.6,
+                Water_content: 20
+            },
+            image: "/assets/defaultBillede.jpg",
+            category: "Konditor",
+            active: true
+        },
+        {
+            id: 4,
+            name: "Chokoladekage",
+            price: 48,
+            ingredients: "Hvedemel, kakao, sukker, smør, æg",
+            nutrition: {
+                Energy_kcal: 420,
+                Energy_kJ: 1757,
+                Fat: 22,
+                Saturated_fatty_acids: 13,
+                Carbohydrates: 50,
+                Sugars: 30,
+                Dietary_fiber: 3,
+                Protein: 6,
+                Salt: 0.7,
+                Water_content: 18
+            },
+            image: "/assets/defaultBillede.jpg",
+            category: "Konditor",
+            active: true
+        },
+        {
+            id: 5,
+            name: "Spandauer",
+            price: 22,
+            ingredients: "Blød dej, smør, remonce, syltetøj",
+            nutrition: {
+                Energy_kcal: 360,
+                Energy_kJ: 1507,
+                Fat: 16,
+                Saturated_fatty_acids: 9,
+                Carbohydrates: 48,
+                Sugars: 18,
+                Dietary_fiber: 2,
+                Protein: 5,
+                Salt: 0.8,
+                Water_content: 22
+            },
+            image: "/assets/defaultBillede.jpg",
+            category: "Wienerbrød",
+            active: true
+        }
+    ];
+
+    fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
+
 }
