@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Topbar() {
   return (
-    <header className="w-full bg-white border-b border-neutral-200 shadow-sm">
+    <header className="fixed top-0 left-0 w-full bg-white border-b border-neutral-200 shadow-sm z-50">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-4">
         <Link href="/" className="text-xl font-bold tracking-tight text-black">
           Byens bager
@@ -12,7 +12,6 @@ export default function Topbar() {
           <Link href="/products" className="hover:text-black transition">
             Produkter
           </Link>
-          {/* Her kan du tilføje flere links senere */}
         </nav>
       </div>
     </header>

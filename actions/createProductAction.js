@@ -4,11 +4,17 @@ import fs from "fs";
 import path from "path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { isValidProductCategory } from "@/lib/productCategories";
 
 export async function createProductAction(formData) {
   const name = formData.get("name");
   const price = parseFloat(formData.get("price"));
   const ingredients = formData.get("ingredients");
+  const category = formData.get("category");
+
+  if (!isValidProductCategory(category)) {
+    return { success: false, error: "INVALID_CATEGORY" };
+  }
 
   const nutrition = {
     Energy_kcal: Number(formData.get("Energy_kcal")),
@@ -23,20 +29,16 @@ export async function createProductAction(formData) {
     Water_content: Number(formData.get("Water_content")),
   };
 
-  // Læs mockdata
   const filePath = path.join(process.cwd(), "mockdata.json");
   const fileContent = fs.readFileSync(filePath, "utf8");
   const data = JSON.parse(fileContent);
 
-  // Auto ID
   let existingIds = data
     .map((p) => p.id)
     .filter((id) => typeof id === "number" && !isNaN(id));
 
-  const newId =
-    existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
+  const newId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
 
-  // Billede
   let imagePath = "/assets/defaultBillede.jpg";
   const image = formData.get("image");
 
@@ -56,12 +58,7 @@ export async function createProductAction(formData) {
     const safeName = image.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const uniqueName = `${Date.now()}-${safeName}`;
 
-    const outputPath = path.join(
-      process.cwd(),
-      "public",
-      "assets",
-      uniqueName
-    );
+    const outputPath = path.join(process.cwd(), "public", "assets", uniqueName);
 
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
@@ -71,7 +68,6 @@ export async function createProductAction(formData) {
     imagePath = `/assets/${uniqueName}`;
   }
 
-  // Nyt produkt
   const newProduct = {
     id: newId,
     name,
@@ -79,7 +75,7 @@ export async function createProductAction(formData) {
     ingredients,
     nutrition,
     image: imagePath,
-    category: "Ukendt",
+    category,
     active: true,
   };
 
@@ -87,10 +83,6 @@ export async function createProductAction(formData) {
 
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 
-  //Redirect direkte fra server action
   revalidatePath("/products");
   redirect("/products?created=true");
 }
-
-
-

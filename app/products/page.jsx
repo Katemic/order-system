@@ -1,26 +1,15 @@
 import { getAllProducts } from "@/lib/products";
 import ProductsGrid from "@/components/ProductsGrid";
-import Link from "next/link";
 import CreatedModal from "@/components/CreatedProductModal";
 
 export default async function ProductsPage() {
   const products = await getAllProducts();
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8">
+    <main className="mx-auto max-w-7xl px-4 py-8 pt-20">
       <header className="mb-8 text-center">
         <h1 className="page-title">Produkter</h1>
       </header>
-
-      <div className="mb-6 flex justify-between items-center gap-4">
-
-        <Link
-          href="/createProduct"
-          className="inline-block px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
-        >
-          + Opret produkt
-        </Link>
-      </div>
 
       <ProductsGrid products={products} />
 
