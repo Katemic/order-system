@@ -21,6 +21,7 @@ export async function updateProductAction(formData) {
     name: formData.get("name"),
     price: parseFloat(formData.get("price")),
     ingredients: formData.get("ingredients"),
+    category: formData.get("category") || old.category,
     nutrition: { ...old.nutrition },
   };
 

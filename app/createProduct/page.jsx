@@ -14,14 +14,10 @@ export default function CreateProductPage() {
   function handleImage(e) {
     const file = e.target.files[0];
     if (!file) return;
-  function handleImage(e) {
-    const file = e.target.files[0];
-    if (!file) return;
 
     const MAX_SIZE_MB = 5;
     const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
     if (!allowedTypes.includes(file.type)) {
@@ -108,8 +104,6 @@ export default function CreateProductPage() {
               <input
                 name="name"
                 type="text"
-                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.name ? "border-red-500" : "border-gray-300"
-                  }`}
                 className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 ${errors.name ? "border-red-500" : "border-gray-300"
                   }`}
               />
