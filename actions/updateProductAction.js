@@ -3,6 +3,7 @@
 import fs from "fs";
 import path from "path";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function updateProductAction(formData) {
   const id = Number(formData.get("id"));
@@ -43,5 +44,6 @@ export async function updateProductAction(formData) {
   all[index] = updated;
   fs.writeFileSync(filePath, JSON.stringify(all, null, 2));
 
+  revalidatePath("/products");
   redirect(`/products?updated=true&productId=${id}`);
 }
