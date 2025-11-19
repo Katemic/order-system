@@ -50,7 +50,7 @@ export default function ProductModal({ product, onClose }) {
               <p className="modal-price">{price} kr.</p>
             )}
 
-            {ingredients && (
+            {ingredients !== null && ingredients !== undefined && (
               <div className="mb-4">
                 <h3 className="modal-subtitle">Ingredienser</h3>
                 <p className="modal-description">{ingredients}</p>

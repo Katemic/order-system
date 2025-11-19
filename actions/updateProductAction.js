@@ -4,35 +4,39 @@ import fs from "fs";
 import path from "path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { getMockFilePath } from "@/lib/products";
+import { updateProductInDb } from "@/lib/products";
 
 export async function updateProductAction(formData) {
   const id = Number(formData.get("id"));
 
-  //const filePath = path.join(process.cwd(), "mockdata.json");
-  const filePath = getMockFilePath();
-  const all = JSON.parse(fs.readFileSync(filePath, "utf8"));
+  // ---------- BASIC FIELDS ----------
+  const name = formData.get("name");
+  const price = Number(formData.get("price"));
+  let ingredients = formData.get("ingredients");
+  const category = formData.get("category");
 
-  const index = all.findIndex((p) => p.id === id);
-  if (index === -1) return { success: false };
-
-  const old = all[index];
-
-  const updated = {
-    ...old,
-    name: formData.get("name"),
-    price: parseFloat(formData.get("price")),
-    ingredients: formData.get("ingredients"),
-    category: formData.get("category") || old.category,
-    nutrition: { ...old.nutrition },
-  };
-
-  for (const key in updated.nutrition) {
-    updated.nutrition[key] = Number(formData.get(key));
+  if (!ingredients || ingredients.trim() === "") {
+    ingredients = "Udfyldes senere...";
   }
 
-  // Billedehåndtering
+  // ---------- NUTRITION ----------
+  const nutrition = {
+    Energy_kcal: Number(formData.get("Energy_kcal")),
+    Energy_kJ: Number(formData.get("Energy_kJ")),
+    Fat: Number(formData.get("Fat")),
+    Saturated_fatty_acids: Number(formData.get("Saturated_fatty_acids")),
+    Carbohydrates: Number(formData.get("Carbohydrates")),
+    Sugars: Number(formData.get("Sugars")),
+    Dietary_fiber: Number(formData.get("Dietary_fiber")),
+    Protein: Number(formData.get("Protein")),
+    Salt: Number(formData.get("Salt")),
+    Water_content: Number(formData.get("Water_content")),
+  };
+
+  // ---------- IMAGE ----------
+  let imagePath = formData.get("existingImage") ?? null;
   const image = formData.get("image");
+
   if (image && image.size > 0) {
     const safe = image.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const unique = `${Date.now()}-${safe}`;
@@ -41,12 +45,20 @@ export async function updateProductAction(formData) {
     const out = path.join(process.cwd(), "public", "assets", unique);
 
     fs.writeFileSync(out, bytes);
-    updated.image = `/assets/${unique}`;
+    imagePath = `/assets/${unique}`;
   }
 
-  all[index] = updated;
-  fs.writeFileSync(filePath, JSON.stringify(all, null, 2));
+  // ---------- DB CALL ----------
+  await updateProductInDb(id, {
+    name,
+    price,
+    ingredients,
+    category,
+    nutrition,
+    image: imagePath,
+  });
 
   revalidatePath("/products");
   redirect(`/products?updated=true&productId=${id}`);
 }
+
