@@ -64,38 +64,73 @@ test("desktop: 3 produkt-cards per row", async ({ page }) => {
   expect(columnCount).toBe(3);
 });
 
-test('product-card shows name and image', async ({ page }) => {
+test('product-card shows name "Hvedebrød" and image', async ({ page }) => {
   await page.goto('http://localhost:3000/products');
 
   // Find grid-section with product cards
   const grid = page.locator('section.grid');
 
-  // Find first product card (button inside the grid)
-  const firstCard = grid.getByRole('button').first();
+  // Find product card specifically for Hvedebrød
+  const card = grid.getByRole('button', { name: /Hvedebrød/i });
 
-  // Check that the name is visible (h3)
-  const nameElement = firstCard.locator('h3');
+  // Check that the card exists and is visible
+  await expect(card).toBeVisible();
+
+  // Check that the name <h3> exists and has the correct text
+  const nameElement = card.locator('h3');
   await expect(nameElement).toBeVisible();
+  await expect(nameElement).toHaveText('Hvedebrød');
 
-  // Check that the image is visible (img)
-  const image = firstCard.locator('img');
+  // Check that the image is visible
+  const image = card.locator('img');
   await expect(image).toBeVisible();
 });
+
 
 test('product-modal shows all data and buttons for Hvedebrød', async ({ page }) => {
   await page.goto('http://localhost:3000/products');
 
+  // Click on the product card for Hvedebrød
   await page.getByRole('button', { name: /Hvedebrød/ }).click();
 
-  // 1) Modal is shown
+  // 1) Modal overlay
   const overlay = page.locator('div.fixed.inset-0');
   await expect(overlay).toBeVisible();
 
-  // 2) Finding nutritional info section
+  // ========== BASIC DATA ==========
+
+  // 2) Title
+  const title = page.locator('.modal-title');
+  await expect(title).toBeVisible();
+  await expect(title).toHaveText('Hvedebrød');
+
+  // 3) Category
+  const category = page.locator('.modal-category');
+  await expect(category).toBeVisible();
+  await expect(category).toHaveText('Brød');
+
+  // 4) Price
+  const price = page.locator('.modal-price');
+  await expect(price).toBeVisible();
+  await expect(price).toHaveText('28.5 kr.');
+
+  // 5) Ingredients
+  const ingredientsTitle = page.locator('.modal-subtitle');
+  await expect(ingredientsTitle).toHaveText('Ingredienser');
+
+  const ingredientsText = page.locator('.modal-description');
+  await expect(ingredientsText).toHaveText('Hvedemel, vand, gær, salt');
+
+  // 6) Image
+  const image = overlay.locator('.modal-image-wrapper img[alt="Hvedebrød"]');
+  await expect(image).toBeVisible();
+
+
+  // ========== NUTRITION DATA ==========
   const nutritionSectionTitle = page.locator('.modal-section-title');
   await expect(nutritionSectionTitle).toHaveText('Næringsindhold pr. 100 g');
 
-  // helper for finding nutrition values
+  // helper for nutrition
   const nutritionValue = (label: string) =>
     page
       .locator('div.flex.justify-between.gap-2', {
@@ -114,18 +149,20 @@ test('product-modal shows all data and buttons for Hvedebrød', async ({ page })
   await expect(nutritionValue('Salt (g)')).toHaveText('1.2');
   await expect(nutritionValue('Vandindhold (%)')).toHaveText('36');
 
-// 7) Rediger-button (link)
-const editButton = page.getByRole('link', { name: 'Rediger produkt' });
-await expect(editButton).toBeVisible();
-await expect(editButton).toHaveAttribute('href', '/products/1/edit');
+  // ========== BUTTONS ==========
 
-// 8) Close modal
-const closeButton = page.getByRole('button', { name: 'Luk' });
-await expect(closeButton).toBeVisible();
+  // "Rediger produkt" link
+  const editButton = page.getByRole('link', { name: 'Rediger produkt' });
+  await expect(editButton).toBeVisible();
+  await expect(editButton).toHaveAttribute('href', '/products/1/edit');
 
-await closeButton.click();
+  // Close button
+  const closeButton = page.getByRole('button', { name: 'Luk' });
+  await expect(closeButton).toBeVisible();
 
-await expect(page.locator('div.fixed.inset-0')).toBeHidden();
+  // Close the modal
+  await closeButton.click();
+  await expect(overlay).toBeHidden();
 });
 
 const CATEGORIES = [
