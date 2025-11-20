@@ -1,9 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { resetMockData } from "./helpers/cleanup";
+import { gotoProducts } from './helpers/navigationHelpers';
 
-//lav tilføj billede test TODO
-//produkt kan oprettes uden billede - tjek at default billede bruges TODO
-//produkt kan oprettes uden ingredienser og næringsindhold - tjek at det vises korrekt TODO
 
 test.beforeEach(() => {
     resetMockData();
@@ -14,8 +12,7 @@ test.afterAll(() => {
 });
 
 test('checks all fields and buttons are present on create product page and the back buttons work', async ({ page }) => {
-    await page.goto('http://localhost:3000/');
-    await page.getByRole('link', { name: 'Produkter' }).click();
+    await gotoProducts(page);
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
     await expect(page).toHaveURL('http://localhost:3000/createProduct');
 
@@ -76,8 +73,7 @@ test('checks all fields and buttons are present on create product page and the b
 
 
 test('Shows error messages when not all requred fields have been filled out', async ({ page }) => {
-    await page.goto('http://localhost:3000/');
-    await page.getByRole('link', { name: 'Produkter' }).click();
+    await gotoProducts(page);
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
 
     //required fields have stars to indicate they are required
@@ -106,8 +102,7 @@ test('Shows error messages when not all requred fields have been filled out', as
 });
 
 test('All categories are available ', async ({ page }) => {
-    await page.goto('http://localhost:3000/');
-    await page.getByRole('link', { name: 'Produkter' }).click();
+    await gotoProducts(page);
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
 
     // verify combobox options
@@ -141,8 +136,7 @@ test('All categories are available ', async ({ page }) => {
 });
 
 test('Creates a new product when all required fields are filled out', async ({ page }) => {
-    await page.goto('http://localhost:3000/');
-    await page.getByRole('link', { name: 'Produkter' }).click();
+    await gotoProducts(page);
     //checks that the create product button is visible
     await expect(page.getByRole('link', { name: '+ Opret produkt' })).toBeVisible();
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
@@ -173,10 +167,6 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await page.locator('input[name="Salt"]').fill('9');
     await page.locator('input[name="Water_content"]').click();
     await page.locator('input[name="Water_content"]').fill('10');
-    // await page.locator('label').filter({ hasText: 'Vælg billede' }).click();
-    // const path = require('path');
-    // const filePath = path.join(process.cwd(), 'public', 'assets', 'kage.webp');
-    // await page.locator('input[type="file"]').setInputFiles(filePath);
     await page.getByRole('button', { name: 'Opret' }).click();
 
     //check that we are redirected to products page and see modal
@@ -201,14 +191,12 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await expect(page.getByText('Kostfibre (g)7')).toBeVisible();
     await expect(page.getByText('Protein (g)8')).toBeVisible();
     await expect(page.getByText('Salt (g)9')).toBeVisible();
-    await expect(page.getByText('Vandindhold (%)10')).toBeVisible();
+    await expect(page.getByText('Vandindhold (g)10')).toBeVisible();
     await expect(page.getByRole('img', { name: 'TestBrød' }).nth(1)).toBeVisible();
 })
 
 test('Default values are shown when nonrequired fields arent shown', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page.getByText('Byens bagerProdukter').click();
-  await page.getByRole('link', { name: 'Produkter' }).click();
+  await gotoProducts(page);
   await page.getByRole('link', { name: '+ Opret produkt' }).click();
   await page.locator('input[name="name"]').fill('defaultTest');
   await page.locator('input[name="price"]').click();
@@ -227,11 +215,34 @@ test('Default values are shown when nonrequired fields arent shown', async ({ pa
   await expect(page.getByText('Kostfibre (g)0')).toBeVisible();
   await expect(page.getByText('Protein (g)0')).toBeVisible();
   await expect(page.getByText('Salt (g)0')).toBeVisible();
-  await expect(page.getByText('Vandindhold (%)0')).toBeVisible();
+  await expect(page.getByText('Vandindhold (g)0')).toBeVisible();
   await expect(page.getByRole('img', { name: 'defaultTest' }).nth(1)).toBeVisible();
 });
 
+//this test will only be run manually bc of file upload
+test.skip('You can add your own photo and see a preview', async ({ page }) => {
+  await gotoProducts(page);
+  await page.getByRole('link', { name: '+ Opret produkt' }).click();
+  await page.locator('input[name="name"]').click();
+  await page.locator('input[name="name"]').fill('test');
+  await page.locator('input[name="price"]').click();
+  await page.locator('input[name="price"]').fill('10');
+  await page.getByRole('combobox').selectOption('Brød');
 
+  //add image and see preview
+  await page.locator('label').filter({ hasText: 'Vælg billede' }).click();
+  const path = require('path');
+  const filePath = path.join(process.cwd(), 'public', 'assets', 'kage.webp');
+  await page.locator('input[type="file"]').setInputFiles(filePath);
+  await expect(page.getByRole('img', { name: 'Preview' })).toBeVisible();
+
+  //create product and see image in product modal
+  await page.getByRole('button', { name: 'Opret' }).click();
+  await page.getByRole('button', { name: 'Luk' }).click();
+  await page.getByRole('button', { name: 'test test' }).click();
+  await expect(page.getByRole('img', { name: 'test' }).nth(1)).toBeVisible();
+
+});
 
 
 

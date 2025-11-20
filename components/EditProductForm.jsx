@@ -135,29 +135,44 @@ export default function EditProductForm({ product }) {
         />
       </div>
 
-      {/* NÆRINGSINDHOLD */}
-      <div className="border-t border-gray-200 pt-4">
-        <h2 className="text-sm font-semibold text-gray-900 mb-3">
-          Næringsindhold pr. 100 g
-        </h2>
+{/* NÆRINGSINDHOLD */}
+<div className="border-t border-gray-200 pt-4">
+  <h2 className="text-sm font-semibold text-gray-900 mb-3">
+    Næringsindhold pr. 100 g
+  </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          {Object.entries(product.nutrition).map(([key, value]) => (
-            <div key={key}>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
-                {key}
-              </label>
-              <input
-                name={key}
-                type="number"
-                step="0.1"
-                defaultValue={value}
-                className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-          ))}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+    {Object.entries(product.nutrition).map(([key, value]) => {
+      const labels = {
+        Energy_kcal: "Energi (kcal)",
+        Energy_kJ: "Energi (kJ)",
+        Fat: "Fedt (g)",
+        Saturated_fatty_acids: "Heraf mættede fedtsyrer (g)",
+        Carbohydrates: "Kulhydrat (g)",
+        Sugars: "Heraf sukkerarter (g)",
+        Dietary_fiber: "Kostfibre (g)",
+        Protein: "Protein (g)",
+        Salt: "Salt (g)",
+        Water_content: "Vandindhold (g)",
+      };
+
+      return (
+        <div key={key}>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            {labels[key] || key}
+          </label>
+          <input
+            name={key}
+            type="number"
+            step="0.1"
+            defaultValue={value}
+            className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          />
         </div>
-      </div>
+      );
+    })}
+  </div>
+</div>
 
       {/* BILLEDEUPLOAD */}
       <div className="border-t border-gray-200 pt-4">

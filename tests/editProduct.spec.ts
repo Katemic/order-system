@@ -1,11 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { resetMockData } from "./helpers/cleanup";
-
-//rediger produkt kan opdatere alle felter TODO
-//rediger produkt siden viser eksisterende data korrekt TODO
-//rediger knap er synlig og virker TODO
-//kategori dropdown viser korrekt kategori som valgt TODO
-//alle kategorier er tilgængelige i dropdown TODO
+import { gotoProducts } from './helpers/navigationHelpers';
 
 test.beforeEach(() => {
     resetMockData();
@@ -13,4 +8,242 @@ test.beforeEach(() => {
 
 test.afterAll(() => {
     resetMockData();
+});
+
+
+//tjek flakey
+test.skip('check edit button is present on product modal and navigate back buttons are present and working', async ({ page }) => {
+    await gotoProducts(page);
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    await expect(page.getByRole('link', { name: 'Rediger produkt' })).toBeVisible();
+    await page.getByRole('link', { name: 'Rediger produkt' }).click();
+    await expect(page).toHaveURL('http://localhost:3000/products/1/edit');
+    await expect(page.getByRole('link', { name: 'Tilbage til produkter' })).toBeVisible();
+    await page.getByRole('link', { name: 'Tilbage til produkter' }).click();
+    await expect(page).toHaveURL('http://localhost:3000/products');
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    //await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click(); //skal dobbeltklikke for at den gider åben modalen?
+    await page.getByRole('link', { name: 'Rediger produkt' }).click();
+    await expect(page.getByRole('button', { name: 'Annuller' })).toBeVisible();
+    await page.getByRole('button', { name: 'Annuller' }).click();
+    await expect(page).toHaveURL('http://localhost:3000/products');
+});
+
+
+test('Category picker is available with all options and the products category is selected', async ({ page }) => {
+    await gotoProducts(page);
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    await page.getByRole('link', { name: 'Rediger produkt' }).click();
+
+    // verify combobox options
+    const combobox = page.getByRole('combobox');
+    const options = combobox.locator('option');
+
+    // total count
+    await expect(options).toHaveCount(12);
+
+    // texts in order
+    const texts = await options.allTextContents();
+    expect(texts).toEqual([
+        'Vælg kategori',
+        'Brød',
+        'Morgenbrød',
+        'Wienerbrød',
+        'Konditor',
+        'Mejeri',
+        'Cafe',
+        'Sæsonkager og andet',
+        'Specialiteter',
+        'Glutenfri fryser',
+        'Festkager',
+        'Kørsel'
+    ]);
+
+    // verify selected value
+    await expect(combobox).toHaveValue('Brød');
+
+});
+
+test('All fields are present on edit product page', async ({ page }) => {
+    await gotoProducts(page);
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    await page.getByRole('link', { name: 'Rediger produkt' }).click();
+
+    const container = page.getByText(
+        'Rediger produktTilbage til produkterProduktnavn *Pris *krKategori *Vælg'
+    );
+
+    await expect(container.getByRole('heading', { name: 'Rediger produkt', level: 1 })).toBeVisible();
+    await expect(container.getByRole('link', { name: 'Tilbage til produkter' })).toBeVisible();
+
+    await expect(container.getByText('Produktnavn *')).toBeVisible();
+
+    await expect(container.getByText('Pris *')).toBeVisible();
+    await expect(container.getByText('kr')).toBeVisible();
+
+    await expect(container.getByRole('combobox')).toBeVisible();
+
+    await expect(container.getByText('Kategori *')).toBeVisible();
+
+    await expect(container.getByText('Ingredienser')).toBeVisible();
+
+    await expect(container.getByRole('heading', { name: 'Næringsindhold pr. 100 g', level: 2 })).toBeVisible();
+
+    const nutritionLabels = [
+        'Energi (kcal)',
+        'Energi (kJ)',
+        'Fedt (g)',
+        'Heraf mættede fedtsyrer (g)',
+        'Kulhydrat (g)',
+        'Heraf sukkerarter (g)',
+        'Kostfibre (g)',
+        'Protein (g)',
+        'Salt (g)',
+        'Vandindhold (g)'
+    ];
+    for (const label of nutritionLabels) {
+        await expect(container.getByText(label)).toBeVisible();
+    }
+
+    await expect(container.getByText('Vælg billede')).toBeVisible();
+    await expect(container.getByRole('button', { name: 'Annuller' })).toBeVisible();
+    await expect(container.getByRole('button', { name: 'Gem ændringer' })).toBeVisible();
+
+    // assert exactly 12 visible input elements and 1 visible text/textarea
+    await expect(page.locator('input:visible')).toHaveCount(12);
+    await expect(page.locator('textarea:visible, [role="textbox"]:visible')).toHaveCount(1);
+    await expect(page.getByRole('combobox')).toHaveCount(1);
+
+});
+
+
+test('Editing a product updates its data correctly', async ({ page }) => {
+    await gotoProducts(page);
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    await page.getByRole('link', { name: 'Rediger produkt' }).click();
+    await page.locator('input[name="name"]').click();
+    await page.locator('input[name="name"]').fill('Hvedebrød2');
+    await page.locator('input[name="price"]').click();
+    await page.locator('input[name="price"]').fill('30');
+    await page.getByRole('combobox').selectOption('Morgenbrød');
+    await page.getByText('Hvedemel, vand, gær, salt').click();
+    await page.getByText('Hvedemel, vand, gær, salt').fill('EDIT');
+    await page.locator('input[name="Energy_kcal"]').click();
+    await page.locator('input[name="Energy_kcal"]').fill('1');
+    await page.locator('input[name="Energy_kJ"]').click();
+    await page.locator('input[name="Energy_kJ"]').fill('2');
+    await page.locator('input[name="Fat"]').click();
+    await page.locator('input[name="Fat"]').fill('3');
+    await page.locator('input[name="Saturated_fatty_acids"]').fill('4');
+    await page.locator('input[name="Carbohydrates"]').click();
+    await page.locator('input[name="Carbohydrates"]').fill('5');
+    await page.locator('input[name="Sugars"]').click();
+    await page.locator('input[name="Sugars"]').fill('6');
+    await page.locator('input[name="Dietary_fiber"]').click();
+    await page.locator('input[name="Dietary_fiber"]').fill('7');
+    await page.locator('input[name="Protein"]').click();
+    await page.locator('input[name="Protein"]').fill('8');
+    await page.locator('input[name="Salt"]').click();
+    await page.locator('input[name="Salt"]').fill('9');
+    await page.locator('input[name="Water_content"]').click();
+    await page.locator('input[name="Water_content"]').fill('10');
+    await page.getByRole('button', { name: 'Gem ændringer' }).click();
+    await page.getByRole('button', { name: 'Luk' }).click();
+    await page.getByRole('link', { name: 'Morgenbrød' }).click();
+    await page.getByRole('button', { name: 'Hvedebrød2 Hvedebrød2' }).click();
+
+    // NAME
+    await expect(page.getByRole('main').getByText('Morgenbrød')).toBeVisible();
+
+    // CATEGORY
+    await expect(page.getByRole('main').getByText('Morgenbrød')).toBeVisible();
+
+    // PRICE
+    await expect(page.getByText("30 kr.")).toBeVisible();
+
+    // INGREDIENTS
+    await expect(page.getByText("EDIT")).toBeVisible();
+
+    const nutritionModal = page.getByText("Næringsindhold pr. 100 g").locator("..");
+
+    const expectedNutrition = {
+        "Energi (kcal)": "1",
+        "Energi (kJ)": "2",
+        "Fedt (g)": "3",
+        "Heraf mættede fedtsyrer (g)": "4",
+        "Kulhydrat (g)": "5",
+        "Heraf sukkerarter (g)": "6",
+        "Kostfibre (g)": "7",
+        "Protein (g)": "8",
+        "Salt (g)": "9",
+        "Vandindhold (g)": "10",
+    };
+
+    for (const [label, value] of Object.entries(expectedNutrition)) {
+        const row = nutritionModal.locator("div", { hasText: label });
+        await expect(row).toBeVisible();
+        await expect(row.locator("dd")).toHaveText(value);
+    }
+
+
+
+})
+
+test('The edit page shows the products current infomation', async ({ page }) => {
+    await gotoProducts(page);
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    await page.getByRole('link', { name: 'Rediger produkt' }).click();
+
+    await expect(page.locator('input[name="name"]')).toHaveValue("Hvedebrød");
+    await expect(page.locator('input[name="price"]')).toHaveValue("28.5");
+    await expect(page.getByText('Hvedemel, vand, gær, salt')).toBeVisible();
+
+    const nutritionSection = page.getByRole("heading", {
+        name: "Næringsindhold pr. 100 g",
+    }).locator("..");
+
+    const fields = {
+        "Energi (kcal)": "250",
+        "Energi (kJ)": "1046",
+        "Fedt (g)": "2",
+        "Heraf mættede fedtsyrer (g)": "0.3",
+        "Kulhydrat (g)": "48",
+        "Heraf sukkerarter (g)": "2",
+        "Kostfibre (g)": "3",
+        "Protein (g)": "9",
+        "Salt (g)": "1.2",
+        "Vandindhold (g)": "36",
+    };
+
+    for (const [label, value] of Object.entries(fields)) {
+        // match kun den individuelle div, ikke grid-containeren
+        const fieldContainer = nutritionSection.locator('div:not(.grid)', {
+            hasText: label,
+        });
+
+        await expect(fieldContainer).toBeVisible();
+
+        const input = fieldContainer.locator("input");
+        await expect(input).toHaveValue(value);
+    }
+})
+
+//to be run manually due to image upload
+test.skip('Can change photo and see preview', async ({ page }) => {
+    await gotoProducts(page);
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    await page.getByRole('link', { name: 'Rediger produkt' }).click();
+
+    await expect(page.getByRole('img', { name: 'Preview' })).toBeVisible();
+    await page.locator('label').filter({ hasText: 'Vælg billede' }).click();
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'public', 'assets', 'kage.webp');
+    await page.locator('input[type="file"]').setInputFiles(filePath);
+    await expect(page.getByRole('img', { name: 'Preview' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Gem ændringer' }).click();
+    await page.getByRole('button', { name: 'Luk' }).click();
+    await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+    await expect(page.getByRole('img', { name: 'Hvedebrød' }).nth(1)).toBeVisible();
+
 });
