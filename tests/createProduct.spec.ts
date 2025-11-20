@@ -13,7 +13,7 @@ test.afterAll(() => {
     resetMockData();
 });
 
-test('checks all fields and buttons are present on create product page and the bacl buttons work', async ({ page }) => {
+test('checks all fields and buttons are present on create product page and the back buttons work', async ({ page }) => {
     await page.goto('http://localhost:3000/');
     await page.getByRole('link', { name: 'Produkter' }).click();
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
@@ -203,9 +203,33 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await expect(page.getByText('Salt (g)9')).toBeVisible();
     await expect(page.getByText('Vandindhold (%)10')).toBeVisible();
     await expect(page.getByRole('img', { name: 'TestBrød' }).nth(1)).toBeVisible();
-
-
 })
+
+test('Default values are shown when nonrequired fields arent shown', async ({ page }) => {
+  await page.goto('http://localhost:3000/');
+  await page.getByText('Byens bagerProdukter').click();
+  await page.getByRole('link', { name: 'Produkter' }).click();
+  await page.getByRole('link', { name: '+ Opret produkt' }).click();
+  await page.locator('input[name="name"]').fill('defaultTest');
+  await page.locator('input[name="price"]').click();
+  await page.locator('input[name="price"]').fill('10');
+  await page.getByRole('combobox').selectOption('Brød');
+  await page.getByRole('button', { name: 'Opret' }).click();
+  await page.getByRole('button', { name: 'Luk' }).click();
+  await page.getByRole('button', { name: 'defaultTest defaultTest' }).click();
+  //tilføj expect på ingredienser når den nye ændring er merget - er sammen med database koden
+  await expect(page.getByText('Energi (kcal)0')).toBeVisible();
+  await expect(page.getByText('Energi (kJ)0')).toBeVisible();
+  await expect(page.getByText('Fedt (g)0')).toBeVisible();
+  await expect(page.getByText('Heraf mættede fedtsyrer (g)0')).toBeVisible();
+  await expect(page.getByText('Kulhydrat (g)0')).toBeVisible();
+  await expect(page.getByText('Heraf sukkerarter (g)0')).toBeVisible();
+  await expect(page.getByText('Kostfibre (g)0')).toBeVisible();
+  await expect(page.getByText('Protein (g)0')).toBeVisible();
+  await expect(page.getByText('Salt (g)0')).toBeVisible();
+  await expect(page.getByText('Vandindhold (%)0')).toBeVisible();
+  await expect(page.getByRole('img', { name: 'defaultTest' }).nth(1)).toBeVisible();
+});
 
 
 
