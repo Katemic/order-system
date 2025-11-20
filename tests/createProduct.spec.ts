@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { resetMockData } from "./helpers/cleanup";
 
 //lav tilføj billede test TODO
+//produkt kan oprettes uden billede - tjek at default billede bruges TODO
+//produkt kan oprettes uden ingredienser og næringsindhold - tjek at det vises korrekt TODO
 
 test.beforeEach(() => {
     resetMockData();
@@ -9,6 +11,67 @@ test.beforeEach(() => {
 
 test.afterAll(() => {
     resetMockData();
+});
+
+test('checks all fields and buttons are present on create product page and the bacl buttons work', async ({ page }) => {
+    await page.goto('http://localhost:3000/');
+    await page.getByRole('link', { name: 'Produkter' }).click();
+    await page.getByRole('link', { name: '+ Opret produkt' }).click();
+    await expect(page).toHaveURL('http://localhost:3000/createProduct');
+
+    // locator the UI fragment you provided
+    const container = page.getByText(
+        'Opret produktTilbage til produkterProduktnavn *Pris *krKategori *Vælg'
+    );
+
+    await expect(container.getByRole('heading', { name: 'Opret produkt', level: 1 })).toBeVisible();
+    await expect(container.getByRole('button', { name: 'Tilbage til produkter' })).toBeVisible();
+
+    await expect(container.getByText('Produktnavn *')).toBeVisible();
+
+    await expect(container.getByText('Pris *')).toBeVisible();
+    await expect(container.getByText('kr')).toBeVisible();
+
+    await expect(container.getByRole('combobox')).toBeVisible();
+
+    await expect(container.getByText('Kategori *')).toBeVisible();
+
+    await expect(container.getByText('Ingredienser')).toBeVisible();
+
+    await expect(container.getByRole('heading', { name: 'Næringsindhold pr. 100 g', level: 2 })).toBeVisible();
+
+    const nutritionLabels = [
+        'Energi (kcal)',
+        'Energi (kJ)',
+        'Fedt (g)',
+        'Heraf mættede fedtsyrer (g)',
+        'Kulhydrat (g)',
+        'Heraf sukkerarter (g)',
+        'Kostfibre (g)',
+        'Protein (g)',
+        'Salt (g)',
+        'Vandindhold (g)'
+    ];
+    for (const label of nutritionLabels) {
+        await expect(container.getByText(label)).toBeVisible();
+    }
+
+    await expect(container.getByText('Vælg billede')).toBeVisible();
+    await expect(container.getByRole('button', { name: 'Annuller' })).toBeVisible();
+    await expect(container.getByRole('button', { name: 'Opret' })).toBeVisible();
+
+    // assert exactly 12 visible input elements and 1 visible text/textarea
+    await expect(page.locator('input:visible')).toHaveCount(12);
+    await expect(page.locator('textarea:visible, [role="textbox"]:visible')).toHaveCount(1);
+    await expect(page.getByRole('combobox')).toHaveCount(1);
+
+
+    //check that all back buttons work as expected
+    await page.getByRole('button', { name: 'Tilbage til produkter' }).click();
+    await expect(page).toHaveURL('http://localhost:3000/products');
+    await page.getByRole('link', { name: '+ Opret produkt' }).click();
+    await page.getByRole('button', { name: 'Annuller' }).click();
+    await expect(page).toHaveURL('http://localhost:3000/products');
 });
 
 
@@ -80,7 +143,10 @@ test('All categories are available ', async ({ page }) => {
 test('Creates a new product when all required fields are filled out', async ({ page }) => {
     await page.goto('http://localhost:3000/');
     await page.getByRole('link', { name: 'Produkter' }).click();
+    //checks that the create product button is visible
+    await expect(page.getByRole('link', { name: '+ Opret produkt' })).toBeVisible();
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
+    //makes sure we can fill out all the fields
     await page.locator('input[name="name"]').fill('TestBrød');
     await page.locator('input[name="price"]').click();
     await page.locator('input[name="price"]').fill('50');
@@ -112,7 +178,13 @@ test('Creates a new product when all required fields are filled out', async ({ p
     // const filePath = path.join(process.cwd(), 'public', 'assets', 'kage.webp');
     // await page.locator('input[type="file"]').setInputFiles(filePath);
     await page.getByRole('button', { name: 'Opret' }).click();
+
+    //check that we are redirected to products page and see modal
+    await expect(page).toHaveURL('http://localhost:3000/products?created=true');
+    await expect(page.getByRole('heading', { name: 'Produkt oprettet' })).toBeVisible();
+
     await page.getByRole('button', { name: 'Luk' }).click();
+    await expect(page).toHaveURL('http://localhost:3000/products');
     await page.getByRole('button', { name: 'TestBrød TestBrød' }).first().click();
 
     // verify that the modal shows the correct information
