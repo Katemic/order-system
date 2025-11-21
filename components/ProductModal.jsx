@@ -16,7 +16,7 @@ export default function ProductModal({ product, onClose }) {
     Dietary_fiber: "Kostfibre (g)",
     Protein: "Protein (g)",
     Salt: "Salt (g)",
-    Water_content: "Vandindhold (%)",
+    Water_content: "Vandindhold (g)",
   };
 
   return (
