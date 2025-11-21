@@ -198,3 +198,32 @@ export async function updateProductInDb(id, updates) {
   if (error) throw error;
   return data;
 }
+
+export async function updateProductActiveBool(id, active) {
+  if (isTestMode()) {
+    // ---------- MOCK MODE ----------
+    const data = readMockData();
+    const index = data.findIndex((p) => p.id === id);
+    if (index === -1) return null;
+
+    data[index] = {
+      ...data[index],
+      active,
+    };
+
+    writeMockData(data); // du bruger den allerede i create/update
+    return data[index];
+  }
+
+  // ---------- DATABASE MODE ----------
+  const { data, error } = await supabase
+    .from("products")
+    .update({ active })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+

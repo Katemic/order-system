@@ -1,10 +1,28 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useTransition } from "react";
+import { toggleProductActive } from "@/actions/toggleProductActiveAction";
 
 export default function ProductModal({ product, onClose }) {
+  // Hooks SKAL ligge øverst
+  const [isPending, startTransition] = useTransition();
+  const [confirmMode, setConfirmMode] = useState(null); // "archive" | "reactivate" | null
+
+  // Ingen produkt valgt → ingen modal
   if (!product) return null;
 
-  const { id, name, price, ingredients, nutrition, category, image } = product;
+  const {
+    id,
+    name,
+    price,
+    ingredients,
+    nutrition,
+    category,
+    image,
+    active,
+  } = product;
 
   const nutritionLabels = {
     Energy_kcal: "Energi (kcal)",
@@ -19,6 +37,54 @@ export default function ProductModal({ product, onClose }) {
     Water_content: "Vandindhold (%)",
   };
 
+  // Klik på hovedknap (Arkiver / Genaktiver) → vis confirm-view
+  const handleMainActionClick = () => {
+    if (active) {
+      setConfirmMode("archive");
+    } else {
+      setConfirmMode("reactivate");
+    }
+  };
+
+  // Bekræft Arkiver/Genaktiver
+  const handleConfirm = () => {
+    startTransition(async () => {
+      await toggleProductActive(id, active);
+      setConfirmMode(null);
+
+      // Luk modal og tilbage til produktlisten (som du allerede er på)
+      if (onClose) onClose();
+    });
+  };
+
+  // Annuller bekræftelse → tilbage til produktvisning
+  const handleCancel = () => {
+    setConfirmMode(null);
+  };
+
+  // Dynamiske tekster & styling til confirm-view
+  const isArchiveConfirm = confirmMode === "archive";
+
+  const confirmTitle = isArchiveConfirm
+    ? "Arkiver produkt?"
+    : "Genaktiver produkt?";
+
+  const confirmDescription = isArchiveConfirm
+    ? `Er du sikker på, at du vil arkivere ${name}? Produktet vil ikke længere være aktivt.`
+    : `Er du sikker på, at du vil genaktivere ${name}? Produktet vil igen blive vist som aktivt.`;
+
+  const confirmButtonText = isArchiveConfirm
+    ? isPending
+      ? "Arkiverer..."
+      : "Arkiver"
+    : isPending
+      ? "Genaktiverer..."
+      : "Genaktiver";
+
+  const confirmButtonClasses = isArchiveConfirm
+    ? "bg-red-600 hover:bg-red-700 text-white border-red-500"
+    : "bg-green-600 hover:bg-green-700 text-white border-green-500";
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
@@ -28,75 +94,135 @@ export default function ProductModal({ product, onClose }) {
         className="relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Luk-knap */}
         <button
           onClick={onClose}
-          className="modal-close-button"
+          className="absolute right-4 top-4 text-2xl"
           aria-label="Luk"
         >
           ✕
         </button>
 
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-1">
-            <div className="mb-4">
-              <h2 className="modal-title">{name}</h2>
+        {/* ========================== */}
+        {/*      CONFIRMATION VIEW     */}
+        {/* ========================== */}
+        {confirmMode !== null ? (
+          <div className="flex flex-col gap-4">
+            <h2 className="text-xl font-bold">{confirmTitle}</h2>
 
-              {category && (
-                <p className="modal-category">{category}</p>
+            <p className="text-neutral-700">{confirmDescription}</p>
+
+            <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-end">
+              <button
+                type="button"
+                onClick={handleCancel}
+                disabled={isPending}
+                className="px-4 py-2 rounded-lg border border-neutral-300 text-neutral-800 hover:bg-neutral-100 disabled:opacity-60"
+              >
+                Annuller
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirm}
+                disabled={isPending}
+                className={`px-4 py-2 rounded-lg font-medium border ${confirmButtonClasses} disabled:opacity-70 disabled:cursor-wait`}
+              >
+                {confirmButtonText}
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* ========================== */
+          /*     NORMAL PRODUCT VIEW    */
+          /* ========================== */
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Venstre side */}
+            <div className="flex-1">
+              <div className="mb-4">
+                <h2 className="text-2xl font-bold">{name}</h2>
+                {category && <p className="text-neutral-500">{category}</p>}
+              </div>
+
+              {price != null && (
+                <p className="text-lg font-semibold mb-4">{price} kr.</p>
+              )}
+
+              {ingredients && (
+                <div className="mb-4">
+                  <h3 className="font-semibold text-lg">Ingredienser</h3>
+                  <p className="text-neutral-700">{ingredients}</p>
+                </div>
+              )}
+
+              {nutrition && (
+                <div className="mb-2">
+                  <h3 className="font-semibold text-lg">
+                    Næringsindhold pr. 100 g
+                  </h3>
+
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm mt-2">
+                    {Object.entries(nutrition).map(([key, value]) => {
+                      const label = nutritionLabels[key];
+                      if (!label) return null;
+
+                      return (
+                        <div key={key} className="flex justify-between gap-2">
+                          <dt className="text-neutral-600">{label}</dt>
+                          <dd className="font-medium">{value}</dd>
+                        </div>
+                      );
+                    })}
+                  </dl>
+                </div>
               )}
             </div>
 
-            {price != null && (
-              <p className="modal-price">{price} kr.</p>
-            )}
+            {/* Højre side */}
+            {image && (
+              <div className="flex flex-col items-center gap-4 w-full max-w-sm">
+                <div className="w-full aspect-square rounded-xl bg-neutral-100 overflow-hidden flex items-center justify-center">
+                  <Image
+                    src={image}
+                    alt={name}
+                    width={500}
+                    height={500}
+                    className="object-contain w-full h-full"
+                  />
+                </div>
 
-            {ingredients !== null && ingredients !== undefined && (
-              <div className="mb-4">
-                <h3 className="modal-subtitle">Ingredienser</h3>
-                <p className="modal-description">{ingredients}</p>
-              </div>
-            )}
+                <div className="w-full flex flex-col gap-2">
+                  <Link
+                    href={`/products/${id}/edit`}
+                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
+                  >
+                    Rediger produkt
+                  </Link>
 
-            {nutrition && (
-              <div className="mb-2">
-                <h3 className="modal-section-title">Næringsindhold pr. 100 g</h3>
-                <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-                  {Object.entries(nutrition).map(([key, value]) => {
-                    const label = nutritionLabels[key];
-                    return (
-                      <div key={key} className="flex justify-between gap-2">
-                        <dt className="modal-label">{label}</dt>
-                        <dd className="modal-value">{value}</dd>
-                      </div>
-                    );
-                  })}
-                </dl>
+                  <button
+                    type="button"
+                    onClick={handleMainActionClick}
+                    disabled={isPending}
+                    className={`w-full px-4 py-2 rounded-lg border font-medium transition
+                      ${
+                        active
+                          ? "border-red-400 text-red-600 hover:bg-red-50"
+                          : "border-green-400 text-green-600 hover:bg-green-50"
+                      }
+                      ${isPending ? "opacity-70 cursor-wait" : ""}
+                    `}
+                  >
+                    {isPending
+                      ? "Opdaterer..."
+                      : active
+                      ? "Arkiver"
+                      : "Genaktiver"}
+                  </button>
+                </div>
               </div>
             )}
           </div>
-
-          {image && (
-            <div className="modal-image-wrapper flex flex-col items-center gap-4">
-              <div className="w-full aspect-square rounded-xl bg-neutral-100 overflow-hidden flex items-center justify-center">
-                <Image
-                  src={image}
-                  alt={name}
-                  width={500}
-                  height={500}
-                  className="object-contain w-full h-full"
-                />
-              </div>
-
-              <Link
-                href={`/products/${id}/edit`}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
-              >
-                Rediger produkt
-              </Link>
-            </div>
-          )}
-
-        </div>
+        )}
       </div>
     </div>
   );
