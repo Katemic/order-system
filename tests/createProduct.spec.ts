@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 import { resetMockData } from "./helpers/cleanup";
 import { gotoProducts } from './helpers/navigationHelpers';
 
-
 test.beforeEach(() => {
     resetMockData();
 });
@@ -208,6 +207,7 @@ test('Default values are shown when nonrequired fields arent shown', async ({ pa
   await page.getByRole('combobox').selectOption('Brød');
   await page.getByRole('button', { name: 'Opret' }).click();
   await page.getByRole('button', { name: 'Luk' }).click();
+  sleep(4000); // give some time to visually see the filled form before submission
   await page.getByRole('button', { name: 'defaultTest defaultTest' }).click();
   //tilføj expect på ingredienser når den nye ændring er merget - er sammen med database koden
   await expect(page.getByText('Energi (kcal)0')).toBeVisible();

@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { updateProductInDb } from "@/lib/products";
+import { updateProduct } from "@/lib/products";
 
 export async function updateProductAction(formData) {
   const id = Number(formData.get("id"));
@@ -49,7 +49,7 @@ export async function updateProductAction(formData) {
   }
 
   // ---------- DB CALL ----------
-  await updateProductInDb(id, {
+  await updateProduct(id, {
     name,
     price,
     ingredients,
