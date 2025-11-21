@@ -24,24 +24,29 @@ export default async function ProductsPage(props) {
 
   const allProducts = await getAllProducts();
 
-  let filteredProducts = allProducts;
+  const activeProducts = allProducts.filter((p) => p.active !== false);
+
+  let filteredProducts = activeProducts;
 
   if (searchTerm) {
-    filteredProducts = allProducts.filter((p) => {
+    filteredProducts = activeProducts.filter((p) => {
       const name = p.name?.toLowerCase() || "";
-      return (
-        name.includes(searchTerm)
-      );
+      return name.includes(searchTerm);
     });
   } else {
-    filteredProducts =
-      categoryParam === "Alle"
-        ? allProducts
-        : allProducts.filter(
-          (p) =>
-            p.category &&
-            p.category.toLowerCase() === categoryParam.toLowerCase()
-        );
+    if (categoryParam === "Alle") {
+      filteredProducts = activeProducts;
+    } 
+    else if (categoryParam === "Arkiverede") {
+      filteredProducts = allProducts.filter((p) => p.active === false);
+    } 
+    else {
+      filteredProducts = activeProducts.filter(
+        (p) =>
+          p.category &&
+          p.category.toLowerCase() === categoryParam.toLowerCase()
+      );
+    }
   }
 
   return (
