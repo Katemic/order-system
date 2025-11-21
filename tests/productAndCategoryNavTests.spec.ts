@@ -147,7 +147,7 @@ test('product-modal shows all data and buttons for Hvedebrød', async ({ page })
   await expect(nutritionValue('Kostfibre (g)')).toHaveText('3');
   await expect(nutritionValue('Protein (g)')).toHaveText('9');
   await expect(nutritionValue('Salt (g)')).toHaveText('1.2');
-  await expect(nutritionValue('Vandindhold (%)')).toHaveText('36');
+  await expect(nutritionValue('Vandindhold (g)')).toHaveText('36');
 
   // ========== BUTTONS ==========
 
@@ -178,7 +178,9 @@ const CATEGORIES = [
   'Festkager',
   'Kørsel',
   'Alle',
+  'Arkiverede',
 ];
+
 
 test('sidebar shows all categories', async ({ page }) => {
   await page.goto('http://localhost:3000/products');
