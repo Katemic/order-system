@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 // ------------------ //
 // INTERNAL UTILITIES //
 // ------------------ //
-function getMockFilePath() {
+export function getMockFilePath() {
   const isTest = process.env.TEST_ENV === "true";
 
   return path.join(
@@ -197,4 +197,33 @@ export async function updateProductInDb(id, updates) {
 
   if (error) throw error;
   return data;
+}
+
+export async function deleteProductInDb(id) {
+  id = Number(id);
+
+  const isTest = process.env.TEST_ENV === "true";
+
+  if (isTest) {
+    const filePath = getMockFilePath();
+    const data = readMockData();
+
+    const filtered = data.filter((p) => p.id !== id);
+
+    fs.writeFileSync(filePath, JSON.stringify(filtered, null, 2));
+    return { success: true };
+  }
+
+  // ---------- REAL DATABASE ----------
+  const { error } = await supabase
+    .from("products")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    return { success: false };
+  }
+
+  return { success: true };
 }

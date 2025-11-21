@@ -1,8 +1,15 @@
+"use client";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 
 export default function ProductModal({ product, onClose }) {
+  
+  const [showDelete, setShowDelete] = useState(false);
+  
   if (!product) return null;
+
 
   const { id, name, price, ingredients, nutrition, category, image } = product;
 
@@ -93,11 +100,30 @@ export default function ProductModal({ product, onClose }) {
               >
                 Rediger produkt
               </Link>
+
+              <button
+                onClick={() => setShowDelete(true)}
+                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Slet produkt
+              </button>
+
             </div>
           )}
 
         </div>
       </div>
+
+    {showDelete && (
+<DeleteConfirmModal
+  product={product}
+  onClose={() => setShowDelete(false)}
+  onDeleteComplete={onClose}
+/>
+)}  
     </div>
+
+
+
   );
 }
