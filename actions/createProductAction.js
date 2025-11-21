@@ -1,16 +1,19 @@
 "use server";
 
-import fs from "fs";
-import path from "path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { getMockFilePath } from "@/lib/products";
+import { createProductInDb } from "@/lib/products";
 import { isValidProductCategory } from "@/lib/productCategories";
+import fs from "fs";
+import path from "path";
 
 export async function createProductAction(formData) {
   const name = formData.get("name");
   const price = parseFloat(formData.get("price"));
-  const ingredients = formData.get("ingredients");
+  let ingredients = formData.get("ingredients");
+  if (!ingredients || ingredients.trim() === "") {
+    ingredients = "Udfyldes senere...";
+  }
   const category = formData.get("category");
 
   if (!isValidProductCategory(category)) {
@@ -30,62 +33,32 @@ export async function createProductAction(formData) {
     Water_content: Number(formData.get("Water_content")),
   };
 
-  // Læs mockdata
-  //const filePath = path.join(process.cwd(), "mockdata.json");
-  const filePath = getMockFilePath();
-  const fileContent = fs.readFileSync(filePath, "utf8");
-  const data = JSON.parse(fileContent);
-
-  let existingIds = data
-    .map((p) => p.id)
-    .filter((id) => typeof id === "number" && !isNaN(id));
-
-  const newId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
-
+  // ---------- IMAGE HANDLING ----------
   let imagePath = "/assets/defaultBillede.jpg";
   const image = formData.get("image");
 
-  const MAX_SIZE_MB = 5;
-  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-
   if (image && image.size > 0) {
-    if (!allowedTypes.includes(image.type)) {
-      return { success: false, error: "INVALID_FILE_TYPE" };
-    }
-
-    if (image.size > MAX_SIZE_BYTES) {
-      return { success: false, error: "IMAGE_TOO_LARGE" };
-    }
-
     const safeName = image.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const uniqueName = `${Date.now()}-${safeName}`;
-
     const outputPath = path.join(process.cwd(), "public", "assets", uniqueName);
 
     const bytes = await image.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    fs.writeFileSync(outputPath, buffer);
+    fs.writeFileSync(outputPath, Buffer.from(bytes));
 
     imagePath = `/assets/${uniqueName}`;
   }
 
-  const newProduct = {
-    id: newId,
+  // ---------- USE LIB FUNCTION ----------
+  await createProductInDb({
     name,
     price,
     ingredients,
+    category,
     nutrition,
     image: imagePath,
-    category,
-    active: true,
-  };
-
-  data.push(newProduct);
-
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  });
 
   revalidatePath("/products");
   redirect("/products?created=true");
 }
+
