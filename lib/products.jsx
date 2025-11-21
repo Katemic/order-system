@@ -20,6 +20,11 @@ function readMockData() {
   return JSON.parse(content);
 }
 
+function writeMockData(updatedData) {
+  const filePath = getMockFilePath();
+  fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2), "utf8");
+}
+
 function isTestMode() {
   return process.env.TEST_ENV === "true";
 }

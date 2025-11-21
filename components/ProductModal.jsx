@@ -3,14 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { toggleProductActive } from "@/actions/toggleProductActiveAction";
+import { toggleProductActive } from "../actions/toggleProductActiveAction";
 
 export default function ProductModal({ product, onClose }) {
-  // Hooks SKAL ligge øverst
   const [isPending, startTransition] = useTransition();
   const [confirmMode, setConfirmMode] = useState(null); // "archive" | "reactivate" | null
 
-  // Ingen produkt valgt → ingen modal
   if (!product) return null;
 
   const {
@@ -37,7 +35,6 @@ export default function ProductModal({ product, onClose }) {
     Water_content: "Vandindhold (%)",
   };
 
-  // Klik på hovedknap (Arkiver / Genaktiver) → vis confirm-view
   const handleMainActionClick = () => {
     if (active) {
       setConfirmMode("archive");
@@ -46,23 +43,18 @@ export default function ProductModal({ product, onClose }) {
     }
   };
 
-  // Bekræft Arkiver/Genaktiver
   const handleConfirm = () => {
     startTransition(async () => {
       await toggleProductActive(id, active);
       setConfirmMode(null);
-
-      // Luk modal og tilbage til produktlisten (som du allerede er på)
       if (onClose) onClose();
     });
   };
 
-  // Annuller bekræftelse → tilbage til produktvisning
   const handleCancel = () => {
     setConfirmMode(null);
   };
 
-  // Dynamiske tekster & styling til confirm-view
   const isArchiveConfirm = confirmMode === "archive";
 
   const confirmTitle = isArchiveConfirm
@@ -97,15 +89,13 @@ export default function ProductModal({ product, onClose }) {
         {/* Luk-knap */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-2xl"
+          className="modal-close-button absolute right-4 top-4 text-2xl"
           aria-label="Luk"
         >
           ✕
         </button>
 
-        {/* ========================== */}
-        {/*      CONFIRMATION VIEW     */}
-        {/* ========================== */}
+        {/* ===== CONFIRM VIEW ===== */}
         {confirmMode !== null ? (
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-bold">{confirmTitle}</h2>
@@ -133,31 +123,46 @@ export default function ProductModal({ product, onClose }) {
             </div>
           </div>
         ) : (
-          /* ========================== */
-          /*     NORMAL PRODUCT VIEW    */
-          /* ========================== */
+          /* ===== NORMAL PRODUCT VIEW ===== */
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Venstre side */}
+            {/* VENSTRE SIDE */}
             <div className="flex-1">
               <div className="mb-4">
-                <h2 className="text-2xl font-bold">{name}</h2>
-                {category && <p className="text-neutral-500">{category}</p>}
+                {/* 👇 matcher .modal-title i testen */}
+                <h2 className="modal-title text-2xl font-bold">{name}</h2>
+
+                {category && (
+                  // 👇 matcher .modal-category i testen
+                  <p className="modal-category text-neutral-500">
+                    {category}
+                  </p>
+                )}
               </div>
 
               {price != null && (
-                <p className="text-lg font-semibold mb-4">{price} kr.</p>
+                // 👇 matcher .modal-price i testen
+                <p className="modal-price text-lg font-semibold mb-4">
+                  {price} kr.
+                </p>
               )}
 
               {ingredients && (
                 <div className="mb-4">
-                  <h3 className="font-semibold text-lg">Ingredienser</h3>
-                  <p className="text-neutral-700">{ingredients}</p>
+                  {/* 👇 matcher .modal-subtitle */}
+                  <h3 className="modal-subtitle font-semibold text-lg">
+                    Ingredienser
+                  </h3>
+                  {/* 👇 matcher .modal-description */}
+                  <p className="modal-description text-neutral-700">
+                    {ingredients}
+                  </p>
                 </div>
               )}
 
               {nutrition && (
                 <div className="mb-2">
-                  <h3 className="font-semibold text-lg">
+                  {/* 👇 matcher .modal-section-title */}
+                  <h3 className="modal-section-title font-semibold text-lg">
                     Næringsindhold pr. 100 g
                   </h3>
 
@@ -169,7 +174,10 @@ export default function ProductModal({ product, onClose }) {
                       return (
                         <div key={key} className="flex justify-between gap-2">
                           <dt className="text-neutral-600">{label}</dt>
-                          <dd className="font-medium">{value}</dd>
+                          {/* 👇 matcher .modal-value */}
+                          <dd className="modal-value font-medium">
+                            {value}
+                          </dd>
                         </div>
                       );
                     })}
@@ -178,9 +186,9 @@ export default function ProductModal({ product, onClose }) {
               )}
             </div>
 
-            {/* Højre side */}
+            {/* HØJRE SIDE */}
             {image && (
-              <div className="flex flex-col items-center gap-4 w-full max-w-sm">
+              <div className="modal-image-wrapper flex flex-col items-center gap-4 w-full max-w-sm">
                 <div className="w-full aspect-square rounded-xl bg-neutral-100 overflow-hidden flex items-center justify-center">
                   <Image
                     src={image}

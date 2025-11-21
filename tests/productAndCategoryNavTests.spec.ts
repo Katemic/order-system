@@ -178,7 +178,9 @@ const CATEGORIES = [
   'Festkager',
   'Kørsel',
   'Alle',
+  'Arkiverede',
 ];
+
 
 test('sidebar shows all categories', async ({ page }) => {
   await page.goto('http://localhost:3000/products');
