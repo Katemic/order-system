@@ -29,6 +29,53 @@ function isTestMode() {
   return process.env.TEST_ENV === "true";
 }
 
+function mapDbRowToProduct(row) {
+  if (!row) return null;
+
+  return {
+    ...row,
+    nutrition: {
+      Energy_kcal: row.energy_kcal,
+      Energy_kJ: row.energy_kj,
+      Fat: row.fat,
+      Saturated_fatty_acids: row.saturated_fatty_acids,
+      Carbohydrates: row.carbohydrates,
+      Sugars: row.sugars,
+      Dietary_fiber: row.dietary_fiber,
+      Protein: row.protein,
+      Salt: row.salt,
+      Water_content: row.water_content,
+    },
+  };
+}
+
+function mapProductToDbPayload(product) {
+  if (!product) return null;
+
+  const nutrition = product.nutrition || {};
+
+  return {
+    name: product.name,
+    price: product.price,
+    ingredients: product.ingredients,
+    image: product.image,
+    category: product.category,
+    active:
+      typeof product.active === "boolean" ? product.active : true,
+
+    energy_kcal: nutrition.Energy_kcal,
+    energy_kj: nutrition.Energy_kJ,
+    fat: nutrition.Fat,
+    saturated_fatty_acids: nutrition.Saturated_fatty_acids,
+    carbohydrates: nutrition.Carbohydrates,
+    sugars: nutrition.Sugars,
+    dietary_fiber: nutrition.Dietary_fiber,
+    protein: nutrition.Protein,
+    salt: nutrition.Salt,
+    water_content: nutrition.Water_content,
+  };
+}
+
 // ---------------- //
 // PUBLIC FUNCTIONS //
 // ---------------- //
@@ -50,21 +97,7 @@ export async function getAllProducts() {
 
   if (error) throw error;
 
-    return data.map(p => ({
-    ...p,
-    nutrition: {
-      Energy_kcal: p.energy_kcal,
-      Energy_kJ: p.energy_kj,
-      Fat: p.fat,
-      Saturated_fatty_acids: p.saturated_fatty_acids,
-      Carbohydrates: p.carbohydrates,
-      Sugars: p.sugars,
-      Dietary_fiber: p.dietary_fiber,
-      Protein: p.protein,
-      Salt: p.salt,
-      Water_content: p.water_content,
-    }
-  }));
+  return data.map(mapDbRowToProduct);
 }
 
 /**
@@ -75,7 +108,7 @@ export async function getAllProducts() {
 export async function getProductById(id) {
   if (isTestMode()) {
     const data = readMockData();
-    return data.find(p => p.id === id) || null;
+    return data.find((p) => p.id === id) || null;
   }
 
   const { data, error } = await supabase
@@ -86,31 +119,16 @@ export async function getProductById(id) {
 
   if (error || !data) return null;
 
-  // TRANSFORM DB → UI FORMAT
-  data.nutrition = {
-    Energy_kcal: data.energy_kcal,
-    Energy_kJ: data.energy_kj,
-    Fat: data.fat,
-    Saturated_fatty_acids: data.saturated_fatty_acids,
-    Carbohydrates: data.carbohydrates,
-    Sugars: data.sugars,
-    Dietary_fiber: data.dietary_fiber,
-    Protein: data.protein,
-    Salt: data.salt,
-    Water_content: data.water_content,
-  };
-
-  return data;
+  return mapDbRowToProduct(data);
 }
 
-
 // ---------- DATABASE + MOCK CREATE PRODUCT ----------
-export async function createProductInDb(product) {
+export async function createProduct(product) {
   if (isTestMode()) {
     // ---------- WRITE TO MOCK JSON ----------
     const data = readMockData();
 
-    const ids = data.map(p => p.id);
+    const ids = data.map((p) => p.id);
     const newId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
 
     const newProduct = { id: newId, ...product };
@@ -121,41 +139,27 @@ export async function createProductInDb(product) {
   }
 
   // ---------- WRITE TO SUPABASE ----------
+  const payload = {
+    ...mapProductToDbPayload(product),
+    active: true,
+  };
+
   const { data, error } = await supabase
     .from("products")
-    .insert({
-      name: product.name,
-      price: product.price,
-      ingredients: product.ingredients,
-      image: product.image,
-      category: product.category,
-      active: true,
-
-      // Nutrition mapped to columns
-      energy_kcal: product.nutrition.Energy_kcal,
-      energy_kj: product.nutrition.Energy_kJ,
-      fat: product.nutrition.Fat,
-      saturated_fatty_acids: product.nutrition.Saturated_fatty_acids,
-      carbohydrates: product.nutrition.Carbohydrates,
-      sugars: product.nutrition.Sugars,
-      dietary_fiber: product.nutrition.Dietary_fiber,
-      protein: product.nutrition.Protein,
-      salt: product.nutrition.Salt,
-      water_content: product.nutrition.Water_content
-    })
+    .insert(payload)
     .select()
     .single();
 
   if (error) throw error;
-  return data;
+
+  return mapDbRowToProduct(data);
 }
 
-
-export async function updateProductInDb(id, updates) {
+export async function updateProduct(id, updates) {
   if (isTestMode()) {
     // ---------- MOCK MODE ----------
     const data = readMockData();
-    const index = data.findIndex(p => p.id === id);
+    const index = data.findIndex((p) => p.id === id);
     if (index === -1) return null;
 
     // Merge mock nutrition object
@@ -164,8 +168,8 @@ export async function updateProductInDb(id, updates) {
       ...updates,
       nutrition: {
         ...data[index].nutrition,
-        ...updates.nutrition
-      }
+        ...(updates.nutrition || {}),
+      },
     };
 
     writeMockData(data);
@@ -173,25 +177,7 @@ export async function updateProductInDb(id, updates) {
   }
 
   // ---------- DATABASE MODE ----------
-  const payload = {
-    name: updates.name,
-    price: updates.price,
-    ingredients: updates.ingredients,
-    category: updates.category,
-    image: updates.image,
-
-    // nutrition → kolonner
-    energy_kcal: updates.nutrition.Energy_kcal,
-    energy_kj: updates.nutrition.Energy_kJ,
-    fat: updates.nutrition.Fat,
-    saturated_fatty_acids: updates.nutrition.Saturated_fatty_acids,
-    carbohydrates: updates.nutrition.Carbohydrates,
-    sugars: updates.nutrition.Sugars,
-    dietary_fiber: updates.nutrition.Dietary_fiber,
-    protein: updates.nutrition.Protein,
-    salt: updates.nutrition.Salt,
-    water_content: updates.nutrition.Water_content,
-  };
+  const payload = mapProductToDbPayload(updates);
 
   const { data, error } = await supabase
     .from("products")
@@ -201,10 +187,11 @@ export async function updateProductInDb(id, updates) {
     .single();
 
   if (error) throw error;
-  return data;
+
+  return mapDbRowToProduct(data);
 }
 
-export async function deleteProductInDb(id) {
+export async function deleteProduct(id) {
   id = Number(id);
 
   const isTest = process.env.TEST_ENV === "true";
@@ -232,6 +219,7 @@ export async function deleteProductInDb(id) {
 
   return { success: true };
 }
+
 export async function updateProductActiveBool(id, active) {
   if (isTestMode()) {
     // ---------- MOCK MODE ----------
@@ -244,7 +232,7 @@ export async function updateProductActiveBool(id, active) {
       active,
     };
 
-    writeMockData(data); // du bruger den allerede i create/update
+    writeMockData(data);
     return data[index];
   }
 
@@ -257,6 +245,5 @@ export async function updateProductActiveBool(id, active) {
     .single();
 
   if (error) throw error;
-  return data;
+  return mapDbRowToProduct(data);
 }
-

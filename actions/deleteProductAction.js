@@ -1,8 +1,8 @@
 "use server";
 
-import { deleteProductInDb } from "@/lib/products";
+import { deleteProduct } from "@/lib/products";
 
 export async function deleteProductAction(id) {
-  const result = await deleteProductInDb(id);
+  const result = await deleteProduct(id);
   return result;
 }
