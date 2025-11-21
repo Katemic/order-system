@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toggleProductActive } from "../actions/toggleProductActiveAction";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 
 export default function ProductModal({ product, onClose }) {
   const [isPending, startTransition] = useTransition();
   const [confirmMode, setConfirmMode] = useState(null); // "archive" | "reactivate" | null
+  const [showDelete, setShowDelete] = useState(false);
 
   if (!product) return null;
 
@@ -226,12 +228,29 @@ export default function ProductModal({ product, onClose }) {
                       ? "Arkiver"
                       : "Genaktiver"}
                   </button>
+                  <button
+                onClick={() => setShowDelete(true)}
+                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Slet produkt
+              </button>
                 </div>
               </div>
             )}
           </div>
         )}
       </div>
+
+    {showDelete && (
+<DeleteConfirmModal
+  product={product}
+  onClose={() => setShowDelete(false)}
+  onDeleteComplete={onClose}
+/>
+)}  
     </div>
+
+
+
   );
 }
