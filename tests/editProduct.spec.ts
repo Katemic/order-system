@@ -8,11 +8,13 @@ test.beforeEach(() => {
 
 test.afterAll(() => {
     resetMockData();
-});
+    });
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 
-//tjek flakey
-test.skip('check edit button is present on product modal and navigate back buttons are present and working', async ({ page }) => {
+
+test('check edit button is present on product modal and navigate back buttons are present and working', async ({ page }) => {
     await gotoProducts(page);
     await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
     await expect(page.getByRole('link', { name: 'Rediger produkt' })).toBeVisible();
@@ -21,8 +23,8 @@ test.skip('check edit button is present on product modal and navigate back butto
     await expect(page.getByRole('link', { name: 'Tilbage til produkter' })).toBeVisible();
     await page.getByRole('link', { name: 'Tilbage til produkter' }).click();
     await expect(page).toHaveURL('http://localhost:3000/products');
+    await sleep(5000); // inserted 5s wait
     await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
-    //await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click(); //skal dobbeltklikke for at den gider åben modalen?
     await page.getByRole('link', { name: 'Rediger produkt' }).click();
     await expect(page.getByRole('button', { name: 'Annuller' })).toBeVisible();
     await page.getByRole('button', { name: 'Annuller' }).click();
@@ -128,24 +130,15 @@ test('Editing a product updates its data correctly', async ({ page }) => {
     await page.getByRole('combobox').selectOption('Morgenbrød');
     await page.getByText('Hvedemel, vand, gær, salt').click();
     await page.getByText('Hvedemel, vand, gær, salt').fill('EDIT');
-    await page.locator('input[name="Energy_kcal"]').click();
     await page.locator('input[name="Energy_kcal"]').fill('1');
-    await page.locator('input[name="Energy_kJ"]').click();
     await page.locator('input[name="Energy_kJ"]').fill('2');
-    await page.locator('input[name="Fat"]').click();
     await page.locator('input[name="Fat"]').fill('3');
     await page.locator('input[name="Saturated_fatty_acids"]').fill('4');
-    await page.locator('input[name="Carbohydrates"]').click();
     await page.locator('input[name="Carbohydrates"]').fill('5');
-    await page.locator('input[name="Sugars"]').click();
     await page.locator('input[name="Sugars"]').fill('6');
-    await page.locator('input[name="Dietary_fiber"]').click();
     await page.locator('input[name="Dietary_fiber"]').fill('7');
-    await page.locator('input[name="Protein"]').click();
     await page.locator('input[name="Protein"]').fill('8');
-    await page.locator('input[name="Salt"]').click();
     await page.locator('input[name="Salt"]').fill('9');
-    await page.locator('input[name="Water_content"]').click();
     await page.locator('input[name="Water_content"]').fill('10');
     await page.getByRole('button', { name: 'Gem ændringer' }).click();
     await page.getByRole('button', { name: 'Luk' }).click();

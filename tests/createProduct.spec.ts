@@ -11,6 +11,8 @@ test.afterAll(() => {
     resetMockData();
 });
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 test('checks all fields and buttons are present on create product page and the back buttons work', async ({ page }) => {
     await gotoProducts(page);
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
@@ -167,6 +169,8 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await page.locator('input[name="Salt"]').fill('9');
     await page.locator('input[name="Water_content"]').click();
     await page.locator('input[name="Water_content"]').fill('10');
+    sleep(1000); // give some time to visually see the filled form before submission
+    await expect(page.getByRole('button', { name: 'Opret' })).toBeVisible();
     await page.getByRole('button', { name: 'Opret' }).click();
 
     //check that we are redirected to products page and see modal
