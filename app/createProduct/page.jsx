@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { createProductAction } from "@/actions/createProductAction";
 import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
+import Image from "next/image";
 
 export default function CreateProductPage() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function CreateProductPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
-        
+
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">Opret produkt</h1>
           <button
@@ -55,9 +56,8 @@ export default function CreateProductPage() {
                 name="name"
                 type="text"
                 defaultValue={values.name}
-                className={`w-full rounded-lg border px-3 py-2 text-sm ${
-                  errors.name ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm ${errors.name ? "border-red-500" : "border-gray-300"
+                  }`}
               />
 
               {errors.name && (
@@ -77,9 +77,8 @@ export default function CreateProductPage() {
                   type="number"
                   step="any"
                   defaultValue={values.price}
-                  className={`w-full rounded-lg border px-3 py-2 text-sm pr-10 ${
-                    errors.price ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full rounded-lg border px-3 py-2 text-sm pr-10 ${errors.price ? "border-red-500" : "border-gray-300"
+                    }`}
                 />
 
                 <span className="absolute inset-y-0 right-3 flex items-center text-gray-400 text-sm">
@@ -102,9 +101,8 @@ export default function CreateProductPage() {
             <select
               name="category"
               defaultValue={values.category || ""}
-              className={`w-full rounded-lg border px-3 py-2 text-sm ${
-                errors.category ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`w-full rounded-lg border px-3 py-2 text-sm ${errors.category ? "border-red-500" : "border-gray-300"
+                }`}
             >
               <option value="" disabled>
                 Vælg kategori
@@ -133,6 +131,7 @@ export default function CreateProductPage() {
               rows={3}
               defaultValue={values.ingredients}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              placeholder="Hvedemel, vand, surdej (hvede), salt..."
             />
           </div>
 
@@ -194,8 +193,12 @@ export default function CreateProductPage() {
               {(imagePreview || values.imagePreview) && (
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Forhåndsvisning:</p>
-                  <img
+                  <Image
                     src={imagePreview || values.imagePreview}
+                    alt="Preview"
+                    width={128}
+                    height={128}
+                    unoptimized
                     className="h-32 w-32 rounded-lg object-cover border border-gray-200"
                   />
                 </div>
