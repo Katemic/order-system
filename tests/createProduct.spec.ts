@@ -146,8 +146,8 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await page.locator('input[name="price"]').click();
     await page.locator('input[name="price"]').fill('50');
     await page.getByRole('combobox').selectOption('Brød');
-    await page.getByRole('textbox', { name: 'Hvedemel, vand, surdej (hvede' }).click();
-    await page.getByRole('textbox', { name: 'Hvedemel, vand, surdej (hvede' }).fill('Meeeeeget sukker');
+    await page.locator('textarea[name="ingredients"]').click();
+    +    await page.locator('textarea[name="ingredients"]').fill('Meeeeeget sukker');
     await page.locator('input[name="Energy_kcal"]').click();
     await page.locator('input[name="Energy_kcal"]').fill('1');
     await page.locator('input[name="Energy_kJ"]').click();
@@ -199,52 +199,51 @@ test('Creates a new product when all required fields are filled out', async ({ p
 })
 
 test('Default values are shown when nonrequired fields arent shown', async ({ page }) => {
-  await gotoProducts(page);
-  await page.getByRole('link', { name: '+ Opret produkt' }).click();
-  await page.locator('input[name="name"]').fill('defaultTest');
-  await page.locator('input[name="price"]').click();
-  await page.locator('input[name="price"]').fill('10');
-  await page.getByRole('combobox').selectOption('Brød');
-  await page.getByRole('button', { name: 'Opret' }).click();
-  await page.getByRole('button', { name: 'Luk' }).click();
-  sleep(4000); // give some time to visually see the filled form before submission
-  await page.getByRole('button', { name: 'defaultTest defaultTest' }).click();
-  //tilføj expect på ingredienser når den nye ændring er merget - er sammen med database koden
-  await expect(page.getByText('Energi (kcal)0')).toBeVisible();
-  await expect(page.getByText('Energi (kJ)0')).toBeVisible();
-  await expect(page.getByText('Fedt (g)0')).toBeVisible();
-  await expect(page.getByText('Heraf mættede fedtsyrer (g)0')).toBeVisible();
-  await expect(page.getByText('Kulhydrat (g)0')).toBeVisible();
-  await expect(page.getByText('Heraf sukkerarter (g)0')).toBeVisible();
-  await expect(page.getByText('Kostfibre (g)0')).toBeVisible();
-  await expect(page.getByText('Protein (g)0')).toBeVisible();
-  await expect(page.getByText('Salt (g)0')).toBeVisible();
-  await expect(page.getByText('Vandindhold (g)0')).toBeVisible();
-  await expect(page.getByRole('img', { name: 'defaultTest' }).nth(1)).toBeVisible();
+    await gotoProducts(page);
+    await page.getByRole('link', { name: '+ Opret produkt' }).click();
+    await page.locator('input[name="name"]').fill('defaultTest');
+    await page.locator('input[name="price"]').click();
+    await page.locator('input[name="price"]').fill('10');
+    await page.getByRole('combobox').selectOption('Brød');
+    await page.getByRole('button', { name: 'Opret' }).click();
+    await page.getByRole('button', { name: 'Luk' }).click();
+    await page.getByRole('button', { name: 'defaultTest defaultTest' }).click();
+    //tilføj expect på ingredienser når den nye ændring er merget - er sammen med database koden
+    await expect(page.getByText('Energi (kcal)0')).toBeVisible();
+    await expect(page.getByText('Energi (kJ)0')).toBeVisible();
+    await expect(page.getByText('Fedt (g)0')).toBeVisible();
+    await expect(page.getByText('Heraf mættede fedtsyrer (g)0')).toBeVisible();
+    await expect(page.getByText('Kulhydrat (g)0')).toBeVisible();
+    await expect(page.getByText('Heraf sukkerarter (g)0')).toBeVisible();
+    await expect(page.getByText('Kostfibre (g)0')).toBeVisible();
+    await expect(page.getByText('Protein (g)0')).toBeVisible();
+    await expect(page.getByText('Salt (g)0')).toBeVisible();
+    await expect(page.getByText('Vandindhold (g)0')).toBeVisible();
+    await expect(page.getByRole('img', { name: 'defaultTest' }).nth(1)).toBeVisible();
 });
 
 //this test will only be run manually bc of file upload
 test.skip('You can add your own photo and see a preview', async ({ page }) => {
-  await gotoProducts(page);
-  await page.getByRole('link', { name: '+ Opret produkt' }).click();
-  await page.locator('input[name="name"]').click();
-  await page.locator('input[name="name"]').fill('test');
-  await page.locator('input[name="price"]').click();
-  await page.locator('input[name="price"]').fill('10');
-  await page.getByRole('combobox').selectOption('Brød');
+    await gotoProducts(page);
+    await page.getByRole('link', { name: '+ Opret produkt' }).click();
+    await page.locator('input[name="name"]').click();
+    await page.locator('input[name="name"]').fill('test');
+    await page.locator('input[name="price"]').click();
+    await page.locator('input[name="price"]').fill('10');
+    await page.getByRole('combobox').selectOption('Brød');
 
-  //add image and see preview
-  await page.locator('label').filter({ hasText: 'Vælg billede' }).click();
-  const path = require('path');
-  const filePath = path.join(process.cwd(), 'public', 'assets', 'kage.webp');
-  await page.locator('input[type="file"]').setInputFiles(filePath);
-  await expect(page.getByRole('img', { name: 'Preview' })).toBeVisible();
+    //add image and see preview
+    await page.locator('label').filter({ hasText: 'Vælg billede' }).click();
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'public', 'assets', 'kage.webp');
+    await page.locator('input[type="file"]').setInputFiles(filePath);
+    await expect(page.getByRole('img', { name: 'Preview' })).toBeVisible();
 
-  //create product and see image in product modal
-  await page.getByRole('button', { name: 'Opret' }).click();
-  await page.getByRole('button', { name: 'Luk' }).click();
-  await page.getByRole('button', { name: 'test test' }).click();
-  await expect(page.getByRole('img', { name: 'test' }).nth(1)).toBeVisible();
+    //create product and see image in product modal
+    await page.getByRole('button', { name: 'Opret' }).click();
+    await page.getByRole('button', { name: 'Luk' }).click();
+    await page.getByRole('button', { name: 'test test' }).click();
+    await expect(page.getByRole('img', { name: 'test' }).nth(1)).toBeVisible();
 
 });
 
