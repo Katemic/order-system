@@ -55,7 +55,7 @@ export async function createProductAction(prevState, formData) {
   };
 
   // ---------- SAVE ----------
-  await createProductInDb({
+  await createProduct({
     name: values.name,
     price: parseFloat(values.price),
     ingredients: values.ingredients || "Udfyldes senere...",
