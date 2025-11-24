@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createProductInDb } from "@/lib/products";
+import { createProduct } from "@/lib/products";
 import { isValidProductCategory } from "@/lib/productCategories";
 import fs from "fs";
 import path from "path";

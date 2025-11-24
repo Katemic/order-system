@@ -4,8 +4,8 @@ import fs from "fs";
 import path from "path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { updateProductInDb } from "@/lib/products";
 import { isValidProductCategory } from "@/lib/productCategories";
+import { updateProduct } from "@/lib/products";
 
 export async function updateProductAction(prevState, formData) {
   const values = Object.fromEntries(formData);
@@ -61,9 +61,9 @@ export async function updateProductAction(prevState, formData) {
     imagePath = `/assets/${unique}`;
   }
 
-  // ----------- DATABASE UPDATE -----------
-  await updateProductInDb(id, {
-    name: values.name,
+  // ---------- DB CALL ----------
+  await updateProduct(id, {
+    name. values.name,
     price,
     ingredients,
     category: values.category,
