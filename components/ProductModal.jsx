@@ -190,7 +190,7 @@ export default function ProductModal({ product, onClose }) {
 
             {/* HØJRE SIDE */}
             {image && (
-              <div className="modal-image-wrapper flex flex-col items-center gap-4 w-full max-w-sm">
+              <div className="modal-image-wrapper flex flex-col items-center gap-4">
                 <div className="w-full aspect-square rounded-xl bg-neutral-100 overflow-hidden flex items-center justify-center">
                   <Image
                     src={image}
@@ -214,10 +214,9 @@ export default function ProductModal({ product, onClose }) {
                     onClick={handleMainActionClick}
                     disabled={isPending}
                     className={`w-full px-4 py-2 rounded-lg border font-medium transition
-                      ${
-                        active
-                          ? "border-red-400 text-red-600 hover:bg-red-50"
-                          : "border-green-400 text-green-600 hover:bg-green-50"
+                      ${active
+                        ? "border-red-400 text-red-600 hover:bg-red-50"
+                        : "border-green-400 text-green-600 hover:bg-green-50"
                       }
                       ${isPending ? "opacity-70 cursor-wait" : ""}
                     `}
@@ -225,15 +224,15 @@ export default function ProductModal({ product, onClose }) {
                     {isPending
                       ? "Opdaterer..."
                       : active
-                      ? "Arkiver"
-                      : "Genaktiver"}
+                        ? "Arkiver"
+                        : "Genaktiver"}
                   </button>
                   <button
-                onClick={() => setShowDelete(true)}
-                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-              >
-                Slet produkt
-              </button>
+                    onClick={() => setShowDelete(true)}
+                    className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  >
+                    Slet produkt
+                  </button>
                 </div>
               </div>
             )}
@@ -241,16 +240,14 @@ export default function ProductModal({ product, onClose }) {
         )}
       </div>
 
-    {showDelete && (
-<DeleteConfirmModal
-  product={product}
-  onClose={() => setShowDelete(false)}
-  onDeleteComplete={onClose}
-/>
-)}  
+      {showDelete && (
+        <DeleteConfirmModal
+          product={product}
+          onClose={() => setShowDelete(false)}
+          onDeleteComplete={onClose}
+        />
+      )}
     </div>
-
-
 
   );
 }
