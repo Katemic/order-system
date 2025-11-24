@@ -63,7 +63,7 @@ export async function updateProductAction(prevState, formData) {
 
   // ---------- DB CALL ----------
   await updateProduct(id, {
-    name. values.name,
+    name: values.name,
     price,
     ingredients,
     category: values.category,
