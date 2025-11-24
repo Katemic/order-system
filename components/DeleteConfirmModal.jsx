@@ -1,23 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { deleteProductAction } from "@/actions/deleteProductAction";
 
 export default function DeleteConfirmModal({ product, onClose, onDeleteComplete }) {
-  const router = useRouter();
+  const pathname = usePathname();        // fx "/products"
+  const searchParams = useSearchParams(); // fx "?category=Morgenbrød"
 
-  async function handleDelete() {
-    await deleteProductAction(product.id);
-
-    // 1. Luk confirm modal
-    onClose();
-
-    // 2. Luk product modal
-    if (onDeleteComplete) onDeleteComplete();
-
-    // 3. Redirect
-    router.push(`/products?deleted=true&name=${encodeURIComponent(product.name)}`);
-  }
+  const currentUrl =
+    searchParams.toString()
+      ? `${pathname}?${searchParams.toString()}`
+      : pathname;
 
   return (
     <div
@@ -42,15 +35,27 @@ export default function DeleteConfirmModal({ product, onClose, onDeleteComplete 
             Annuller
           </button>
 
-          <button
-            onClick={handleDelete}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          <form
+            action={async (formData) => {
+              await deleteProductAction(formData);
+
+              onClose();
+              if (onDeleteComplete) onDeleteComplete();
+            }}
           >
-            Slet
-          </button>
+            <input type="hidden" name="id" value={product.id} />
+            <input type="hidden" name="name" value={product.name} />
+            <input type="hidden" name="currentUrl" value={currentUrl} />
+
+            <button type="submit" className="px-4 py-2 bg-red-600 text-white rounded-lg">
+              Slet
+            </button>
+          </form>
         </div>
       </div>
     </div>
   );
 }
+
+
 

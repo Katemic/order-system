@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 export default function NotificationBanner() {
-  const params = useSearchParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
 
-  const deleted = params.get("deleted");
-  const productName = params.get("name") || "";
+  const deleted = searchParams.get("deleted");
+  const productName = searchParams.get("name") || "";
 
   const [visible, setVisible] = useState(false);
 
@@ -16,15 +17,25 @@ export default function NotificationBanner() {
     if (deleted === "true") {
       setVisible(true);
 
-      // Fjern notifikationen efter 5s
       const timer = setTimeout(() => {
         setVisible(false);
-        router.replace("/products", { scroll: false });
+
+        // Kopiér nuværende query params
+        const params = new URLSearchParams(searchParams.toString());
+
+        // Fjern kun dem, der hører til notifikationen
+        params.delete("deleted");
+        params.delete("name");
+
+        const newQuery = params.toString();
+        const url = newQuery ? `${pathname}?${newQuery}` : pathname;
+
+        router.replace(url, { scroll: false });
       }, 5000);
 
       return () => clearTimeout(timer);
     }
-  }, [deleted, router]);
+  }, [deleted, router, pathname, searchParams]);
 
   if (!visible) return null;
 
@@ -34,3 +45,4 @@ export default function NotificationBanner() {
     </div>
   );
 }
+
