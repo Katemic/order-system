@@ -12,6 +12,9 @@ export default function Topbar() {
           <Link href="/products" className="hover:text-black transition">
             Produkter
           </Link>
+          <Link href="/orders" className="hover:text-blue-600">
+            Bestillinger
+          </Link>
 
           <Link href="/createOrder" className="btn-primary">
             Opret bestilling
