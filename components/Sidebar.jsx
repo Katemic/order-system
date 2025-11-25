@@ -3,7 +3,7 @@ import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 
 const CATEGORIES = [...PRODUCT_CATEGORIES, "Alle", "Arkiverede"];
 
-export default function Sidebar({ selectedCategory, onItemClick }) {
+export default function Sidebar({ selectedCategory, onItemClick, basePath = "/products" }) {
   const baseClasses =
     "block rounded-md px-3 py-2 text-sm font-medium text-left w-full transition";
 
@@ -12,9 +12,8 @@ export default function Sidebar({ selectedCategory, onItemClick }) {
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
       <div className="flex-1 min-h-0 flex flex-col">
-        {/* Søgning */}
         <form
-          action="/products"
+          action={basePath}
           method="GET"
           onSubmit={onItemClick}
           className="mb-4 grid grid-cols-[1fr_auto] gap-2 overflow-hidden"
@@ -42,7 +41,7 @@ export default function Sidebar({ selectedCategory, onItemClick }) {
         <div className="flex-1 min-h-0 flex flex-col gap-1 overflow-y-auto pr-1">
           {CATEGORIES.map((category) => {
             const isActive = activeCategory === category;
-            const href = `/products?category=${encodeURIComponent(category)}`;
+            const href = `${basePath}?category=${encodeURIComponent(category)}`;
 
             const className =
               baseClasses +
@@ -64,17 +63,19 @@ export default function Sidebar({ selectedCategory, onItemClick }) {
         </div>
       </div>
 
-      <div className="mt-6 pt-6 border-t border-neutral-200">
-        <Link
-          href="/createProduct"
-          className="block w-full text-center px-4 py-2 
-                     bg-emerald-600 text-white rounded-lg 
-                     hover:bg-emerald-700 transition"
-          onClick={onItemClick}
-        >
-          + Opret produkt
-        </Link>
-      </div>
+      {basePath === "/products" && (
+        <div className="mt-6 pt-6 border-t border-neutral-200">
+          <Link
+            href="/createProduct"
+            className="block w-full text-center px-4 py-2 
+                       bg-emerald-600 text-white rounded-lg 
+                       hover:bg-emerald-700 transition"
+            onClick={onItemClick}
+          >
+            + Opret produkt
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }

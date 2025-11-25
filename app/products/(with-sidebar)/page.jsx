@@ -37,11 +37,9 @@ export default async function ProductsPage(props) {
   } else {
     if (categoryParam === "Alle") {
       filteredProducts = activeProducts;
-    } 
-    else if (categoryParam === "Arkiverede") {
+    } else if (categoryParam === "Arkiverede") {
       filteredProducts = allProducts.filter((p) => p.active === false);
-    } 
-    else {
+    } else {
       filteredProducts = activeProducts.filter(
         (p) =>
           p.category &&
@@ -56,7 +54,10 @@ export default async function ProductsPage(props) {
         <h1 className="page-title">Produkter</h1>
       </header>
 
-      <ProductsGrid products={filteredProducts} />
+      <ProductsGrid
+        products={filteredProducts}
+        variant="products"
+      />
 
       <CreatedModal />
       <UpdatedModal />
