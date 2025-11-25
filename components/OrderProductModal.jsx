@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function OrderProductModal({ product, onClose, onAdd }) {
+    const router = useRouter();
+
     const [quantity, setQuantity] = useState(1);
     const [note, setNote] = useState("");
 
@@ -22,6 +25,11 @@ export default function OrderProductModal({ product, onClose, onAdd }) {
         if (onClose) onClose();
     };
 
+    const handleCancel = () => {
+        if (onClose) onClose();
+        router.push("/createOrder");
+    };
+
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
@@ -31,14 +39,6 @@ export default function OrderProductModal({ product, onClose, onAdd }) {
                 className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
                 onClick={(e) => e.stopPropagation()}
             >
-                <button
-                    onClick={onClose}
-                    className="modal-close-button absolute right-4 top-4 text-2xl"
-                    aria-label="Luk"
-                >
-                    ✕
-                </button>
-
                 <div className="flex flex-col gap-5">
                     <div>
                         <h2 className="text-2xl font-bold text-neutral-900">{name}</h2>
@@ -63,7 +63,7 @@ export default function OrderProductModal({ product, onClose, onAdd }) {
                             value={quantity}
                             onChange={(e) => setQuantity(e.target.value)}
                             className="w-32 rounded-md border border-neutral-300 px-3 py-2 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                           focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         />
                     </div>
 
@@ -80,12 +80,20 @@ export default function OrderProductModal({ product, onClose, onAdd }) {
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
                             className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                           focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
                             placeholder="Fx skæres ud, leveres koldt, uden nødder..."
                         />
                     </div>
 
-                    <div className="mt-2 flex justify-end">
+                    <div className="mt-2 flex justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={handleCancel}
+                            className="btn-secondary"
+                        >
+                            Annuller
+                        </button>
+
                         <button
                             type="button"
                             onClick={handleAdd}
