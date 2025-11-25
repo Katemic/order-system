@@ -71,7 +71,7 @@ export default async function OrdersPage() {
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Dato</th>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Tidspunkt</th>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">antal produkter</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Antal produkter</th>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Pris</th>
             </tr>
           </thead>
