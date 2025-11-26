@@ -10,6 +10,8 @@ test.afterAll(() => {
     resetMockData();
 });
 
+test.describe.configure({ mode: "serial" });
+
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 test('checks all fields and buttons are present on create product page and the back buttons work', async ({ page }) => {
@@ -206,8 +208,12 @@ test('Default values are shown when nonrequired fields arent shown', async ({ pa
     await page.locator('input[name="price"]').fill('10');
     await page.getByRole('combobox').selectOption('Brød');
     await page.getByRole('button', { name: 'Opret' }).click();
+   
+    const overlay = page.locator('div.fixed.inset-0');
     await page.getByRole('button', { name: 'Luk' }).click();
-    await page.getByRole('button', { name: 'defaultTest defaultTest' }).click();
+    await expect(overlay).toBeHidden();
+
+    await page.getByRole('button', { name: /defaultTest/i }).click();
     //tilføj expect på ingredienser når den nye ændring er merget - er sammen med database koden
     await expect(page.getByText('Energi (kcal)0')).toBeVisible();
     await expect(page.getByText('Energi (kJ)0')).toBeVisible();
