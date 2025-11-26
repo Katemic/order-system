@@ -1,5 +1,5 @@
 import { getAllProducts } from "@/lib/products";
-import ProductsGrid from "@/components/ProductsGrid";
+import CreateOrderClient from "@/components/CreateOrderClient";
 
 export const dynamic = "force-dynamic";
 
@@ -48,10 +48,10 @@ export default async function CreateOrderPage(props) {
     return (
         <main className="mx-auto max-w-7xl px-4 py-8 pt-20">
             <header className="mb-8 text-center">
-                <h1 className="page-title">Opret ordre</h1>
+                <h1 className="page-title">Opret bestilling</h1>
             </header>
 
-            <ProductsGrid products={filteredProducts} variant="order" />
+            <CreateOrderClient products={filteredProducts} />
         </main>
     );
 }
