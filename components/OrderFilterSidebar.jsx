@@ -1,16 +1,25 @@
 "use client";
 
-export default function OrderFilterSidebar({
-  singleDate,
-  setSingleDate,
-  fromDate,
-  setFromDate,
-  toDate,
-  setToDate,
-  onToday,
-  onAll,
-  onItemClick,
-}) {
+import { useOrdersFilter } from "@/components/OrdersFilterContext";
+
+export default function OrderFilterSidebar({ onItemClick }) {
+  const {
+    singleDate,
+    fromDate,
+    toDate,
+    setSingleDate,
+    setFromDate,
+    setToDate,
+    handleToday,
+    handleAll,
+  } = useOrdersFilter();
+
+  const inputClasses =
+    "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm " +
+    "bg-white shadow-sm " +
+    "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 " +
+    "hover:border-neutral-400 transition";
+
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
 
@@ -28,8 +37,9 @@ export default function OrderFilterSidebar({
             setSingleDate(e.target.value);
             setFromDate("");
             setToDate("");
+            onItemClick?.();
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={inputClasses}
         />
       </div>
 
@@ -43,8 +53,9 @@ export default function OrderFilterSidebar({
           onChange={(e) => {
             setFromDate(e.target.value);
             setSingleDate("");
+            onItemClick?.();
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm mb-2"
+          className={`${inputClasses} mb-2`}
         />
 
         <input
@@ -53,34 +64,38 @@ export default function OrderFilterSidebar({
           onChange={(e) => {
             setToDate(e.target.value);
             setSingleDate("");
+            onItemClick?.();
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={inputClasses}
         />
       </div>
 
-      {/* HURTIGE KNAPPER */}
+      {/* KNAPPER */}
       <div className="mt-auto flex flex-col gap-2">
         <button
           onClick={() => {
-            onToday();
+            handleToday();
             onItemClick?.();
           }}
-          className="w-full px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
+          className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition shadow-sm"
         >
           I dag
         </button>
 
         <button
           onClick={() => {
-            onAll();
+            handleAll();
             onItemClick?.();
           }}
-          className="w-full px-4 py-2 bg-neutral-200 rounded-lg hover:bg-neutral-300 transition"
+          className="bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
         >
           Alle bestillinger
         </button>
       </div>
+
     </nav>
   );
 }
+
+
 

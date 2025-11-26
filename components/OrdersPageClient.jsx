@@ -1,50 +1,29 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useOrdersFilter } from "@/components/OrdersFilterContext";
 import OrdersTable from "@/components/OrdersTable";
 
 export default function OrdersPageClient({ orders }) {
-  const [singleDate, setSingleDate] = useState("");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const { singleDate, fromDate, toDate } = useOrdersFilter();
 
-  const today = new Date().toISOString().slice(0, 10);
+const filtered = orders.filter((o) => {
+  const date = o.date_needed_raw; // rå dato fra DB: yyyy-mm-dd
 
-  function handleToday() {
-    setSingleDate(today);
-    setFromDate("");
-    setToDate("");
-  }
+  if (singleDate) return date === singleDate;
 
-  function handleAll() {
-    setSingleDate("");
-    setFromDate("");
-    setToDate("");
-  }
+  if (fromDate && toDate)
+    return date >= fromDate && date <= toDate;
 
-  const filteredOrders = useMemo(() => {
-    if (!singleDate && !fromDate && !toDate) return orders;
+  return true;
+});
 
-    if (singleDate) {
-      return orders.filter((o) => o.date_needed === singleDate);
-    }
-
-    if (fromDate && toDate) {
-      return orders.filter(
-        (o) => o.date_needed >= fromDate && o.date_needed <= toDate
-      );
-    }
-
-    return orders;
-  }, [orders, singleDate, fromDate, toDate]);
-
-  // sidebar triggers sendes via context (kommer om lidt)
   return (
     <div className="p-6">
-      <OrdersTable orders={filteredOrders} />
+      <OrdersTable orders={filtered} />
     </div>
   );
 }
+
 
 
 
