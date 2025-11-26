@@ -3,9 +3,9 @@ import { supabase } from "@/lib/supabaseClient";
 export async function getAllOrders() {
 
 
-    //need to set up mock data for orders later
+  //need to set up mock data for orders later
 
-const { data, error } = await supabase
+  const { data, error } = await supabase
     .from("orders")
     .select(`
       *,
