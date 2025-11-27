@@ -15,6 +15,8 @@ export default function OrderDetailModal({ order, onClose }) {
       <div
         className="relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
       >
         {/* Luk-knap */}
         <button
@@ -35,13 +37,13 @@ export default function OrderDetailModal({ order, onClose }) {
 
         {/* GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
+
           {/* VENSTRE – PRODUKTER */}
           <div>
             <h3 className="text-lg font-semibold mb-2">Produkter</h3>
 
             {/* Juster h'jde her i max værdi */}
-            <div className="border rounded-lg divide-y max-h-110 overflow-y-auto"> 
+            <div className="border rounded-lg divide-y max-h-110 overflow-y-auto">
               {order.order_items.map((item, i) => (
                 <div key={i} className="p-3 text-sm">
                   <div className="flex justify-between">
@@ -73,9 +75,8 @@ export default function OrderDetailModal({ order, onClose }) {
 
             {/* TYPE SOM H3 – NU RØD VED LEVERING */}
             <h3
-              className={`text-lg font-semibold mt-4 mb-1 ${
-                isDelivery ? "text-red-600" : ""
-              }`}
+              className={`text-lg font-semibold mt-4 mb-1 ${isDelivery ? "text-red-600" : ""
+                }`}
             >
               {typeLabel}
             </h3>
