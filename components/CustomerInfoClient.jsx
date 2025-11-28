@@ -48,7 +48,6 @@ export default function CustomerInfoClient() {
         pickupTime: "",
         address: "",
         zip: "",
-        deliveryNote: "",
         deliveryTime: "",
         orderNote: "",
     });

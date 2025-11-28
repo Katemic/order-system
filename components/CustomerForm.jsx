@@ -25,8 +25,6 @@ export default function CustomerForm({
             )}
 
             <form className="space-y-4" action={formAction}>
-                {/* HIDDEN felter, for at gemme bestillingen i localStorage og for at kunne sende dem med i formularen, 
-                samt levering eller afhentning */}
                 <input
                     type="hidden"
                     name="orderItems"
@@ -39,10 +37,11 @@ export default function CustomerForm({
                 />
 
                 <div>
-                    <label className="text-sm font-medium">
+                    <label className="text-sm font-medium" htmlFor="orderDate">
                         Dato<span className="text-red-500">*</span>
                     </label>
                     <input
+                        id="orderDate"
                         type="date"
                         name="orderDate"
                         value={form.orderDate}
@@ -56,10 +55,11 @@ export default function CustomerForm({
                 </div>
 
                 <div>
-                    <label className="text-sm font-medium">
+                    <label className="text-sm font-medium" htmlFor="customerName">
                         Navn på kunde<span className="text-red-500">*</span>
                     </label>
                     <input
+                        id="customerName"
                         type="text"
                         name="customerName"
                         value={form.customerName}
@@ -74,8 +74,11 @@ export default function CustomerForm({
 
                 <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                        <label className="text-sm font-medium">Telefonnr</label>
+                        <label className="text-sm font-medium" htmlFor="phone">
+                            Telefonnr
+                        </label>
                         <input
+                            id="phone"
                             type="tel"
                             name="phone"
                             value={form.phone}
@@ -86,8 +89,11 @@ export default function CustomerForm({
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium">Aftalt pris</label>
+                        <label className="text-sm font-medium" htmlFor="agreedPrice">
+                            Aftalt pris
+                        </label>
                         <input
+                            id="agreedPrice"
                             type="number"
                             step="0.01"
                             name="agreedPrice"
@@ -101,10 +107,11 @@ export default function CustomerForm({
 
                 <div className="grid gap-4 md:grid-cols-[2fr_1fr] items-center">
                     <div>
-                        <label className="text-sm font-medium">
+                        <label className="text-sm font-medium" htmlFor="orderedBy">
                             Bestilt af<span className="text-red-500">*</span>
                         </label>
                         <input
+                            id="orderedBy"
                             type="text"
                             name="orderedBy"
                             value={form.orderedBy}
@@ -160,10 +167,11 @@ export default function CustomerForm({
 
                 {isPickup && (
                     <div>
-                        <label className="text-sm font-medium">
+                        <label className="text-sm font-medium" htmlFor="pickupTime">
                             Afhentningstidspunkt<span className="text-red-500">*</span>
                         </label>
                         <input
+                            id="pickupTime"
                             type="text"
                             name="pickupTime"
                             value={form.pickupTime}
@@ -182,10 +190,11 @@ export default function CustomerForm({
                 {isDelivery && (
                     <div className="space-y-3">
                         <div>
-                            <label className="text-sm font-medium">
+                            <label className="text-sm font-medium" htmlFor="address">
                                 Adresse<span className="text-red-500">*</span>
                             </label>
                             <input
+                                id="address"
                                 type="text"
                                 name="address"
                                 value={form.address}
@@ -194,15 +203,18 @@ export default function CustomerForm({
                            focus:outline-none focus:ring-2 focus:ring-emerald-500"
                             />
                             {state?.errors?.address && (
-                                <p className="text-sm text-red-600">{state.errors.address}</p>
+                                <p className="text-sm text-red-600">
+                                    {state.errors.address}
+                                </p>
                             )}
                         </div>
 
                         <div>
-                            <label className="text-sm font-medium">
+                            <label className="text-sm font-medium" htmlFor="zip">
                                 Postnr<span className="text-red-500">*</span>
                             </label>
                             <input
+                                id="zip"
                                 type="text"
                                 name="zip"
                                 value={form.zip}
@@ -216,10 +228,14 @@ export default function CustomerForm({
                         </div>
 
                         <div>
-                            <label className="text-sm font-medium">
+                            <label
+                                className="text-sm font-medium"
+                                htmlFor="deliveryTime"
+                            >
                                 Leveringstidspunkt<span className="text-red-500">*</span>
                             </label>
                             <input
+                                id="deliveryTime"
                                 type="text"
                                 name="deliveryTime"
                                 value={form.deliveryTime}
@@ -233,24 +249,15 @@ export default function CustomerForm({
                                 </p>
                             )}
                         </div>
-
-                        <div>
-                            <label className="text-sm font-medium">Leveringsnote</label>
-                            <textarea
-                                name="deliveryNote"
-                                value={form.deliveryNote}
-                                onChange={onChange}
-                                rows={2}
-                                className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm 
-                           focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                            />
-                        </div>
                     </div>
                 )}
 
                 <div>
-                    <label className="text-sm font-medium">Note til bestillingen</label>
+                    <label className="text-sm font-medium" htmlFor="orderNote">
+                        Note til bestillingen
+                    </label>
                     <textarea
+                        id="orderNote"
                         name="orderNote"
                         value={form.orderNote}
                         onChange={onChange}

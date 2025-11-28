@@ -21,7 +21,6 @@ export async function submitOrderAction(prevState, formData) {
     const address = formData.get("address")?.toString().trim() || "";
     const zip = formData.get("zip")?.toString().trim() || "";
     const deliveryTime = formData.get("deliveryTime")?.toString().trim() || "";
-    const deliveryNote = formData.get("deliveryNote")?.toString().trim() || "";
     const orderNote = formData.get("orderNote")?.toString().trim() || "";
 
     const orderItemsRaw = formData.get("orderItems")?.toString() || "[]";
