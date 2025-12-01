@@ -108,7 +108,7 @@ export default function CustomerForm({
                 <div className="grid gap-4 md:grid-cols-[2fr_1fr] items-center">
                     <div>
                         <label className="text-sm font-medium" htmlFor="orderedBy">
-                            Bestilt af<span className="text-red-500">*</span>
+                            Betjent af<span className="text-red-500">*</span>
                         </label>
                         <input
                             id="orderedBy"
