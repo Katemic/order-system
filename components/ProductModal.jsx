@@ -242,7 +242,8 @@ export default function ProductModal({ product, onClose }) {
 
       {showDelete && (
         <DeleteConfirmModal
-          product={product}
+          item={product}
+          type="product"
           onClose={() => setShowDelete(false)}
           onDeleteComplete={onClose}
         />

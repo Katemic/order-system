@@ -149,7 +149,7 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await page.locator('input[name="price"]').fill('50');
     await page.getByRole('combobox').selectOption('Brød');
     await page.locator('textarea[name="ingredients"]').click();
-    +    await page.locator('textarea[name="ingredients"]').fill('Meeeeeget sukker');
+    await page.locator('textarea[name="ingredients"]').fill('Meeeeeget sukker');
     await page.locator('input[name="Energy_kcal"]').click();
     await page.locator('input[name="Energy_kcal"]').fill('1');
     await page.locator('input[name="Energy_kJ"]').click();

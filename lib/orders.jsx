@@ -27,6 +27,30 @@ function writeOrdersMock(data) {
   );
 }
 
+export async function deleteOrder(id) {
+ if (isTestMode()) {
+    const data = readOrdersMock();
+
+    const filtered = data.filter((p) => p.id !== id);
+
+    writeOrdersMock(filtered);
+
+    return { success: true };
+  }
+
+  // ----------------- REAL DATABASE -----------------
+  const { error } = await supabase
+    .from("orders")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    return { success: false };
+  }
+
+  return { success: true };
+}
 
 
 
