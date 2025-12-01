@@ -1,10 +1,19 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 export default function OrderSummary({ items, onReset }) {
+    const router = useRouter();
+
     const total = items.reduce(
         (sum, item) => sum + (item.price || 0) * (item.quantity || 0),
         0
     );
+
+    const handleProceed = () => {
+        if (!items || items.length === 0) return;
+        router.push("/createOrder/customerInfo");
+    };
 
     return (
         <aside className="w-full max-w-sm bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm sticky top-24 max-h-[calc(100vh-8rem)] flex flex-col">
@@ -46,7 +55,12 @@ export default function OrderSummary({ items, onReset }) {
                 </div>
 
                 <div className="flex gap-2">
-                    <button type="button" className="flex-1 btn-primary">
+                    <button
+                        type="button"
+                        onClick={handleProceed}
+                        disabled={items.length === 0}
+                        className="flex-1 btn-primary"
+                    >
                         Videre
                     </button>
                     <button

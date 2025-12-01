@@ -8,41 +8,56 @@ export default function NotificationBanner() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const created = searchParams.get("created");
   const deleted = searchParams.get("deleted");
   const productName = searchParams.get("name") || "";
 
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (deleted === "true") {
-      setVisible(true);
+    const isOrderCreated = created === "true";
+    const isDeletion = deleted === "true";
 
-      const timer = setTimeout(() => {
-        setVisible(false);
+    if (!isOrderCreated && !isDeletion) return;
 
-        // Kopiér nuværende query params
-        const params = new URLSearchParams(searchParams.toString());
+    setVisible(true);
 
-        // Fjern kun dem, der hører til notifikationen
-        params.delete("deleted");
-        params.delete("name");
-
-        const newQuery = params.toString();
-        const url = newQuery ? `${pathname}?${newQuery}` : pathname;
-
-        router.replace(url, { scroll: false });
-      }, 5000);
-
-      return () => clearTimeout(timer);
+    if (isOrderCreated) {
+      try {
+        localStorage.removeItem("orderItems");
+      } catch (err) {
+        console.error("Kunne ikke fjerne orderItems:", err);
+      }
     }
-  }, [deleted, router, pathname, searchParams]);
+
+    const timer = setTimeout(() => {
+      setVisible(false);
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("created");
+      params.delete("deleted");
+      params.delete("name");
+
+      const newQuery = params.toString();
+      const url = newQuery ? `${pathname}?${newQuery}` : pathname;
+
+      router.replace(url, { scroll: false });
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [created, deleted, router, pathname, searchParams]);
 
   if (!visible) return null;
 
+  const text = deleted === "true"
+    ? `Produkt "${productName}" er slettet.`
+    : "Bestilling er oprettet.";
+
+  const bgColor = deleted === "true" ? "bg-red-600" : "bg-emerald-600";
+
   return (
-    <div className="fixed bottom-6 right-6 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg z-50">
-      Produkt "{productName}" er slettet.
+    <div className={`fixed bottom-6 right-6 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50`}>
+      {text}
     </div>
   );
 }
-
