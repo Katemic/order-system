@@ -59,10 +59,15 @@ export default function OrderSummary({ items, onReset }) {
                         type="button"
                         onClick={handleProceed}
                         disabled={items.length === 0}
-                        className="flex-1 btn-primary"
+                        className={`flex-1 transition px-3 py-2 rounded-lg text-sm font-medium
+                          ${items.length === 0
+                              ? "opacity-50 cursor-not-allowed bg-neutral-300 text-neutral-500 border border-neutral-300"
+                              : "btn-primary"
+                          }`}
                     >
                         Videre
                     </button>
+
                     <button
                         type="button"
                         onClick={onReset}

@@ -553,7 +553,7 @@ test('pickup: invalid afhentningstidspunkt gives validation error', async ({ pag
   // Fill required fields (pickup)
   await page.getByLabel('Dato').fill('2025-12-24');
   await page.getByLabel('Navn på kunde').fill('Test Kunde');
-  await page.getByLabel('Bestilt af').fill('Test Ekspedient');
+  await page.getByLabel('Betjent af').fill('Test Ekspedient');
 
   // Invalid afhentningstid
   await page.getByLabel('Afhentningstidspunkt').fill('kl to');
@@ -569,7 +569,7 @@ test('pickup: invalid afhentningstidspunkt gives validation error', async ({ pag
   // Specific error for tidspunkt
   await expect(
     page.getByText(
-      "Ugyldigt format. Brug fx: 14, kl 14, 14.00, 14-16."
+      "Ugyldigt format. Brug fx: 14, 14.00, 14-16."
     )
   ).toBeVisible();
 });
@@ -594,7 +594,7 @@ test('pickup: valid afhentningstidspunkt is accepted (no time errors)', async ({
   // Fill all required fields for pickup
   await page.getByLabel('Dato*').fill('2025-12-24');
   await page.getByLabel('Navn på kunde*').fill('Test Kunde');
-  await page.getByLabel('Bestilt af*').fill('Test Ekspedient');
+  await page.getByLabel('Betjent af*').fill('Test Ekspedient');
   await page.getByLabel('Afhentningstidspunkt*').fill('14-16');
 
   // Send formular
@@ -631,7 +631,7 @@ test('success-flow: gennemfører bestilling, rydder orderItems og viser tom kurv
   // Udfyld minimum for en gyldig pickup-bestilling
   await page.getByLabel('Dato*').fill('2025-12-24');
   await page.getByLabel('Navn på kunde*').fill('Kunde Test');
-  await page.getByLabel('Bestilt af*').fill('Ekspedient Test');
+  await page.getByLabel('Betjent af*').fill('Ekspedient Test');
   await page.getByLabel('Afhentningstidspunkt*').fill('14');
 
   // Gennemfør bestilling
