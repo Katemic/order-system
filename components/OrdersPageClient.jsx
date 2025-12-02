@@ -10,7 +10,7 @@ export default function OrdersPageClient({ orders }) {
   const date = params.get("date") || "";
   const from = params.get("from") || "";
   const to = params.get("to") || "";
-  const fulfillment = params.get("fulfillment") || ""; // 👈 NY
+  const fulfillment = params.get("fulfillment") || "";
 
   let filtered = orders;
 
