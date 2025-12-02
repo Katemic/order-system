@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { OrdersFilterProvider } from "@/components/OrdersFilterContext";
 import OrderFilterSidebar from "@/components/OrderFilterSidebar";
 
 export default function OrdersLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <OrdersFilterProvider>
       <div className="min-h-screen flex bg-neutral-50">
         
         {/* ---------------- DESKTOP SIDEBAR ---------------- */}
@@ -73,7 +71,6 @@ export default function OrdersLayout({ children }) {
           <div className="flex-1">{children}</div>
         </div>
       </div>
-    </OrdersFilterProvider>
   );
 }
 
