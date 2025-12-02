@@ -10,6 +10,7 @@ export default function NotificationBanner() {
 
   const created = searchParams.get("created");
   const deleted = searchParams.get("deleted");
+  const updated = searchParams.get("updated");
   const productName = searchParams.get("name") || "";
   const id = searchParams.get("id");
 
@@ -18,8 +19,9 @@ export default function NotificationBanner() {
   useEffect(() => {
     const isOrderCreated = created === "true";
     const isDeletion = deleted === "true";
+    const isOrderUpdated = updated === "true";
 
-    if (!isOrderCreated && !isDeletion) return;
+    if (!isOrderCreated && !isDeletion && !isOrderUpdated) return;
 
     setVisible(true);
 
@@ -37,6 +39,7 @@ export default function NotificationBanner() {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("created");
       params.delete("deleted");
+      params.delete("updated");
       params.delete("name");
       params.delete("id");
 
@@ -47,7 +50,7 @@ export default function NotificationBanner() {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [created, deleted, router, pathname, searchParams]);
+  }, [created, deleted, updated, router, pathname, searchParams]);
 
   if (!visible) return null;
 
@@ -59,13 +62,19 @@ export default function NotificationBanner() {
     } else {
       text = `Produkt "${productName}" er slettet.`; // Produkt-sletning
     }
-  } else {
+  }
+    } else if (created === "true") {
     text = "Bestilling er oprettet.";
+  }
+  else {
+    text = "Bestilling er opdateret.";
   }
   const bgColor = deleted === "true" ? "bg-red-600" : "bg-emerald-600";
 
   return (
-    <div className={`fixed bottom-6 right-6 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50`}>
+    <div
+      className={`fixed bottom-6 right-6 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50`}
+    >
       {text}
     </div>
   );

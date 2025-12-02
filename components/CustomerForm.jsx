@@ -1,4 +1,5 @@
 export default function CustomerForm({
+    orderId,
     form,
     onChange,
     onCheckboxChange,
@@ -25,6 +26,11 @@ export default function CustomerForm({
             )}
 
             <form className="space-y-4" action={formAction}>
+                {/* Hidden felter */}
+                {orderId != null && (
+                    <input type="hidden" name="orderId" value={orderId} />
+                )}
+
                 <input
                     type="hidden"
                     name="orderItems"
@@ -180,9 +186,7 @@ export default function CustomerForm({
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         />
                         {state?.errors?.pickupTime && (
-                            <p className="text-sm text-red-600">
-                                {state.errors.pickupTime}
-                            </p>
+                            <p className="text-sm text-red-600">{state.errors.pickupTime}</p>
                         )}
                     </div>
                 )}
@@ -203,9 +207,7 @@ export default function CustomerForm({
                            focus:outline-none focus:ring-2 focus:ring-emerald-500"
                             />
                             {state?.errors?.address && (
-                                <p className="text-sm text-red-600">
-                                    {state.errors.address}
-                                </p>
+                                <p className="text-sm text-red-600">{state.errors.address}</p>
                             )}
                         </div>
 

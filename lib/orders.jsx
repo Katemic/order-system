@@ -74,6 +74,43 @@ export async function getAllOrders() {
   return data;
 }
 
+export async function getOrderById(id) {
+  if (isTestMode()) {
+    const orders = readOrdersMock();
+    const order = orders.find((o) => o.id === id);
+    return order || null;
+  }
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select(
+      `
+      *,
+      order_items(
+        id,
+        order_id,
+        product_id,
+        quantity,
+        item_note,
+        products (
+          id,
+          name,
+          price
+        )
+      )
+    `
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Fejl ved getOrderById:", error);
+    return null;
+  }
+
+  return data;
+}
+
 export async function createOrderWithItems({
   orderDate,
   customerName,
@@ -201,4 +238,81 @@ export async function createOrderWithItems({
   }
 
   return { success: true, orderId: order.id, mode: "db" };
+}
+
+export async function UpdateOrderCustomerInfo({
+  id,
+  orderDate,
+  customerName,
+  phone,
+  orderedBy,
+  paid,
+  agreedPrice,
+  fulfillmentType,
+  pickupTime,
+  address,
+  zip,
+  deliveryTime,
+  orderNote,
+}) {
+
+  if (isTestMode()) {
+    const orders = readOrdersMock();
+    const index = orders.findIndex((o) => o.id === Number(id));
+
+    if (index === -1) {
+      return {
+        success: false,
+        message: "Ordre ikke fundet i mockdata.",
+      };
+    }
+
+    orders[index] = {
+      ...orders[index],
+      customer_name: customerName,
+      customer_phone: phone || null,
+      date_needed: orderDate,
+      taken_by: orderedBy,
+      paid,
+      agreed_price: agreedPrice,
+      delivery_type: fulfillmentType,
+      pickup_time: fulfillmentType === "pickup" ? pickupTime : null,
+      delivery_time: fulfillmentType === "delivery" ? deliveryTime : null,
+      delivery_address: fulfillmentType === "delivery" ? address : null,
+      delivery_zip: fulfillmentType === "delivery" ? zip : null,
+      note: orderNote || null,
+    };
+
+    writeOrdersMock(orders);
+
+    return { success: true };
+  }
+
+  const { error } = await supabase
+    .from("orders")
+    .update({
+      customer_name: customerName,
+      customer_phone: phone || null,
+      date_needed: orderDate,
+      taken_by: orderedBy,
+      paid,
+      agreed_price: agreedPrice,
+      delivery_type: fulfillmentType,
+      pickup_time: fulfillmentType === "pickup" ? pickupTime : null,
+      delivery_time: fulfillmentType === "delivery" ? deliveryTime : null,
+      delivery_address: fulfillmentType === "delivery" ? address : null,
+      delivery_zip: fulfillmentType === "delivery" ? zip : null,
+      note: orderNote || null,
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Fejl ved opdatering:", error);
+    return {
+      success: false,
+      message: "Der skete en fejl ved opdatering af bestillingen.",
+    };
+  }
+
+  return { success: true };
 }

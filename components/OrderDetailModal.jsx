@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import { useState } from "react";
@@ -77,7 +78,6 @@ export default function OrderDetailModal({ order, onClose }) {
               <p><strong>Telefon:</strong> {order.customer_phone}</p>
             )}
 
-            {/* TYPE SOM H3 – NU RØD VED LEVERING */}
             <h3
               className={`text-lg font-semibold mt-4 mb-1 ${isDelivery ? "text-red-600" : ""
                 }`}
@@ -111,6 +111,15 @@ export default function OrderDetailModal({ order, onClose }) {
             <p className="mt-2">
               <strong>I alt:</strong> {order.total_price} kr.
             </p>
+
+            <div className="mt-6">
+              <Link
+                href={`/orders/${order.id}/editCustomerInfo`}
+                className="inline-block px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition"
+              >
+                Redigér kundeoplysninger
+              </Link>
+            </div>
                               <button
                     onClick={() => setShowDelete(true)}
                     className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
