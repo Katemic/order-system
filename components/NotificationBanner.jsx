@@ -11,6 +11,7 @@ export default function NotificationBanner() {
   const created = searchParams.get("created");
   const deleted = searchParams.get("deleted");
   const productName = searchParams.get("name") || "";
+  const id = searchParams.get("id");
 
   const [visible, setVisible] = useState(false);
 
@@ -37,6 +38,7 @@ export default function NotificationBanner() {
       params.delete("created");
       params.delete("deleted");
       params.delete("name");
+      params.delete("id");
 
       const newQuery = params.toString();
       const url = newQuery ? `${pathname}?${newQuery}` : pathname;
@@ -49,10 +51,17 @@ export default function NotificationBanner() {
 
   if (!visible) return null;
 
-  const text = deleted === "true"
-    ? `Produkt "${productName}" er slettet.`
-    : "Bestilling er oprettet.";
+ let text = "";
 
+  if (deleted === "true") {
+    if (id) {
+      text = `Bestilling #${id} er slettet.`;   // Ordre-sletning
+    } else {
+      text = `Produkt "${productName}" er slettet.`; // Produkt-sletning
+    }
+  } else {
+    text = "Bestilling er oprettet.";
+  }
   const bgColor = deleted === "true" ? "bg-red-600" : "bg-emerald-600";
 
   return (
