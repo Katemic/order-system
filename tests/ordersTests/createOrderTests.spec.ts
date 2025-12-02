@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { resetMockData } from "../helpers/cleanup";
+import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockData();
+    resetMockDataOrders();
 });
 
 test.afterAll(() => {
-    resetMockData();
+    resetMockDataOrders();
 });
 
 test('create-order page shows product cards with name and price', async ({ page }) => {

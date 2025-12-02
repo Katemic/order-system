@@ -1,12 +1,16 @@
 "use client";
 import Link from "next/link";
 
+import DeleteConfirmModal from "./DeleteConfirmModal";
+import { useState } from "react";
+
 export default function OrderDetailModal({ order, onClose }) {
   if (!order) return null;
 
   const isDelivery = order.delivery_type === "delivery";
   const typeLabel = isDelivery ? "Levering:" : "Afhentning:";
   const time = isDelivery ? order.delivery_time : order.pickup_time;
+  const [showDelete, setShowDelete] = useState(false);
 
   return (
     <div
@@ -116,10 +120,27 @@ export default function OrderDetailModal({ order, onClose }) {
                 Redigér kundeoplysninger
               </Link>
             </div>
+                              <button
+                    onClick={() => setShowDelete(true)}
+                    className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  >
+                    Slet bestilling
+                  </button>
+
+
           </div>
 
         </div>
       </div>
+            {showDelete && (
+              <DeleteConfirmModal
+                item={order}
+                type="order"
+                onClose={() => setShowDelete(false)}
+                onDeleteComplete={onClose}
+              />
+            )}
+          
     </div>
   );
 }

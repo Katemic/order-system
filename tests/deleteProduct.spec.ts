@@ -58,11 +58,11 @@ test('Delete button is shown and it activates a "are you sure" modal', async ({ 
   await page.getByRole('button', { name: 'Slet produkt' }).click();
 
   // Øverste heading
-  await expect(page.getByRole('heading', { name: 'Er du sikker?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Er du sikker på, at du vil' })).toBeVisible();
 
   // Paragraffen med produktnavnet
   await expect(
-    page.getByText(/Produktet “Hvedebrød” vil blive permanent fjernet\./)
+    page.getByText(/Produkt(?:et)?\s+["“”]?Hvedebrød["“”]?\s+bliver\s+permanent\s+slettet/i)
   ).toBeVisible();
 
   // Begge knapper

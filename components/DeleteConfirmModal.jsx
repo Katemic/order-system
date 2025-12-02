@@ -2,15 +2,37 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { deleteProductAction } from "@/actions/deleteProductAction";
+import { deleteOrderAction } from "@/actions/deleteOrderAction";
 
-export default function DeleteConfirmModal({ product, onClose, onDeleteComplete }) {
-  const pathname = usePathname();        // fx "/products"
-  const searchParams = useSearchParams(); // fx "?category=Morgenbrød"
+const DELETE_CONFIG = {
+  product: {
+    title: (item) => `Produktet “${item.name}” bliver permanent slettet.`,
+    deleteAction: deleteProductAction,
+    name: (item) => item.name || ""
+  },
+  order: {
+    title: (item) => `Bestilling #${item.id} bliver permanent slettet.`,
+    deleteAction: deleteOrderAction,
+    name: () => ""
+  }
+};
 
-  const currentUrl =
-    searchParams.toString()
-      ? `${pathname}?${searchParams.toString()}`
-      : pathname;
+export default function DeleteConfirmModal({ item, type, onClose, onDeleteComplete }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const { title, deleteAction, name } = DELETE_CONFIG[type];
+
+  // Behold query params
+  const currentUrl = searchParams.toString()
+    ? `${pathname}?${searchParams.toString()}`
+    : pathname;
+
+  async function handleDelete(formData) {
+    await deleteAction(formData);
+    onClose();
+    onDeleteComplete?.();
+  }
 
   return (
     <div
@@ -21,11 +43,9 @@ export default function DeleteConfirmModal({ product, onClose, onDeleteComplete 
         className="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-semibold mb-3">Er du sikker?</h2>
+        <h2 className="text-lg font-semibold mb-3">Er du sikker på, at du vil slette?</h2>
 
-        <p className="text-sm text-gray-600 mb-6">
-          Produktet “{product.name}” vil blive permanent fjernet.
-        </p>
+        <p className="text-sm text-gray-600 mb-6">{title(item)}</p>
 
         <div className="flex justify-end gap-3">
           <button
@@ -35,16 +55,9 @@ export default function DeleteConfirmModal({ product, onClose, onDeleteComplete 
             Annuller
           </button>
 
-          <form
-            action={async (formData) => {
-              await deleteProductAction(formData);
-
-              onClose();
-              if (onDeleteComplete) onDeleteComplete();
-            }}
-          >
-            <input type="hidden" name="id" value={product.id} />
-            <input type="hidden" name="name" value={product.name} />
+          <form action={handleDelete}>
+            <input type="hidden" name="id" value={item.id} />
+            <input type="hidden" name="name" value={name(item)} />
             <input type="hidden" name="currentUrl" value={currentUrl} />
 
             <button type="submit" className="px-4 py-2 bg-red-600 text-white rounded-lg">
@@ -56,6 +69,7 @@ export default function DeleteConfirmModal({ product, onClose, onDeleteComplete 
     </div>
   );
 }
+
 
 
 
