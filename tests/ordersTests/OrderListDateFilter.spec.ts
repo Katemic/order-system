@@ -9,6 +9,7 @@ test.afterAll(() => {
     resetMockDataOrders();
 });
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 test('Mobilview viser burger-menu på orders', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });
@@ -66,10 +67,11 @@ test("filtering på en periode virker", async ({ page }) => {
     await expect(dateInputs.nth(1)).toBeVisible(); // fromDate
     await expect(dateInputs.nth(2)).toBeVisible(); // toDate
 
-    const inputs = page.locator('input[type="date"]');
+    const inputs = page.getByRole('textbox');
 
-    await inputs.nth(1).fill("2025-12-12"); // fromDate
-    await inputs.nth(2).fill("2025-12-13"); // toDate
+    await inputs.nth(2).fill("2025-12-12"); // fromDate
+    await sleep(1000); 
+    await inputs.nth(3).fill("2025-12-13"); // toDate
 
     const rows = page.locator("table tbody tr");
     await expect(rows).toHaveCount(3); // alt efter din mockdata
