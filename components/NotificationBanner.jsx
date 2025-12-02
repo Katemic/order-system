@@ -10,6 +10,7 @@ export default function NotificationBanner() {
 
   const created = searchParams.get("created");
   const deleted = searchParams.get("deleted");
+  const updated = searchParams.get("updated");
   const productName = searchParams.get("name") || "";
 
   const [visible, setVisible] = useState(false);
@@ -17,8 +18,9 @@ export default function NotificationBanner() {
   useEffect(() => {
     const isOrderCreated = created === "true";
     const isDeletion = deleted === "true";
+    const isOrderUpdated = updated === "true";
 
-    if (!isOrderCreated && !isDeletion) return;
+    if (!isOrderCreated && !isDeletion && !isOrderUpdated) return;
 
     setVisible(true);
 
@@ -36,6 +38,7 @@ export default function NotificationBanner() {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("created");
       params.delete("deleted");
+      params.delete("updated");
       params.delete("name");
 
       const newQuery = params.toString();
@@ -45,18 +48,28 @@ export default function NotificationBanner() {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [created, deleted, router, pathname, searchParams]);
+  }, [created, deleted, updated, router, pathname, searchParams]);
 
   if (!visible) return null;
 
-  const text = deleted === "true"
-    ? `Produkt "${productName}" er slettet.`
-    : "Bestilling er oprettet.";
+  let text = "";
+  let bgColor = "bg-emerald-600";
 
-  const bgColor = deleted === "true" ? "bg-red-600" : "bg-emerald-600";
+  if (deleted === "true") {
+    text = `Produkt "${productName}" er slettet.`;
+    bgColor = "bg-red-600";
+  } else if (updated === "true") {
+    text = "Bestilling er opdateret.";
+    bgColor = "bg-emerald-600";
+  } else if (created === "true") {
+    text = "Bestilling er oprettet.";
+    bgColor = "bg-emerald-600";
+  }
 
   return (
-    <div className={`fixed bottom-6 right-6 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50`}>
+    <div
+      className={`fixed bottom-6 right-6 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50`}
+    >
       {text}
     </div>
   );
