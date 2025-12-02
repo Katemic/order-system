@@ -10,6 +10,9 @@ export default function OrderFilterSidebar({ onItemClick }) {
   const date = searchParams.get("date") || "";
   const from = searchParams.get("from") || "";
   const to = searchParams.get("to") || "";
+  const fulfillment = searchParams.get("fulfillment") || "";
+
+  const isDeliveryOnly = fulfillment === "delivery";
 
   const inputClasses =
     "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm " +
@@ -17,30 +20,38 @@ export default function OrderFilterSidebar({ onItemClick }) {
     "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 " +
     "hover:border-neutral-400 transition";
 
-  // Helper to update URL
   function update(params) {
     const url = new URL(window.location.href);
+
     Object.entries(params).forEach(([key, value]) => {
-      if (value === null || value === "") url.searchParams.delete(key);
-      else url.searchParams.set(key, value);
+      if (value === null || value === "") {
+        url.searchParams.delete(key);
+      } else {
+        url.searchParams.set(key, value);
+      }
     });
+
     router.push(url.toString(), { scroll: false });
     onItemClick?.();
   }
 
-  // Today
-function handleToday() {
-  const today = new Date().toISOString().slice(0, 10);
+  function handleToggleDelivery(checked) {
+    update({
+      fulfillment: checked ? "delivery" : null,
+    });
+  }
 
-  update({
-    date: today,
-    from: null,
-    to: null,
-    search: null,   // ← NULSTIL SØGNINGEN
-  });
-}
+  function handleToday() {
+    const today = new Date().toISOString().slice(0, 10);
 
-  // Select single date
+    update({
+      date: today,
+      from: null,
+      to: null,
+      search: null,
+    });
+  }
+
   function handleDateChange(value) {
     update({
       date: value,
@@ -49,18 +60,17 @@ function handleToday() {
     });
   }
 
-  // Select period
   function handleFromChange(value) {
     update({
       from: value,
-      to: to, // keep existing
+      to,
       date: null,
     });
   }
 
   function handleToChange(value) {
     update({
-      from: from, // keep existing
+      from,
       to: value,
       date: null,
     });
@@ -68,8 +78,7 @@ function handleToday() {
 
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
-
-      {/* 🔍 Søgefelt — samme style som produkter */}
+      {/* 🔍 SØGNING */}
       <form
         action="/orders"
         method="GET"
@@ -97,7 +106,7 @@ function handleToday() {
         Filtrer dato
       </div>
 
-      {/* ENKELT DATO (AUTO FILTER) */}
+      {/* ENKELT DATO */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Vælg dato</label>
         <input
@@ -108,7 +117,7 @@ function handleToday() {
         />
       </div>
 
-      {/* PERIODE (AUTO FILTER) */}
+      {/* PERIODE */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Periode</label>
 
@@ -127,9 +136,20 @@ function handleToday() {
         />
       </div>
 
-      {/* ACTION-KNAPPER */}
-      <div className="mt-auto flex flex-col gap-2">
+      <label className="inline-flex items-center gap-2 text-sm mt-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={isDeliveryOnly}
+          onChange={(e) => handleToggleDelivery(e.target.checked)}
+          className="h-4 w-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500"
+        />
+        <span>Kun leveringer</span>
+      </label>
+
+      {/* ACTION-KNAPPER + CHECKBOX */}
+      <div className="mt-auto flex flex-col gap-3">
         <button
+          type="button"
           onClick={handleToday}
           className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition shadow-sm"
         >
@@ -137,6 +157,7 @@ function handleToday() {
         </button>
 
         <button
+          type="button"
           onClick={() => router.push("/orders")}
           className="bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
         >
@@ -146,9 +167,3 @@ function handleToday() {
     </nav>
   );
 }
-
-
-
-
-
-

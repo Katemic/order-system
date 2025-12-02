@@ -10,33 +10,40 @@ export default function OrdersPageClient({ orders }) {
   const date = params.get("date") || "";
   const from = params.get("from") || "";
   const to = params.get("to") || "";
+  const fulfillment = params.get("fulfillment") || "";
 
   let filtered = orders;
 
-  // 🔍 SEARCH
   if (search) {
     filtered = filtered.filter((o) => {
-      const customer = o.customer_name.toLowerCase();
+      const customer = (o.customer_name || "").toLowerCase();
+
       const matchesCustomer = customer.includes(search);
 
-      const matchesProduct = o.order_items.some((item) =>
-        item.products.name.toLowerCase().includes(search)
-      );
+      const matchesProduct = Array.isArray(o.order_items)
+        ? o.order_items.some((item) =>
+          (item.products?.name || "").toLowerCase().includes(search)
+        )
+        : false;
 
       return matchesCustomer || matchesProduct;
     });
   }
 
-  // 📅 SINGLE DATE
   if (date) {
     filtered = filtered.filter((o) => o.date_needed_raw === date);
   }
 
-  // 📆 RANGE
   if (!date && from && to) {
     filtered = filtered.filter(
       (o) => o.date_needed_raw >= from && o.date_needed_raw <= to
     );
+  }
+
+  if (fulfillment === "delivery") {
+    filtered = filtered.filter((o) => o.delivery_type === "delivery");
+  } else if (fulfillment === "pickup") {
+    filtered = filtered.filter((o) => o.delivery_type === "pickup");
   }
 
   return (
@@ -45,8 +52,3 @@ export default function OrdersPageClient({ orders }) {
     </div>
   );
 }
-
-
-
-
-
