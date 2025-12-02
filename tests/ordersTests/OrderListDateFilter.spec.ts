@@ -24,11 +24,11 @@ test('Desktop viser fast sidebar', async ({ page }) => {
     await expect(page.locator('aside')).toBeVisible();
 });
 
-test('Mobile sidebar lukker når man vælger dato', async ({ page }) => {
+test('Mobile sidebar closes when selecting a date', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/orders');
 
-  // Åbn mobil-sidebar
+  // Open mobile sidebar
   await page.getByRole('button', { name: 'Menu' }).click();
 
   const mobileSidebar = page.locator('div.w-64.bg-white.border-r');
@@ -37,12 +37,12 @@ test('Mobile sidebar lukker når man vælger dato', async ({ page }) => {
 
   await dateInput.fill("2025-12-12");
 
-  // Sidebar skal nu lukkes
+  // Sidebar should now be closed
   await expect(page.locator('div.w-64.bg-white.border-r')).not.toBeVisible();
 });
 
 
-test("filtering på én dato virker", async ({ page }) => {
+test("filtering on a single date works", async ({ page }) => {
   await page.goto("/orders");
 
   const singleDate = page.locator('input[type="date"]').first();
@@ -50,16 +50,16 @@ test("filtering på én dato virker", async ({ page }) => {
 
   await page.locator('input[type="date"]').first().fill("2025-12-12");
 
-  // Hent alle viste rækker efter filtrering
+  // Get all visible rows after filtering
   const rows = page.locator("table tbody tr");
-  await expect(rows).toHaveCount(1); // forvent 1 ordre fx
+  await expect(rows).toHaveCount(1); // expect 1 order for example
 
-  // Tjek datoen
+  // Check the date
   const dateCell = rows.first().locator("td").nth(1); 
   await expect(dateCell).toHaveText("12.12.2025"); 
 });
 
-test("filtering på en periode virker", async ({ page }) => {
+test("filtering on a date range works", async ({ page }) => {
     await page.goto("/orders");
 
     const dateInputs = page.locator('input[type="date"]');
@@ -72,9 +72,9 @@ test("filtering på en periode virker", async ({ page }) => {
     await inputs.nth(2).fill("2025-12-13"); // toDate
 
     const rows = page.locator("table tbody tr");
-    await expect(rows).toHaveCount(3); // alt efter din mockdata
+    await expect(rows).toHaveCount(3); 
 
-    // Tjek at alle datoer ligger i intervallet
+    // Check that all dates are within the range
     const dates = await rows.locator("td:nth-child(2)").allTextContents();
 
     for (const d of dates) {
@@ -119,62 +119,62 @@ test('"Alle bestillinger" nulstiller filtrering', async ({ page }) => {
 
 const BASE_URL = "http://localhost:3000";
 
-test("orders: 'Kun leveringer' filter viser kun leveringsordrer og kan toggles", async ({
+test("orders: 'Kun leveringer' filter only shows delivery orders and can be toggled", async ({
   page,
 }) => {
   await page.goto(`${BASE_URL}/orders`);
 
   const deliveryCheckbox = page.getByLabel("Kun leveringer");
 
-  // Start: ikke checked
+  // Start: not checked
   await expect(deliveryCheckbox).not.toBeChecked();
 
-  // Først: både pickup og delivery synlige
+  // First: both pickup and delivery visible
   await expect(page.getByText("Hans Jensen")).toBeVisible();    // pickup
   await expect(page.getByText("Maria Madsen")).toBeVisible();   // delivery
   await expect(page.getByText("Sofie Sørensen")).toBeVisible(); // delivery
 
-  // 🔘 Slå "Kun leveringer" til (klik i stedet for .check())
+  // Turn "Kun leveringer" on (click instead of .check())
   await deliveryCheckbox.click();
 
-  // Efter navigation: hent en frisk locator og assert checked
+  // After navigation: get a fresh locator and assert checked
   await expect(page.getByLabel("Kun leveringer")).toBeChecked();
 
-  // Pickup-ordrer skal være væk
+  // Pickup orders should be gone
   await expect(page.getByText("Hans Jensen")).toHaveCount(0);
   await expect(page.getByText("Peter Larsen")).toHaveCount(0);
   await expect(page.getByText("Kasper Nielsen")).toHaveCount(0);
   await expect(page.getByText("Nina Kristensen")).toHaveCount(0);
 
-  // Delivery-ordrer skal være der
+  // Delivery orders should be there
   await expect(page.getByText("Maria Madsen")).toBeVisible();
   await expect(page.getByText("Frederikke Holm")).toBeVisible();
   await expect(page.getByText("Sofie Sørensen")).toBeVisible();
 
-  // 🔘 Slå filter fra igen
+  // Turn the filter off again
   await page.getByLabel("Kun leveringer").click();
   await expect(page.getByLabel("Kun leveringer")).not.toBeChecked();
 
-  // Pickup er tilbage
+  // Pickup is back
   await expect(page.getByText("Hans Jensen")).toBeVisible();
   await expect(page.getByText("Nina Kristensen")).toBeVisible();
 });
 
-test("orders: 'Kun leveringer' kombineret med dato-filter", async ({ page }) => {
+test("orders: 'Kun leveringer' combined with date filter", async ({ page }) => {
   await page.goto(`${BASE_URL}/orders`);
 
-  // Vælg dato 2025-12-13 (Sofie = delivery, Nina = pickup)
+  // Select date 2025-12-13 (Sofie = delivery, Nina = pickup)
   const dateInput = page.locator('input[type="date"]').first();
   await dateInput.fill("2025-12-13");
 
   await expect(page.getByText("Sofie Sørensen")).toBeVisible();
   await expect(page.getByText("Nina Kristensen")).toBeVisible();
 
-  // Slå "Kun leveringer" til
+  // Turn "Kun leveringer" on
   await page.getByLabel("Kun leveringer").click();
   await expect(page.getByLabel("Kun leveringer")).toBeChecked();
 
-  // Kun Sofie (delivery) tilbage
+  // Only Sofie (delivery) left
   await expect(page.getByText("Sofie Sørensen")).toBeVisible();
   await expect(page.getByText("Nina Kristensen")).toHaveCount(0);
 });

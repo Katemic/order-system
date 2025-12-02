@@ -14,7 +14,6 @@ export default function OrdersPageClient({ orders }) {
 
   let filtered = orders;
 
-  // 🔍 SEARCH (kunde + produkternes navne)
   if (search) {
     filtered = filtered.filter((o) => {
       const customer = (o.customer_name || "").toLowerCase();
@@ -23,27 +22,24 @@ export default function OrdersPageClient({ orders }) {
 
       const matchesProduct = Array.isArray(o.order_items)
         ? o.order_items.some((item) =>
-            (item.products?.name || "").toLowerCase().includes(search)
-          )
+          (item.products?.name || "").toLowerCase().includes(search)
+        )
         : false;
 
       return matchesCustomer || matchesProduct;
     });
   }
 
-  // 📅 SINGLE DATE
   if (date) {
     filtered = filtered.filter((o) => o.date_needed_raw === date);
   }
 
-  // 📆 RANGE
   if (!date && from && to) {
     filtered = filtered.filter(
       (o) => o.date_needed_raw >= from && o.date_needed_raw <= to
     );
   }
 
-  // 🚚 LEVERING / AFHENTNING – matcher delivery_type fra dit objekt
   if (fulfillment === "delivery") {
     filtered = filtered.filter((o) => o.delivery_type === "delivery");
   } else if (fulfillment === "pickup") {
