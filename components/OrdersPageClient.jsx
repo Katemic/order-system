@@ -1,21 +1,43 @@
 "use client";
 
-import { useOrdersFilter } from "@/components/OrdersFilterContext";
+import { useSearchParams } from "next/navigation";
 import OrdersTable from "@/components/OrdersTable";
 
 export default function OrdersPageClient({ orders }) {
-  const { singleDate, fromDate, toDate } = useOrdersFilter();
+  const params = useSearchParams();
 
-const filtered = orders.filter((o) => {
-  const date = o.date_needed_raw; // rå dato fra DB: yyyy-mm-dd
+  const search = (params.get("search") || "").toLowerCase().trim();
+  const date = params.get("date") || "";
+  const from = params.get("from") || "";
+  const to = params.get("to") || "";
 
-  if (singleDate) return date === singleDate;
+  let filtered = orders;
 
-  if (fromDate && toDate)
-    return date >= fromDate && date <= toDate;
+  // 🔍 SEARCH
+  if (search) {
+    filtered = filtered.filter((o) => {
+      const customer = o.customer_name.toLowerCase();
+      const matchesCustomer = customer.includes(search);
 
-  return true;
-});
+      const matchesProduct = o.order_items.some((item) =>
+        item.products.name.toLowerCase().includes(search)
+      );
+
+      return matchesCustomer || matchesProduct;
+    });
+  }
+
+  // 📅 SINGLE DATE
+  if (date) {
+    filtered = filtered.filter((o) => o.date_needed_raw === date);
+  }
+
+  // 📆 RANGE
+  if (!date && from && to) {
+    filtered = filtered.filter(
+      (o) => o.date_needed_raw >= from && o.date_needed_raw <= to
+    );
+  }
 
   return (
     <div className="p-6">
@@ -23,6 +45,7 @@ const filtered = orders.filter((o) => {
     </div>
   );
 }
+
 
 
 
