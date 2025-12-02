@@ -117,4 +117,65 @@ test('"Alle bestillinger" nulstiller filtrering', async ({ page }) => {
     await expect(rows).toHaveCount(7);
 });
 
+const BASE_URL = "http://localhost:3000";
+
+test("orders: 'Kun leveringer' filter viser kun leveringsordrer og kan toggles", async ({
+  page,
+}) => {
+  await page.goto(`${BASE_URL}/orders`);
+
+  const deliveryCheckbox = page.getByLabel("Kun leveringer");
+
+  // Start: ikke checked
+  await expect(deliveryCheckbox).not.toBeChecked();
+
+  // Først: både pickup og delivery synlige
+  await expect(page.getByText("Hans Jensen")).toBeVisible();    // pickup
+  await expect(page.getByText("Maria Madsen")).toBeVisible();   // delivery
+  await expect(page.getByText("Sofie Sørensen")).toBeVisible(); // delivery
+
+  // 🔘 Slå "Kun leveringer" til (klik i stedet for .check())
+  await deliveryCheckbox.click();
+
+  // Efter navigation: hent en frisk locator og assert checked
+  await expect(page.getByLabel("Kun leveringer")).toBeChecked();
+
+  // Pickup-ordrer skal være væk
+  await expect(page.getByText("Hans Jensen")).toHaveCount(0);
+  await expect(page.getByText("Peter Larsen")).toHaveCount(0);
+  await expect(page.getByText("Kasper Nielsen")).toHaveCount(0);
+  await expect(page.getByText("Nina Kristensen")).toHaveCount(0);
+
+  // Delivery-ordrer skal være der
+  await expect(page.getByText("Maria Madsen")).toBeVisible();
+  await expect(page.getByText("Frederikke Holm")).toBeVisible();
+  await expect(page.getByText("Sofie Sørensen")).toBeVisible();
+
+  // 🔘 Slå filter fra igen
+  await page.getByLabel("Kun leveringer").click();
+  await expect(page.getByLabel("Kun leveringer")).not.toBeChecked();
+
+  // Pickup er tilbage
+  await expect(page.getByText("Hans Jensen")).toBeVisible();
+  await expect(page.getByText("Nina Kristensen")).toBeVisible();
+});
+
+test("orders: 'Kun leveringer' kombineret med dato-filter", async ({ page }) => {
+  await page.goto(`${BASE_URL}/orders`);
+
+  // Vælg dato 2025-12-13 (Sofie = delivery, Nina = pickup)
+  const dateInput = page.locator('input[type="date"]').first();
+  await dateInput.fill("2025-12-13");
+
+  await expect(page.getByText("Sofie Sørensen")).toBeVisible();
+  await expect(page.getByText("Nina Kristensen")).toBeVisible();
+
+  // Slå "Kun leveringer" til
+  await page.getByLabel("Kun leveringer").click();
+  await expect(page.getByLabel("Kun leveringer")).toBeChecked();
+
+  // Kun Sofie (delivery) tilbage
+  await expect(page.getByText("Sofie Sørensen")).toBeVisible();
+  await expect(page.getByText("Nina Kristensen")).toHaveCount(0);
+});
 

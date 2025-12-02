@@ -10,18 +10,22 @@ export default function OrdersPageClient({ orders }) {
   const date = params.get("date") || "";
   const from = params.get("from") || "";
   const to = params.get("to") || "";
+  const fulfillment = params.get("fulfillment") || ""; // 👈 NY
 
   let filtered = orders;
 
-  // 🔍 SEARCH
+  // 🔍 SEARCH (kunde + produkternes navne)
   if (search) {
     filtered = filtered.filter((o) => {
-      const customer = o.customer_name.toLowerCase();
+      const customer = (o.customer_name || "").toLowerCase();
+
       const matchesCustomer = customer.includes(search);
 
-      const matchesProduct = o.order_items.some((item) =>
-        item.products.name.toLowerCase().includes(search)
-      );
+      const matchesProduct = Array.isArray(o.order_items)
+        ? o.order_items.some((item) =>
+            (item.products?.name || "").toLowerCase().includes(search)
+          )
+        : false;
 
       return matchesCustomer || matchesProduct;
     });
@@ -39,14 +43,16 @@ export default function OrdersPageClient({ orders }) {
     );
   }
 
+  // 🚚 LEVERING / AFHENTNING – matcher delivery_type fra dit objekt
+  if (fulfillment === "delivery") {
+    filtered = filtered.filter((o) => o.delivery_type === "delivery");
+  } else if (fulfillment === "pickup") {
+    filtered = filtered.filter((o) => o.delivery_type === "pickup");
+  }
+
   return (
     <div className="p-6">
       <OrdersTable orders={filtered} />
     </div>
   );
 }
-
-
-
-
-

@@ -63,7 +63,7 @@ export default function NotificationBanner() {
       text = `Produkt "${productName}" er slettet.`; // Produkt-sletning
     }
   }
-    } else if (created === "true") {
+  else if (created === "true") {
     text = "Bestilling er oprettet.";
   }
   else {
