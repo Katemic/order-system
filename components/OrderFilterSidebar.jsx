@@ -1,6 +1,7 @@
 "use client";
 
 import { useOrdersFilter } from "@/components/OrdersFilterContext";
+import { useSearchParams } from "next/navigation";
 
 export default function OrderFilterSidebar({ onItemClick }) {
   const {
@@ -14,6 +15,9 @@ export default function OrderFilterSidebar({ onItemClick }) {
     handleAll,
   } = useOrdersFilter();
 
+  const searchParams = useSearchParams();
+  const existingSearch = searchParams.get("search") || "";
+
   const inputClasses =
     "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm " +
     "bg-white shadow-sm " +
@@ -22,6 +26,30 @@ export default function OrderFilterSidebar({ onItemClick }) {
 
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
+
+      <form
+        action="/orders"
+        method="GET"
+        onSubmit={onItemClick}
+        className="mb-6 grid grid-cols-[1fr_auto] gap-2"
+      >
+        <input
+          type="text"
+          name="search"
+          placeholder="Søg bestillinger…"
+          defaultValue={existingSearch}
+          className={inputClasses}
+        />
+
+        <button
+          type="submit"
+          className="px-4 py-2 text-sm font-medium rounded-md 
+                     bg-emerald-600 text-white hover:bg-emerald-700 transition"
+        >
+          Søg
+        </button>
+      </form>
+
 
       <div className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
         Filtrer dato
@@ -70,7 +98,6 @@ export default function OrderFilterSidebar({ onItemClick }) {
         />
       </div>
 
-      {/* KNAPPER */}
       <div className="mt-auto flex flex-col gap-2">
         <button
           onClick={() => {
@@ -92,10 +119,10 @@ export default function OrderFilterSidebar({ onItemClick }) {
           Alle bestillinger
         </button>
       </div>
-
     </nav>
   );
 }
+
 
 
 
