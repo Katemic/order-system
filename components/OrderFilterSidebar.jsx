@@ -1,22 +1,15 @@
 "use client";
 
-import { useOrdersFilter } from "@/components/OrdersFilterContext";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function OrderFilterSidebar({ onItemClick }) {
-  const {
-    singleDate,
-    fromDate,
-    toDate,
-    setSingleDate,
-    setFromDate,
-    setToDate,
-    handleToday,
-    handleAll,
-  } = useOrdersFilter();
-
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const existingSearch = searchParams.get("search") || "";
+
+  const search = searchParams.get("search") || "";
+  const date = searchParams.get("date") || "";
+  const from = searchParams.get("from") || "";
+  const to = searchParams.get("to") || "";
 
   const inputClasses =
     "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm " +
@@ -24,9 +17,59 @@ export default function OrderFilterSidebar({ onItemClick }) {
     "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 " +
     "hover:border-neutral-400 transition";
 
+  // Helper to update URL
+  function update(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === null || value === "") url.searchParams.delete(key);
+      else url.searchParams.set(key, value);
+    });
+    router.push(url.toString(), { scroll: false });
+    onItemClick?.();
+  }
+
+  // Today
+function handleToday() {
+  const today = new Date().toISOString().slice(0, 10);
+
+  update({
+    date: today,
+    from: null,
+    to: null,
+    search: null,   // ← NULSTIL SØGNINGEN
+  });
+}
+
+  // Select single date
+  function handleDateChange(value) {
+    update({
+      date: value,
+      from: null,
+      to: null,
+    });
+  }
+
+  // Select period
+  function handleFromChange(value) {
+    update({
+      from: value,
+      to: to, // keep existing
+      date: null,
+    });
+  }
+
+  function handleToChange(value) {
+    update({
+      from: from, // keep existing
+      to: value,
+      date: null,
+    });
+  }
+
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
 
+      {/* 🔍 Søgefelt — samme style som produkter */}
       <form
         action="/orders"
         method="GET"
@@ -37,10 +80,9 @@ export default function OrderFilterSidebar({ onItemClick }) {
           type="text"
           name="search"
           placeholder="Søg bestillinger…"
-          defaultValue={existingSearch}
+          defaultValue={search}
           className={inputClasses}
         />
-
         <button
           type="submit"
           className="px-4 py-2 text-sm font-medium rounded-md 
@@ -50,70 +92,52 @@ export default function OrderFilterSidebar({ onItemClick }) {
         </button>
       </form>
 
-
+      {/* 📅 DATO-FILTER */}
       <div className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
         Filtrer dato
       </div>
 
-      {/* ENKELT DATO */}
+      {/* ENKELT DATO (AUTO FILTER) */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Vælg dato</label>
         <input
           type="date"
-          value={singleDate}
-          onChange={(e) => {
-            setSingleDate(e.target.value);
-            setFromDate("");
-            setToDate("");
-            onItemClick?.();
-          }}
+          value={date}
+          onChange={(e) => handleDateChange(e.target.value)}
           className={inputClasses}
         />
       </div>
 
-      {/* PERIODE */}
+      {/* PERIODE (AUTO FILTER) */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Periode</label>
 
         <input
           type="date"
-          value={fromDate}
-          onChange={(e) => {
-            setFromDate(e.target.value);
-            setSingleDate("");
-            onItemClick?.();
-          }}
+          value={from}
+          onChange={(e) => handleFromChange(e.target.value)}
           className={`${inputClasses} mb-2`}
         />
 
         <input
           type="date"
-          value={toDate}
-          onChange={(e) => {
-            setToDate(e.target.value);
-            setSingleDate("");
-            onItemClick?.();
-          }}
+          value={to}
+          onChange={(e) => handleToChange(e.target.value)}
           className={inputClasses}
         />
       </div>
 
+      {/* ACTION-KNAPPER */}
       <div className="mt-auto flex flex-col gap-2">
         <button
-          onClick={() => {
-            handleToday();
-            onItemClick?.();
-          }}
+          onClick={handleToday}
           className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition shadow-sm"
         >
           I dag
         </button>
 
         <button
-          onClick={() => {
-            handleAll();
-            onItemClick?.();
-          }}
+          onClick={() => router.push("/orders")}
           className="bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
         >
           Alle bestillinger
@@ -122,6 +146,8 @@ export default function OrderFilterSidebar({ onItemClick }) {
     </nav>
   );
 }
+
+
 
 
 
