@@ -181,3 +181,81 @@ test("orders: 'Kun leveringer' combined with date filter", async ({ page }) => {
   await expect(page.getByText("Nina Kristensen")).toHaveCount(0);
 });
 
+test("Click on 'Gamle bestillinger' resets search and dates and sets range=old", async ({ page }) => {
+  await page.goto("/orders");
+
+  const searchInput = page.getByRole("textbox", { name: "Søg bestillinger…" });
+  const dateInputs = page.locator('input[type="date"]');
+  const singleDate = dateInputs.nth(0);
+  const fromDate = dateInputs.nth(1);
+  const toDate = dateInputs.nth(2);
+
+  // Set search and dates first
+  await searchInput.fill("Hans");
+  await singleDate.fill("2025-12-12");
+  await fromDate.fill("2025-12-12");
+  await toDate.fill("2025-12-13");
+
+  // Click Search to put search in URL
+  await page.getByRole("button", { name: "Søg" }).click();
+  await page.waitForURL((url) => url.searchParams.get("search") === "Hans");
+
+  // Click "Gamle bestillinger"
+  await page.getByRole("button", { name: "Gamle bestillinger" }).click();
+
+  // URL: has range=old and no search
+  await page.waitForURL((url) => url.searchParams.get("range") === "old");
+  await page.waitForURL((url) => !url.searchParams.has("search"));
+
+  // UI: search field is cleared
+  const newSearchInput = page.getByRole("textbox", { name: "Søg bestillinger…" });
+  await expect(newSearchInput).toHaveValue("");
+
+  // UI: date fields are reset
+  const newDateInputs = page.locator('input[type="date"]');
+  await expect(newDateInputs.nth(0)).toHaveValue("");
+  await expect(newDateInputs.nth(1)).toHaveValue("");
+  await expect(newDateInputs.nth(2)).toHaveValue("");
+});
+
+test("Click on 'Nye bestillinger' resets search and dates and sets range=new", async ({ page }) => {
+  await page.goto("/orders");
+
+  const searchInput = page.getByRole("textbox", { name: "Søg bestillinger…" });
+  const dateInputs = page.locator('input[type="date"]');
+  const singleDate = dateInputs.nth(0);
+  const fromDate = dateInputs.nth(1);
+  const toDate = dateInputs.nth(2);
+
+  // Switch to old first, so we know range changes
+  await page.getByRole("button", { name: "Gamle bestillinger" }).click();
+  await page.waitForURL((url) => url.searchParams.get("range") === "old");
+
+  // SSet search and dates
+  await searchInput.fill("test");
+  await singleDate.fill("2025-12-12");
+  await fromDate.fill("2025-12-12");
+  await toDate.fill("2025-12-13");
+
+  // Click Search to put search in URL
+  await page.getByRole("button", { name: "Søg" }).click();
+  await page.waitForURL((url) => url.searchParams.get("search") === "test");
+
+  // Click "Nye bestillinger"
+  await page.getByRole("button", { name: "Nye bestillinger" }).click();
+
+  // URL: range=new and no search
+  await page.waitForURL((url) => url.searchParams.get("range") === "new");
+  await page.waitForURL((url) => !url.searchParams.has("search"));
+
+  // UI reset
+  const newSearchInput = page.getByRole("textbox", { name: "Søg bestillinger…" });
+  await expect(newSearchInput).toHaveValue("");
+
+  const newDateInputs = page.locator('input[type="date"]');
+  await expect(newDateInputs.nth(0)).toHaveValue("");
+  await expect(newDateInputs.nth(1)).toHaveValue("");
+  await expect(newDateInputs.nth(2)).toHaveValue("");
+});
+
+

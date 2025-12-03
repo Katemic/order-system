@@ -11,6 +11,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
   const from = searchParams.get("from") || "";
   const to = searchParams.get("to") || "";
   const fulfillment = searchParams.get("fulfillment") || "";
+  const range = searchParams.get("range") || "";
 
   const isDeliveryOnly = fulfillment === "delivery";
 
@@ -48,7 +49,6 @@ export default function OrderFilterSidebar({ onItemClick }) {
       date: today,
       from: null,
       to: null,
-      search: null,
     });
   }
 
@@ -76,16 +76,30 @@ export default function OrderFilterSidebar({ onItemClick }) {
     });
   }
 
+  function setRange(value) {
+    update({
+      range: value,
+      search: null,
+      date: null,
+      from: null,
+      to: null,
+    });
+  }
+
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
-      {/* 🔍 SØGNING */}
+      {/* SØGNING */}
       <form
         action="/orders"
         method="GET"
         onSubmit={onItemClick}
         className="mb-6 grid grid-cols-[1fr_auto] gap-2"
       >
+        {/* Bevar range når man søger, så man kan søge i gamle/nye */}
+        <input type="hidden" name="range" value={range || "new"} />
+
         <input
+          key={search || "empty"}
           type="text"
           name="search"
           placeholder="Søg bestillinger…"
@@ -136,6 +150,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         />
       </div>
 
+      {/* KUN LEVERINGER */}
       <label className="inline-flex items-center gap-2 text-sm mt-2 cursor-pointer">
         <input
           type="checkbox"
@@ -146,7 +161,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <span>Kun leveringer</span>
       </label>
 
-      {/* ACTION-KNAPPER + CHECKBOX */}
+      {/* ACTION-KNAPPER + RANGE */}
       <div className="mt-auto flex flex-col gap-3">
         <button
           type="button"
@@ -158,8 +173,36 @@ export default function OrderFilterSidebar({ onItemClick }) {
 
         <button
           type="button"
-          onClick={() => router.push("/orders")}
-          className="bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          onClick={() => setRange("new")}
+          className={
+            range === "new" || range === ""
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
+        >
+          Nye bestillinger
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setRange("old")}
+          className={
+            range === "old"
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
+        >
+          Gamle bestillinger
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setRange("all")}
+          className={
+            range === "all"
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
         >
           Alle bestillinger
         </button>

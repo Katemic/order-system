@@ -11,8 +11,21 @@ export default function OrdersPageClient({ orders }) {
   const from = params.get("from") || "";
   const to = params.get("to") || "";
   const fulfillment = params.get("fulfillment") || "";
+  const range = params.get("range") || ""; 
+
+  const today = new Date().toISOString().slice(0, 10);
+  const hasDateFilter = !!date || !!from || !!to;
 
   let filtered = orders;
+
+  if (!hasDateFilter) {
+    if (range === "old") {
+      filtered = filtered.filter((o) => o.date_needed_raw < today);
+    } else if (range === "all") {
+    } else {
+      filtered = filtered.filter((o) => o.date_needed_raw >= today);
+    }
+  }
 
   if (search) {
     filtered = filtered.filter((o) => {
@@ -22,8 +35,8 @@ export default function OrdersPageClient({ orders }) {
 
       const matchesProduct = Array.isArray(o.order_items)
         ? o.order_items.some((item) =>
-          (item.products?.name || "").toLowerCase().includes(search)
-        )
+            (item.products?.name || "").toLowerCase().includes(search)
+          )
         : false;
 
       return matchesCustomer || matchesProduct;
