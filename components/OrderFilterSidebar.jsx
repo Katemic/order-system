@@ -21,6 +21,13 @@ export default function OrderFilterSidebar({ onItemClick }) {
     "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 " +
     "hover:border-neutral-400 transition";
 
+  // Bruges til at style "I dag"-knappen som aktiv
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const isTodaySelected = date === todayStr && !from && !to;
+
+  // Hvis vi har nogen form for dato-filter, skal range-knapper ikke være "aktive"
+  const hasDateFilter = !!date || !!from || !!to;
+
   function update(params) {
     const url = new URL(window.location.href);
 
@@ -115,7 +122,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         </button>
       </form>
 
-      {/* 📅 DATO-FILTER */}
+      {/* DATO-FILTER */}
       <div className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
         Filtrer dato
       </div>
@@ -166,7 +173,11 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <button
           type="button"
           onClick={handleToday}
-          className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition shadow-sm"
+          className={
+            isTodaySelected
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 text-neutral-900 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
         >
           I dag
         </button>
@@ -175,7 +186,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
           type="button"
           onClick={() => setRange("new")}
           className={
-            range === "new" || range === ""
+            !hasDateFilter && (range === "new" || range === "")
               ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
               : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
           }
@@ -187,7 +198,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
           type="button"
           onClick={() => setRange("old")}
           className={
-            range === "old"
+            !hasDateFilter && range === "old"
               ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
               : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
           }
@@ -199,7 +210,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
           type="button"
           onClick={() => setRange("all")}
           className={
-            range === "all"
+            !hasDateFilter && range === "all"
               ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
               : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
           }
