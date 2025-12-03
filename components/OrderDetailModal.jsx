@@ -54,7 +54,7 @@ export default function OrderDetailModal({ order, onClose }) {
                   <div className="flex justify-between">
                     <span>{item.products?.name || "Ukendt produkt"}</span>
                     <span>
-                      {item.quantity} stk — {item.products?.price || "?"} kr.
+                      {item.quantity} stk — {(item.quantity * (item.products?.price ?? 0))} kr.
                     </span>
                   </div>
 
@@ -66,6 +66,15 @@ export default function OrderDetailModal({ order, onClose }) {
                 </div>
               ))}
             </div>
+            <Link
+              href={`/orders/${order.id}/editProducts`}
+              className="block w-full mt-4 px-4 py-3 rounded-lg 
+             bg-emerald-600 text-white text-sm font-medium 
+             hover:bg-emerald-700 transition text-center"
+            >
+              Redigér produkter
+            </Link>
+
           </div>
 
           {/* HØJRE – KUNDEINFO */}
@@ -112,35 +121,39 @@ export default function OrderDetailModal({ order, onClose }) {
               <strong>I alt:</strong> {order.total_price} kr.
             </p>
 
-            <div className="mt-6">
-              <Link
-                href={`/orders/${order.id}/editCustomerInfo`}
-                className="inline-block px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition"
-              >
-                Redigér kundeoplysninger
-              </Link>
-            </div>
-                              <button
-                    onClick={() => setShowDelete(true)}
-                    className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                  >
-                    Slet bestilling
-                  </button>
+            <Link
+              href={`/orders/${order.id}/editCustomerInfo`}
+              className="block w-full mt-4 px-4 py-3 rounded-lg 
+             bg-emerald-600 text-white text-sm font-medium 
+             hover:bg-emerald-700 transition text-center"
+            >
+              Redigér kundeoplysninger
+            </Link>
+
+            {/* SLET-KNAP */}
+            <button
+              onClick={() => setShowDelete(true)}
+              className="block w-full mt-4 px-4 py-3 rounded-lg 
+             bg-red-600 text-white text-sm font-medium 
+             hover:bg-red-700 transition"
+            >
+              Slet bestilling
+            </button>
 
 
           </div>
 
         </div>
       </div>
-            {showDelete && (
-              <DeleteConfirmModal
-                item={order}
-                type="order"
-                onClose={() => setShowDelete(false)}
-                onDeleteComplete={onClose}
-              />
-            )}
-          
+      {showDelete && (
+        <DeleteConfirmModal
+          item={order}
+          type="order"
+          onClose={() => setShowDelete(false)}
+          onDeleteComplete={onClose}
+        />
+      )}
+
     </div>
   );
 }

@@ -316,3 +316,105 @@ export async function UpdateOrderCustomerInfo({
 
   return { success: true };
 }
+
+
+export async function updateOrderItems({ orderId, items }) {
+  const totalPrice = items.reduce(
+    (sum, item) => sum + (item.price || 0) * (item.quantity || 0),
+    0
+  );
+
+  // ---------- TEST MODE (mock) ----------
+  if (isTestMode()) {
+    const orders = readOrdersMock();
+    const index = orders.findIndex((o) => o.id === Number(orderId));
+
+    if (index === -1) {
+      return {
+        success: false,
+        message: "Ordre ikke fundet i mockdata.",
+      };
+    }
+
+    // Find nuværende max item-id, så vi kan lave nye unikke id'er
+    const allExistingItems = orders.flatMap((o) => o.order_items || []);
+    const currentMaxItemId =
+      allExistingItems.length > 0
+        ? Math.max(...allExistingItems.map((i) => Number(i.id)))
+        : 0;
+
+    const newOrderItems = items.map((item, i) => ({
+      id: currentMaxItemId + i + 1,
+      order_id: orders[index].id,
+      product_id: item.productId,
+      quantity: item.quantity,
+      item_note: item.note || "",
+      products: {
+        id: item.productId,
+        name: item.name,
+        price: item.price,
+      },
+    }));
+
+    orders[index] = {
+      ...orders[index],
+      total_price: totalPrice,
+      order_items: newOrderItems,
+    };
+
+    writeOrdersMock(orders);
+
+    return { success: true };
+  }
+
+  // ---------- REAL DATABASE (Supabase) ----------
+  // 1) Slet eksisterende order_items
+  const { error: deleteError } = await supabase
+    .from("order_items")
+    .delete()
+    .eq("order_id", orderId);
+
+  if (deleteError) {
+    console.error("Fejl ved sletning af order_items:", deleteError);
+    return {
+      success: false,
+      message: "Kunne ikke opdatere bestilling (slet order_items).",
+    };
+  }
+
+  // 2) Indsæt nye order_items
+  const rows = items.map((item) => ({
+    order_id: orderId,
+    product_id: item.productId,
+    quantity: item.quantity,
+    item_note: item.note || null,
+  }));
+
+  const { error: insertError } = await supabase
+    .from("order_items")
+    .insert(rows);
+
+  if (insertError) {
+    console.error("Fejl ved indsættelse af order_items:", insertError);
+    return {
+      success: false,
+      message: "Kunne ikke opdatere bestilling (indsæt order_items).",
+    };
+  }
+
+  // 3) Opdater orders.total_price
+  const { error: updateError } = await supabase
+    .from("orders")
+    .update({ total_price: totalPrice })
+    .eq("id", orderId);
+
+  if (updateError) {
+    console.error("Fejl ved opdatering af orders.total_price:", updateError);
+    return {
+      success: false,
+      message: "Kunne ikke opdatere total_price på bestillingen.",
+    };
+  }
+
+  return { success: true};
+}
