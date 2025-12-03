@@ -74,7 +74,10 @@ test('En bestillingsrække indeholder alle nødvendige felter', async ({ page })
 test('Leveringsordrer er markeret med rød tekst', async ({ page }) => {
   await page.goto('/orders');
 
-  const delivery = page.getByText('Levering').first();
+  const delivery = page
+    .locator('tbody tr td:nth-child(4) span')
+    .filter({ hasText: 'Levering' })
+    .first();
 
   await expect(delivery).toBeVisible();
   await expect(delivery).toHaveClass(/text-red-600/);
