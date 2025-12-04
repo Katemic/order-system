@@ -1,11 +1,11 @@
 import { getOrderById } from "@/lib/orders";
 import { getAllProducts } from "@/lib/products";
 import EditProductsClient from "@/components/editOrderProductsClient";
+import { notFound } from "next/navigation";
 
 const DEFAULT_CATEGORY = "Brød";
 
 export default async function EditProductsPage({ params, searchParams }) {
-  // unwrap possible Promise params/searchParams
   const resolvedParams = params ? await params : {};
   const resolvedSearchParams = searchParams ? await searchParams : {};
 
@@ -31,11 +31,12 @@ export default async function EditProductsPage({ params, searchParams }) {
   }
 
   if (!order) {
-    return (
-      <div className="p-10 text-center text-red-600">
-        Kunne ikke finde bestillingen.
-      </div>
-    );
+    notFound();
+    // return (
+    //   <div className="p-10 text-center text-red-600">
+    //     Kunne ikke finde bestillingen.
+    //   </div>
+    // );
   }
   
   const categoryParam =
