@@ -52,7 +52,7 @@ export default function OrderSummary({
                 )}
               </div>
 
-              {/* ❌ FJERN PRODUKT */}
+              {/* FJERN PRODUKT */}
               {onRemoveItem && (
                 <button
                   onClick={() => onRemoveItem(index)}

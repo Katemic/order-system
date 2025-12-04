@@ -118,7 +118,7 @@ test("modal åbner med korrekte ordreoplysninger", async ({ page }) => {
     await expect(modal.getByText("I alt")).toBeVisible();
 
     // Produkter liste container
-    await expect(modal.getByText("Produkter")).toBeVisible();
+    await expect(modal.getByRole('heading', { name: 'Produkter' })).toBeVisible();
 
     // Mindst ét produkt fra mockdata
     await expect(modal.getByText("Rundstykker")).toBeVisible();

@@ -8,35 +8,46 @@ import OrderProductModal from "./OrderProductModal";
 export default function CreateOrderClient({ products }) {
   const [orderItems, setOrderItems] = useState(() => {
     if (typeof window === "undefined") return [];
+
     try {
       const stored = window.localStorage.getItem("orderItems");
-      const parsed = JSON.parse(stored || "[]");
+      if (!stored) return [];
+
+      const parsed = JSON.parse(stored);
       return Array.isArray(parsed) ? parsed : [];
-    } catch {
+    } catch (err) {
+      console.error("Kunne ikke læse orderItems fra localStorage:", err);
       return [];
     }
   });
 
   useEffect(() => {
-    window.localStorage.setItem("orderItems", JSON.stringify(orderItems));
+    try {
+      window.localStorage.setItem("orderItems", JSON.stringify(orderItems));
+    } catch (err) {
+      console.error("Kunne ikke gemme orderItems i localStorage:", err);
+    }
   }, [orderItems]);
 
   const handleAddToOrder = ({ product, quantity, note }) => {
-    setOrderItems((prev) => [
-      ...prev,
-      {
-        productId: product.id,
-        name: product.name,
-        price: product.price,
-        quantity,
-        note,
-      },
-    ]);
+    const item = {
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity,
+      note,
+    };
+
+    setOrderItems((prev) => [...prev, item]);
   };
 
   const handleReset = () => {
     setOrderItems([]);
-    window.localStorage.removeItem("orderItems");
+    try {
+      window.localStorage.removeItem("orderItems");
+    } catch (err) {
+      console.error("Kunne ikke fjerne orderItems:", err);
+    }
   };
 
   // Fjern produkt
@@ -65,7 +76,7 @@ export default function CreateOrderClient({ products }) {
     setEditingItemState(null);
   };
 
-  
+
 
   return (
     <div className="flex gap-8 items-start">
