@@ -367,7 +367,6 @@ export async function updateOrderItems({ orderId, items }) {
     return { success: true };
   }
 
-  // ---------- REAL DATABASE (Supabase) ----------
   // 1) Slet eksisterende order_items
   const { error: deleteError } = await supabase
     .from("order_items")
