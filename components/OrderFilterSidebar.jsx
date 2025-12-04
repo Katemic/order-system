@@ -21,12 +21,12 @@ export default function OrderFilterSidebar({ onItemClick }) {
     "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 " +
     "hover:border-neutral-400 transition";
 
-  // Bruges til at style "I dag"-knappen som aktiv
   const todayStr = new Date().toISOString().slice(0, 10);
-  const isTodaySelected = date === todayStr && !from && !to;
-
-  // Hvis vi har nogen form for dato-filter, skal range-knapper ikke være "aktive"
   const hasDateFilter = !!date || !!from || !!to;
+
+  const isTodaySelected =
+    (!from && !to && date === todayStr) ||
+    (!date && !from && !to && !range);
 
   function update(params) {
     const url = new URL(window.location.href);
@@ -103,7 +103,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         className="mb-6 grid grid-cols-[1fr_auto] gap-2"
       >
         {/* Bevar range når man søger, så man kan søge i gamle/nye */}
-        <input type="hidden" name="range" value={range || "new"} />
+        <input type="hidden" name="range" value={range} />
 
         <input
           key={search || "empty"}
@@ -186,7 +186,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
           type="button"
           onClick={() => setRange("new")}
           className={
-            !hasDateFilter && (range === "new" || range === "")
+            !hasDateFilter && range === "new"
               ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
               : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
           }
@@ -197,10 +197,9 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <button
           type="button"
           onClick={() => setRange("old")}
-          className={
-            !hasDateFilter && range === "old"
-              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
-              : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          className={!hasDateFilter && range === "old"
+            ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+            : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
           }
         >
           Gamle bestillinger

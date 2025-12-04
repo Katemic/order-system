@@ -11,7 +11,7 @@ export default function OrdersPageClient({ orders }) {
   const from = params.get("from") || "";
   const to = params.get("to") || "";
   const fulfillment = params.get("fulfillment") || "";
-  const range = params.get("range") || ""; 
+  const range = params.get("range") || "";
 
   const today = new Date().toISOString().slice(0, 10);
   const hasDateFilter = !!date || !!from || !!to;
@@ -21,9 +21,11 @@ export default function OrdersPageClient({ orders }) {
   if (!hasDateFilter) {
     if (range === "old") {
       filtered = filtered.filter((o) => o.date_needed_raw < today);
+    } else if (range === "new") {
+      filtered = filtered.filter((o) => o.date_needed_raw >= today);
     } else if (range === "all") {
     } else {
-      filtered = filtered.filter((o) => o.date_needed_raw >= today);
+      filtered = filtered.filter((o) => o.date_needed_raw === today);
     }
   }
 
@@ -35,8 +37,8 @@ export default function OrdersPageClient({ orders }) {
 
       const matchesProduct = Array.isArray(o.order_items)
         ? o.order_items.some((item) =>
-            (item.products?.name || "").toLowerCase().includes(search)
-          )
+          (item.products?.name || "").toLowerCase().includes(search)
+        )
         : false;
 
       return matchesCustomer || matchesProduct;
@@ -57,6 +59,12 @@ export default function OrdersPageClient({ orders }) {
     filtered = filtered.filter((o) => o.delivery_type === "delivery");
   } else if (fulfillment === "pickup") {
     filtered = filtered.filter((o) => o.delivery_type === "pickup");
+  }
+
+  if (!hasDateFilter && range === "old") {
+    filtered = [...filtered].sort((a, b) =>
+      b.date_needed_raw.localeCompare(a.date_needed_raw)
+    );
   }
 
   return (
