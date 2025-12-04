@@ -41,6 +41,14 @@ test('Search resets when chosing all orders', async ({ page }) => {
     await page.goto('/orders');
 
     const rows = page.locator('tbody tr');
+
+    // Sørg for at vi er i "Alle bestillinger"-tilstand,
+    // så baseline 7 rækker giver mening
+    await page.getByRole('button', { name: 'Alle bestillinger' }).click();
+
+    // Vent til eventuel search er væk
+    await page.waitForURL((url) => !url.searchParams.has("search"));
+
     await expect(rows).toHaveCount(7);
 
     const searchBox = page.getByRole('textbox', { name: 'Søg bestillinger…' });
@@ -58,3 +66,33 @@ test('Search resets when chosing all orders', async ({ page }) => {
     
     await expect(rows).toHaveCount(7);
 });
+
+test("Search keeps range when searching in old orders", async ({ page }) => {
+  await page.goto("/orders");
+
+  // Change to 'Gamle bestillinger'
+  await page.getByRole("button", { name: "Gamle bestillinger" }).click();
+
+  // Wait for range=old in URL
+  await page.waitForURL((url) => url.searchParams.get("range") === "old");
+
+  const searchBox = page.getByRole("textbox", { name: "Søg bestillinger…" });
+  await searchBox.fill("brød");
+
+  await page.getByRole("button", { name: "Søg" }).click();
+
+  // Now both search and range should be in the URL
+  await page.waitForURL((url) => 
+    url.searchParams.get("search") === "brød" &&
+    url.searchParams.get("range") === "old"
+  );
+
+  // And when we then choose 'Alle bestillinger', search should be removed but range changes to all
+  await page.getByRole("button", { name: "Alle bestillinger" }).click();
+
+  await page.waitForURL((url) => 
+    !url.searchParams.has("search") &&
+    url.searchParams.get("range") === "all"
+  );
+});
+
