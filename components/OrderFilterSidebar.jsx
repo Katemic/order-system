@@ -191,7 +191,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
               : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
           }
         >
-          Nye bestillinger
+          Fremtidige bestillinger
         </button>
 
         <button
