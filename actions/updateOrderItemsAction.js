@@ -12,7 +12,7 @@ export async function updateOrderItemsAction({ orderId, items }) {
   }
 
   revalidatePath("/orders");
-  redirect(`/orders?updated=true&id=${orderId}`);
+  redirect(`/orders?updated=true`);
 }
 
 
