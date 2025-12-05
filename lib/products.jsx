@@ -76,15 +76,38 @@ function mapProductToDbPayload(product) {
   };
 }
 
-// ---------------- //
-// PUBLIC FUNCTIONS //
-// ---------------- //
+export function mapDbRowToProductWithCustomization(row) {
+  const base = mapDbRowToProduct(row);
 
-/**
- * Get all products
- * - In production → Postgres via Supabase
- * - In test mode → JSON mock file
- */
+  // Hvis row ikke eksisterer, returnér base (null håndtering)
+  if (!base) return base;
+
+  // Konverter customization til grupperet format
+  const customization = {};
+
+  for (const pco of row.product_customization_options ?? []) {
+    const opt = pco.customization_options;
+    if (!opt) continue;
+
+    const type = opt.customization_types;
+    if (!type) continue;
+
+    if (!customization[type.name]) customization[type.name] = [];
+
+    customization[type.name].push({
+      id: opt.id,
+      name: opt.name,
+    });
+  }
+
+  return {
+    ...base,
+    customizationOptions: customization,
+  };
+}
+
+//-------database functions from here-------------- 
+
 export async function getAllProducts() {
   if (isTestMode()) {
     return readMockData();
@@ -92,12 +115,28 @@ export async function getAllProducts() {
 
   const { data, error } = await supabase
     .from("products")
-    .select("*")
+    .select(`
+    *,
+    product_customization_options:product_customization_options!product_customization_options_product_id_fkey (
+      option_id,
+      customization_options:customization_options!product_customization_options_option_id_fkey (
+        id,
+        name,
+        customization_types:customization_types!customization_options_type_id_fkey (
+          id,
+          name
+        )
+      )
+    )
+  `)
     .order("id", { ascending: true });
 
-  if (error) throw error;
+  if (error) {
+    console.log(error);
+    throw error;
+  }
 
-  return data.map(mapDbRowToProduct);
+  return data.map(mapDbRowToProductWithCustomization);
 }
 
 /**
@@ -206,7 +245,7 @@ export async function deleteProduct(id) {
     return { success: true };
   }
 
-  // ---------- REAL DATABASE ----------
+  // ---------- DATABASE ----------
   const { error } = await supabase
     .from("products")
     .delete()
