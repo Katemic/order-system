@@ -11,6 +11,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
   const from = searchParams.get("from") || "";
   const to = searchParams.get("to") || "";
   const fulfillment = searchParams.get("fulfillment") || "";
+  const range = searchParams.get("range") || "";
 
   const isDeliveryOnly = fulfillment === "delivery";
 
@@ -19,6 +20,13 @@ export default function OrderFilterSidebar({ onItemClick }) {
     "bg-white shadow-sm " +
     "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 " +
     "hover:border-neutral-400 transition";
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const hasDateFilter = !!date || !!from || !!to;
+
+  const isTodaySelected =
+    (!from && !to && date === todayStr) ||
+    (!date && !from && !to && !range);
 
   function update(params) {
     const url = new URL(window.location.href);
@@ -48,7 +56,6 @@ export default function OrderFilterSidebar({ onItemClick }) {
       date: today,
       from: null,
       to: null,
-      search: null,
     });
   }
 
@@ -76,16 +83,30 @@ export default function OrderFilterSidebar({ onItemClick }) {
     });
   }
 
+  function setRange(value) {
+    update({
+      range: value,
+      search: null,
+      date: null,
+      from: null,
+      to: null,
+    });
+  }
+
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
-      {/* 🔍 SØGNING */}
+      {/* SØGNING */}
       <form
         action="/orders"
         method="GET"
         onSubmit={onItemClick}
         className="mb-6 grid grid-cols-[1fr_auto] gap-2"
       >
+        {/* Bevar range når man søger, så man kan søge i gamle/nye */}
+        <input type="hidden" name="range" value={range} />
+
         <input
+          key={search || "empty"}
           type="text"
           name="search"
           placeholder="Søg bestillinger…"
@@ -101,7 +122,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         </button>
       </form>
 
-      {/* 📅 DATO-FILTER */}
+      {/* DATO-FILTER */}
       <div className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
         Filtrer dato
       </div>
@@ -136,6 +157,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         />
       </div>
 
+      {/* KUN LEVERINGER */}
       <label className="inline-flex items-center gap-2 text-sm mt-2 cursor-pointer">
         <input
           type="checkbox"
@@ -146,20 +168,51 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <span>Kun leveringer</span>
       </label>
 
-      {/* ACTION-KNAPPER + CHECKBOX */}
+      {/* ACTION-KNAPPER + RANGE */}
       <div className="mt-auto flex flex-col gap-3">
         <button
           type="button"
           onClick={handleToday}
-          className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition shadow-sm"
+          className={
+            isTodaySelected
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 text-neutral-900 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
         >
           I dag
         </button>
 
         <button
           type="button"
-          onClick={() => router.push("/orders")}
-          className="bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          onClick={() => setRange("new")}
+          className={
+            !hasDateFilter && range === "new"
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
+        >
+          Fremtidige bestillinger
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setRange("old")}
+          className={!hasDateFilter && range === "old"
+            ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+            : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
+        >
+          Gamle bestillinger
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setRange("all")}
+          className={
+            !hasDateFilter && range === "all"
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          }
         >
           Alle bestillinger
         </button>
