@@ -124,7 +124,7 @@ const BASE_URL = "http://localhost:3000";
 test("orders: 'Kun leveringer' filter only shows delivery orders and can be toggled", async ({
   page,
 }) => {
-  await page.goto(`${BASE_URL}/orders`);
+  await page.goto(`${BASE_URL}/orders?range=all`);
 
   const deliveryCheckbox = page.getByLabel("Kun leveringer");
 
@@ -242,7 +242,7 @@ test("Click on 'Nye bestillinger' resets search and dates and sets range=new", a
   await page.waitForURL((url) => url.searchParams.get("search") === "test");
 
   // Click "Nye bestillinger"
-  await page.getByRole("button", { name: "Nye bestillinger" }).click();
+  await page.getByRole("button", { name: "Fremtidige bestillinger" }).click();
 
   // URL: range=new and no search
   await page.waitForURL((url) => url.searchParams.get("range") === "new");

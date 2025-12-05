@@ -20,12 +20,12 @@ test('Kan tilgå "Bestillinger" via topbaren', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Bestillinger' })).toBeVisible();
 });
 
-test('Viser alle bestillinger på /orders', async ({ page }) => {
+test('Viser i dags bestillinger på /orders', async ({ page }) => {
     await page.goto('/orders');
 
     const rows = await page.locator('table tbody tr').count();
 
-    expect(rows).toBe(7); // antal mock-ordrer du har
+    expect(rows).toBe(1); // antal mock-ordrer du har
 });
 
 

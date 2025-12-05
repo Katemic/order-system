@@ -37,7 +37,7 @@ test('edit order: prefilled values, update, redirect and updated-banner', async 
   await expect(page.getByLabel('Navn på kunde')).toHaveValue('Hans Jensen');
 
   // Date from mock might be in the past relative to the test, so we set it to a safe future date
-  await page.getByLabel('Dato').fill('2099-01-01');
+  //await page.getByLabel('Dato').fill('2099-01-01');
 
   // 7) Edit the customer name
   await page.getByLabel('Navn på kunde').fill('Hans Jensen (redigeret)');
