@@ -655,3 +655,28 @@ test('success-flow: gennemfører bestilling, rydder orderItems og viser tom kurv
   ).toBeVisible();
 });
 
+
+test("Create order supports add, edit and remove items", async ({ page }) => {
+  await page.goto("/createOrder");
+
+  // Tilføj et produkt
+  await page.getByText("Hvedebrød").click();
+  const modal = page.getByRole("dialog");
+  await modal.getByLabel("Antal").fill("3");
+  await modal.getByRole("button", { name: "Tilføj til ordre" }).click();
+
+  // Bekræft i dynamisk liste
+  await expect(page.getByText("3x Hvedebrød")).toBeVisible();
+
+  // Rediger fra liste
+  await page.getByText("3x Hvedebrød").click(); // åbner modal
+  await modal.getByLabel("Antal").fill("5");
+  await modal.getByRole("button", { name: "Gem ændringer" }).click();
+
+  await expect(page.getByText("5x Hvedebrød")).toBeVisible();
+
+  // Fjern
+  await page.locator("button:text('✕')").click();
+  await expect(page.getByText("5x Hvedebrød")).not.toBeVisible();
+});
+
