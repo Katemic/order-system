@@ -72,7 +72,7 @@ test('En bestillingsrække indeholder alle nødvendige felter', async ({ page })
 });
 
 test('Leveringsordrer er markeret med rød tekst', async ({ page }) => {
-  await page.goto('/orders');
+  await page.goto('/orders?range=new');
 
   const delivery = page
     .locator('tbody tr td:nth-child(4) span')
@@ -121,7 +121,7 @@ test("modal åbner med korrekte ordreoplysninger", async ({ page }) => {
     await expect(modal.getByText("I alt")).toBeVisible();
 
     // Produkter liste container
-    await expect(modal.getByText("Produkter")).toBeVisible();
+    await expect(modal.getByRole('heading', { name: 'Produkter' })).toBeVisible();
 
     // Mindst ét produkt fra mockdata
     await expect(modal.getByText("Rundstykker")).toBeVisible();
