@@ -134,11 +134,9 @@ export default function ProductModal({ product, onClose }) {
             {/* VENSTRE SIDE - skærm højde nedenfor*/}
             <div className="flex-1 md:max-h-[60vh] md:overflow-y-auto pr-2">
               <div className="mb-4">
-                {/* 👇 matcher .modal-title i testen */}
                 <h2 className="modal-title text-2xl font-bold">{name}</h2>
 
                 {category && (
-                  // 👇 matcher .modal-category i testen
                   <p className="modal-category text-neutral-500">
                     {category}
                   </p>
@@ -146,7 +144,6 @@ export default function ProductModal({ product, onClose }) {
               </div>
 
               {price != null && (
-                // 👇 matcher .modal-price i testen
                 <p className="modal-price text-lg font-semibold mb-4">
                   {price} kr.
                 </p>
@@ -154,11 +151,9 @@ export default function ProductModal({ product, onClose }) {
 
               {ingredients && (
                 <div className="mb-4">
-                  {/* 👇 matcher .modal-subtitle */}
                   <h3 className="modal-subtitle font-semibold text-lg">
                     Ingredienser
                   </h3>
-                  {/* 👇 matcher .modal-description */}
                   <p className="modal-description text-neutral-700">
                     {ingredients}
                   </p>
@@ -167,7 +162,6 @@ export default function ProductModal({ product, onClose }) {
 
               {nutrition && (
                 <div className="mb-2">
-                  {/* 👇 matcher .modal-section-title */}
                   <h3 className="modal-section-title font-semibold text-lg">
                     Næringsindhold pr. 100 g
                   </h3>
@@ -180,7 +174,6 @@ export default function ProductModal({ product, onClose }) {
                       return (
                         <div key={key} className="flex justify-between gap-2">
                           <dt className="text-neutral-600">{label}</dt>
-                          {/* 👇 matcher .modal-value */}
                           <dd className="modal-value font-medium">
                             {value}
                           </dd>
