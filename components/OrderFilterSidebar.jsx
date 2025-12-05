@@ -56,6 +56,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
       date: today,
       from: null,
       to: null,
+      range: null, 
     });
   }
 
@@ -64,6 +65,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
       date: value,
       from: null,
       to: null,
+      range: null,
     });
   }
 
@@ -72,6 +74,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
       from: value,
       to,
       date: null,
+      range: null,
     });
   }
 
@@ -80,6 +83,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
       from,
       to: value,
       date: null,
+      range: null,
     });
   }
 
@@ -197,9 +201,10 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <button
           type="button"
           onClick={() => setRange("old")}
-          className={!hasDateFilter && range === "old"
-            ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
-            : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
+          className={
+            !hasDateFilter && range === "old"
+              ? "bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-sm"
+              : "bg-neutral-200 px-4 py-2 rounded-lg hover:bg-neutral-300 transition shadow-sm"
           }
         >
           Gamle bestillinger
