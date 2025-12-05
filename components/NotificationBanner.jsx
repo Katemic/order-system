@@ -67,7 +67,7 @@ export default function NotificationBanner() {
     text = "Bestilling er oprettet.";
   }
   else {
-    text = id ? `Bestilling #${id}'s produkter er opdateret.` : "Bestilling er opdateret.";
+    text = "Bestilling er opdateret.";
   }
   const bgColor = deleted === "true" ? "bg-red-600" : "bg-emerald-600";
 

@@ -125,10 +125,10 @@ test("Saving edited order redirects and shows notification", async ({ page }) =>
   await page.getByRole("button", { name: "Videre" }).click();
 
   // Redirect til /orders
-  await expect(page).toHaveURL(/orders\?updated=true&id=1/);
+  await expect(page).toHaveURL(/orders\?updated=true/);
 
   // Banner skal vises
-  await expect(page.getByText("Bestilling #1's produkter er opdateret.")).toBeVisible();
+  await expect(page.getByText("Bestilling er opdateret.")).toBeVisible();
 
   // Bekræft at ændring er gemt ved at åbne detaljer for ordren
   await page.getByText("Hans Jensen").click();

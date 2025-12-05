@@ -72,6 +72,6 @@ export async function updateProductAction(prevState, formData) {
   });
 
   revalidatePath("/products");
-  redirect(`/products?updated=true&productId=${id}`);
+  redirect(`/products?updated=true`);
 }
 
