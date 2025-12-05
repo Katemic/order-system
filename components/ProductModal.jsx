@@ -85,7 +85,11 @@ export default function ProductModal({ product, onClose }) {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl"
+        className="
+    relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl 
+    max-h-[90vh] overflow-y-auto     /* Mobil/tablet: modal scroller */
+    md:max-h-none md:overflow-visible  /* Desktop: ingen modal-scroll */
+  "
         onClick={(e) => e.stopPropagation()}
       >
         {/* Luk-knap */}
@@ -127,14 +131,12 @@ export default function ProductModal({ product, onClose }) {
         ) : (
           /* ===== NORMAL PRODUCT VIEW ===== */
           <div className="flex flex-col md:flex-row gap-6">
-            {/* VENSTRE SIDE */}
-            <div className="flex-1">
+            {/* VENSTRE SIDE - skærm højde nedenfor*/}
+            <div className="flex-1 md:max-h-[60vh] md:overflow-y-auto pr-2">
               <div className="mb-4">
-                {/* 👇 matcher .modal-title i testen */}
                 <h2 className="modal-title text-2xl font-bold">{name}</h2>
 
                 {category && (
-                  // 👇 matcher .modal-category i testen
                   <p className="modal-category text-neutral-500">
                     {category}
                   </p>
@@ -142,7 +144,6 @@ export default function ProductModal({ product, onClose }) {
               </div>
 
               {price != null && (
-                // 👇 matcher .modal-price i testen
                 <p className="modal-price text-lg font-semibold mb-4">
                   {price} kr.
                 </p>
@@ -150,11 +151,9 @@ export default function ProductModal({ product, onClose }) {
 
               {ingredients && (
                 <div className="mb-4">
-                  {/* 👇 matcher .modal-subtitle */}
                   <h3 className="modal-subtitle font-semibold text-lg">
                     Ingredienser
                   </h3>
-                  {/* 👇 matcher .modal-description */}
                   <p className="modal-description text-neutral-700">
                     {ingredients}
                   </p>
@@ -163,7 +162,6 @@ export default function ProductModal({ product, onClose }) {
 
               {nutrition && (
                 <div className="mb-2">
-                  {/* 👇 matcher .modal-section-title */}
                   <h3 className="modal-section-title font-semibold text-lg">
                     Næringsindhold pr. 100 g
                   </h3>
@@ -176,7 +174,6 @@ export default function ProductModal({ product, onClose }) {
                       return (
                         <div key={key} className="flex justify-between gap-2">
                           <dt className="text-neutral-600">{label}</dt>
-                          {/* 👇 matcher .modal-value */}
                           <dd className="modal-value font-medium">
                             {value}
                           </dd>
@@ -186,7 +183,49 @@ export default function ProductModal({ product, onClose }) {
                   </dl>
                 </div>
               )}
+              {product.customizationOptions && Object.keys(product.customizationOptions).length > 0 && (
+                <div className="mt-6">
+                  <h3 className="modal-section-title font-semibold text-lg mb-2">
+                    Mulige tilpasninger
+                  </h3>
+
+                  <div className="flex flex-col gap-3">
+                    {Object.entries(product.customizationOptions).map(([typeName, options]) => (
+                      <details
+                        key={typeName}
+                        className="group border border-neutral-200 rounded-lg px-4 py-2 bg-neutral-50"
+                      >
+                        <summary
+                          className="cursor-pointer list-none flex justify-between items-center font-medium text-neutral-800 hover:text-neutral-900"
+                        >
+                          {typeName}
+
+                          <span className="transition-transform group-open:rotate-90 text-neutral-500">
+                            ▶
+                          </span>
+                        </summary>
+                        {/* //ændre antal af kolonner her */}
+                        <ul className="mt-2 ml-1 text-sm text-neutral-700 
+                            grid grid-cols-1 
+                            md:grid-cols-2 
+                            lg:grid-cols-3 
+                            gap-1">
+                          {options.map((opt) => (
+                            <li
+                              key={opt.id}
+                              className="flex items-center gap-2"
+                            >
+                              • {opt.name}
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
+
 
             {/* HØJRE SIDE */}
             {image && (
