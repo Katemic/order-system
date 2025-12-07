@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import DateInput from "@/components/DateInput";
 
 export default function OrderFilterSidebar({ onItemClick }) {
   const router = useRouter();
@@ -56,7 +57,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
       date: today,
       from: null,
       to: null,
-      range: null, 
+      range: null,
     });
   }
 
@@ -134,10 +135,10 @@ export default function OrderFilterSidebar({ onItemClick }) {
       {/* ENKELT DATO */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Vælg dato</label>
-        <input
-          type="date"
+        <DateInput
+          prefix="date"
           value={date}
-          onChange={(e) => handleDateChange(e.target.value)}
+          onCommit={handleDateChange}
           className={inputClasses}
         />
       </div>
@@ -146,17 +147,17 @@ export default function OrderFilterSidebar({ onItemClick }) {
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Periode</label>
 
-        <input
-          type="date"
+        <DateInput
+          prefix="from"
           value={from}
-          onChange={(e) => handleFromChange(e.target.value)}
+          onCommit={handleFromChange}
           className={`${inputClasses} mb-2`}
         />
 
-        <input
-          type="date"
+        <DateInput
+          prefix="to"
           value={to}
-          onChange={(e) => handleToChange(e.target.value)}
+          onCommit={handleToChange}
           className={inputClasses}
         />
       </div>
