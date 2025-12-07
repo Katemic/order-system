@@ -34,7 +34,12 @@ export default function OrdersTable({ orders }) {
                   <tr
                     key={order.id}
                     onClick={() => setSelectedOrder(order)}
-                    className="border-b text-sm bg-white cursor-pointer hover:bg-neutral-100"
+                    className={`border-b text-sm cursor-pointer hover:bg-neutral-100
+    ${order.delivery_type === "delivery"
+                        ? "bg-red-50"
+                        : "bg-white"
+                      }
+  `}
                   >
                     <td className="px-4 py-3 whitespace-nowrap">{order.customer_name}</td>
 
