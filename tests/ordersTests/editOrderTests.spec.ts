@@ -44,7 +44,7 @@ test('edit order: prefilled values, update, redirect and updated-banner', async 
 
   // 8) Submit the form
   await page
-    .getByRole('button', { name: /Gennemfør bestilling/ })
+    .getByRole('button', { name: /Gem ændringer/ })
     .click();
 
   // 9) After successful update → redirect to /orders?updated=true
