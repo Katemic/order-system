@@ -21,6 +21,7 @@ export default function OrdersTable({ orders }) {
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Antal produkter</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Pris</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Betalt</th>
               </tr>
             </thead>
 
@@ -60,6 +61,13 @@ export default function OrdersTable({ orders }) {
                     {/* Pris */}
                     <td className="px-4 py-3 whitespace-nowrap">
                       {order.total_price} kr.
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {order.paid ? (
+                        <span className="text-emerald-600">✔️</span>
+                      ) : (
+                        <span className="text-red-600">❌</span>
+                      )}
                     </td>
                   </tr>
                 );
