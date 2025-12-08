@@ -3,8 +3,8 @@
     "id": 1,
     "customer_name": "Hans Jensen",
     "customer_phone": "22223333",
-    "date_needed": "2025-12-05",
-    "date_created": "2025-12-05",
+    "date_needed": "2025-12-08",
+    "date_created": "2025-12-08",
     "taken_by": "Louise",
     "paid": false,
     "delivery_type": "pickup",
@@ -13,10 +13,10 @@
     "delivery_address": null,
     "delivery_zip": null,
     "note": "Skær i halve",
-    "total_price": 70,
+    "total_price": 110,
     "order_items": [
       {
-        "id": 18,
+        "id": 10,
         "order_id": 1,
         "product_id": 2,
         "quantity": 3,
@@ -28,7 +28,7 @@
         }
       },
       {
-        "id": 19,
+        "id": 11,
         "order_id": 1,
         "product_id": 5,
         "quantity": 1,
@@ -39,8 +39,7 @@
           "price": 10
         }
       }
-    ],
-    "agreed_price": null
+    ]
   },
   {
     "id": 2,

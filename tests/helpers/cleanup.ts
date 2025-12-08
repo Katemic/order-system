@@ -44,30 +44,7 @@ export function resetMockData() {
             },
             image: "/assets/defaultBillede.jpg",
             category: "Brød",
-            active: true,
-            "customizationOptions": {
-                "Topping": [
-                    {
-                        "id": 101,
-                        "name": "Friske hindbær"
-                    },
-                    {
-                        "id": 102,
-                        "name": "Hvid chokolade"
-                    }
-                ],
-                "Størrelse": [
-                    {
-                        "id": 201,
-                        "name": "Lille"
-                    },
-                    {
-                        "id": 202,
-                        "name": "Stor"
-                    }
-                ]
-            }
-
+            active: true
         },
         {
             id: 3,

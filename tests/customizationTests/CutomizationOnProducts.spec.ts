@@ -49,5 +49,5 @@ test("Topping og Størrelse kan være åbne samtidig", async ({ page }) => {
   await page.locator("summary", { hasText: "Størrelse" }).click();
 
   await expect(page.getByText("Friske hindbær")).toBeVisible();
-  await expect(page.getByText("Stor")).toBeVisible();
+  await expect(page.getByText("Lille")).toBeVisible();
 });

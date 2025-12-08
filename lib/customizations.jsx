@@ -115,7 +115,7 @@ export async function setProductCustomizations(productId, optionIds) {
     // Tilføj always-add "andet se note"
     for (const type of allTypes) {
       if (selectedTypes.has(type.id)) {
-        const noteOpt = type.options_all.find(
+        const noteOpt = type.options.find(
           (o) => o.name.toLowerCase() === "andet, se note"
         );
         if (noteOpt) selected.push(noteOpt.id);
