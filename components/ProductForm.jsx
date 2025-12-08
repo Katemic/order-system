@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 
-export default function ProductForm({ mode, product = null, action }) {
+export default function ProductForm({
+  mode,
+  product = null,
+  action,
+  customizationData = [],
+  selectedCustomizationOptionIds = [],
+}) {
   const router = useRouter();
 
   const initialImage = product?.image ?? null;
@@ -30,6 +36,33 @@ export default function ProductForm({ mode, product = null, action }) {
     if (!file) return;
     setImagePreview(URL.createObjectURL(file));
   }
+
+    const [customizationsOpen, setCustomizationsOpen] = useState(false);
+
+  const initiallyOpenTypes = new Set();
+
+  customizationData.forEach((type) => {
+    const hasSelected = type.options.some((opt) =>
+      selectedCustomizationOptionIds.includes(opt.id)
+    );
+    if (hasSelected) {
+      initiallyOpenTypes.add(type.id);
+    }
+  });
+
+  const [openTypes, setOpenTypes] = useState(initiallyOpenTypes);
+
+  const selectedSet = new Set(selectedCustomizationOptionIds);
+
+  function toggleTypeOpen(typeId) {
+    setOpenTypes((prev) => {
+      const next = new Set(prev);
+      if (next.has(typeId)) next.delete(typeId);
+      else next.add(typeId);
+      return next;
+    });
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8 pt-20">
@@ -191,6 +224,86 @@ export default function ProductForm({ mode, product = null, action }) {
               ))}
             </div>
           </div>
+                    {/* TILPASNINGER */}
+          <div className="border-t border-gray-200 pt-4">
+            <button
+              type="button"
+              onClick={() => setCustomizationsOpen((v) => !v)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">
+                  Tilpasninger
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Vælg hvilke tilpasningsmuligheder dette produkt skal have.
+                </p>
+              </div>
+              <span className="text-xs text-gray-500">
+                {customizationsOpen ? "Skjul" : "Vis"}
+              </span>
+            </button>
+
+            {customizationsOpen && (
+              <div className="mt-3 space-y-2">
+                {customizationData.length === 0 && (
+                  <p className="text-xs text-gray-500">
+                    Der er endnu ikke oprettet nogen tilpasningstyper.
+                  </p>
+                )}
+
+                {customizationData.map((type) => {
+                  const isOpen = openTypes.has(type.id);
+
+                  return (
+                    <div
+                      key={type.id}
+                      className="border border-gray-200 rounded-lg"
+                    >
+                      {/* Titel-linje med checkbox */}
+                      <label className="flex items-center justify-between px-3 py-2 cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            // titlens checkbox styrer blot om sektionen er "åben"
+                            checked={isOpen}
+                            onChange={() => toggleTypeOpen(type.id)}
+                          />
+                          <span className="text-sm font-medium text-gray-800">
+                            {type.name}
+                          </span>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {isOpen ? "−" : "+"}
+                        </span>
+                      </label>
+
+                      {/* Options under titlen */}
+                      {isOpen && (
+                        <div className="border-t border-gray-200 px-3 py-2 space-y-1">
+                          {type.options.map((opt) => (
+                            <label
+                              key={opt.id}
+                              className="flex items-center gap-2 text-sm"
+                            >
+                              <input
+                                type="checkbox"
+                                name="customizationOptionIds"
+                                value={opt.id}
+                                defaultChecked={selectedSet.has(opt.id)}
+                              />
+                              <span>{opt.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
 
           {/* BILLEDEUPLOAD */}
           <div className="border-t border-gray-200 pt-4">

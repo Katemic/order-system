@@ -1,3 +1,4 @@
+// actions/updateProductAction.js
 "use server";
 
 import fs from "fs";
@@ -6,13 +7,12 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isValidProductCategory } from "@/lib/productCategories";
 import { updateProduct } from "@/lib/products";
+import { setProductCustomizations } from "@/lib/customizations";
 
 export async function updateProductAction(prevState, formData) {
   const values = Object.fromEntries(formData);
-
   const fieldErrors = {};
 
-  // ----------- VALIDERING -----------
   if (!values.name) fieldErrors.name = "Skal udfyldes";
   if (!values.price) fieldErrors.price = "Skal udfyldes";
   if (!values.category || !isValidProductCategory(values.category))
@@ -22,11 +22,10 @@ export async function updateProductAction(prevState, formData) {
     return {
       success: false,
       fieldErrors,
-      values, // sender alt tilbage til UI
+      values,
     };
   }
 
-  // ----------- KONVERTERING -----------
   const id = Number(values.id);
   const price = parseFloat(values.price);
 
@@ -48,7 +47,6 @@ export async function updateProductAction(prevState, formData) {
     Water_content: Number(values.Water_content),
   };
 
-  // ----------- IMAGE -----------
   let imagePath = values.existingImage || null;
   const image = formData.get("image");
 
@@ -61,7 +59,10 @@ export async function updateProductAction(prevState, formData) {
     imagePath = `/assets/${unique}`;
   }
 
-  // ---------- DB CALL ----------
+  const customizationOptionIds = formData
+    .getAll("customizationOptionIds")
+    .map((v) => Number(v));
+
   await updateProduct(id, {
     name: values.name,
     price,
@@ -71,7 +72,10 @@ export async function updateProductAction(prevState, formData) {
     image: imagePath,
   });
 
+  await setProductCustomizations(id, customizationOptionIds);
+
   revalidatePath("/products");
   redirect(`/products?updated=true&productId=${id}`);
 }
+
 
