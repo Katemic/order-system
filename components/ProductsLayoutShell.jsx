@@ -10,7 +10,7 @@ export default function ProductsLayoutShell({ children, basePath = "/products" }
   const selectedCategory = searchParams.get("category") || "Brød";
 
   return (
-    <div className="min-h-screen flex bg-neutral-50">
+    <div className="min-h-screen flex ">
       <aside className="hidden md:flex fixed top-16 left-0 w-64 h-[calc(100vh-64px)] border-r border-neutral-200 bg-white z-40">
         <Sidebar selectedCategory={selectedCategory} basePath={basePath} />
       </aside>

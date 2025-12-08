@@ -20,8 +20,8 @@ test('check edit button is present on product modal and navigate back buttons ar
     await expect(page.getByRole('link', { name: 'Rediger produkt' })).toBeVisible();
     await page.getByRole('link', { name: 'Rediger produkt' }).click();
     await expect(page).toHaveURL('http://localhost:3000/products/1/edit');
-    await expect(page.getByRole('link', { name: 'Tilbage til produkter' })).toBeVisible();
-    await page.getByRole('link', { name: 'Tilbage til produkter' }).click();
+    await expect(page.getByRole('button', { name: 'Tilbage til produkter' })).toBeVisible();
+    await page.getByRole('button', { name: 'Tilbage til produkter' }).click();
     await expect(page).toHaveURL('http://localhost:3000/products');
     await sleep(5000); // inserted 5s wait
     await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
@@ -76,7 +76,8 @@ test('All fields are present on edit product page', async ({ page }) => {
     );
 
     await expect(container.getByRole('heading', { name: 'Rediger produkt', level: 1 })).toBeVisible();
-    await expect(container.getByRole('link', { name: 'Tilbage til produkter' })).toBeVisible();
+
+    await expect(container.getByRole('button', { name: 'Tilbage til produkter' })).toBeVisible();
 
     await expect(container.getByText('Produktnavn *')).toBeVisible();
 

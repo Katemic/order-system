@@ -269,13 +269,28 @@ export default function CustomerForm({
                     />
                 </div>
 
-                <div className="pt-2 flex justify-end">
+                <div className="pt-2 flex justify-end gap-3">
+                    {orderId != null && (
+                        <a
+                            href="/orders"
+                            className="px-4 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50"
+                        >
+                            Annuller
+                        </a>
+                    )}
+
                     <button
                         type="submit"
                         className="btn-primary"
                         disabled={isPending || !hasItems}
                     >
-                        {isPending ? "Gemmer bestilling..." : "Gennemfør bestilling"}
+                        {isPending
+                            ? orderId != null
+                                ? "Gemmer ændringer..."
+                                : "Gemmer bestilling..."
+                            : orderId != null
+                                ? "Gem ændringer"
+                                : "Gennemfør bestilling"}
                     </button>
                 </div>
             </form>
