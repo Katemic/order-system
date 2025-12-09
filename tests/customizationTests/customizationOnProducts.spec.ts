@@ -13,10 +13,8 @@ test.afterAll(() => {
 test("Viser customization sektion for Surdejsbrød", async ({ page }) => {
   await page.goto("/products");
 
-  // Åbn modal
   await page.getByText("Surdejsbrød").click();
 
-  // Sektionstitel
   await expect(page.getByText("Mulige tilpasninger")).toBeVisible();
 });
 
@@ -49,5 +47,5 @@ test("Topping og Størrelse kan være åbne samtidig", async ({ page }) => {
   await page.locator("summary", { hasText: "Størrelse" }).click();
 
   await expect(page.getByText("Friske hindbær")).toBeVisible();
-  await expect(page.getByText("Stor")).toBeVisible();
+  await expect(page.getByText("Lille")).toBeVisible();
 });

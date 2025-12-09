@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 
-export default function ProductForm({ mode, product = null, action }) {
+export default function ProductForm({
+  mode,
+  product = null,
+  action,
+  customizationData = [],
+  selectedCustomizationOptionIds = [],
+}) {
   const router = useRouter();
 
   const initialImage = product?.image ?? null;
@@ -30,6 +36,75 @@ export default function ProductForm({ mode, product = null, action }) {
     if (!file) return;
     setImagePreview(URL.createObjectURL(file));
   }
+
+  // ---------- INITIAL TYPE & OPTION STATE ----------
+  const initiallySelectedTypes = customizationData
+    .filter((type) =>
+      type.options.some((opt) =>
+        selectedCustomizationOptionIds.includes(opt.id)
+      )
+    )
+    .map((t) => t.id);
+
+  const [selectedTypes, setSelectedTypes] = useState(initiallySelectedTypes);
+  const [selectedOptions, setSelectedOptions] = useState(
+    selectedCustomizationOptionIds
+  );
+
+  const [customizationsOpen, setCustomizationsOpen] = useState(false);
+
+  // ---------- HYDRATE AFTER VALIDATION ERROR ----------
+  useEffect(() => {
+    if (values.customizationTypeIds) {
+      setSelectedTypes(values.customizationTypeIds.map(Number));
+    }
+    if (values.customizationOptionIds) {
+      setSelectedOptions(values.customizationOptionIds.map(Number));
+    }
+  }, [values]);
+
+  // ---------- SELECT / DESELECT TYPE ----------
+function toggleType(typeId) {
+  setSelectedTypes((prev) => {
+    const isSelected = prev.includes(typeId);
+    const newSelectedTypes = isSelected
+      ? prev.filter((id) => id !== typeId)
+      : [...prev, typeId];
+
+    // Fjern alle options under typen der blev un-checket
+    if (isSelected) {
+      const type = customizationData.find((t) => t.id === typeId);
+      if (type) {
+        setSelectedOptions((prevOptions) =>
+          prevOptions.filter(
+            (optId) => !type.options.some((o) => o.id === optId)
+          )
+        );
+      }
+    }
+
+    // Hvis ingen typer er valgt → fjern ALLE valgte options
+    if (newSelectedTypes.length === 0) {
+      setSelectedOptions([]);
+    }
+
+    return newSelectedTypes;
+  });
+}
+
+
+  // ---------- SELECT / DESELECT OPTION ----------
+  function toggleOption(optionId) {
+    setSelectedOptions((prev) =>
+      prev.includes(optionId)
+        ? prev.filter((id) => id !== optionId)
+        : [...prev, optionId]
+    );
+  }
+
+  // Sets for easier checks
+  const openTypes = new Set(selectedTypes);
+  const selectedSet = new Set(selectedOptions);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8 pt-20">
@@ -60,6 +135,25 @@ export default function ProductForm({ mode, product = null, action }) {
               <input type="hidden" name="existingImage" value={product.image} />
             </>
           )}
+
+          {/* Hidden synced TYPE + OPTION values */}
+          {selectedTypes.map((id) => (
+            <input
+              key={"t" + id}
+              type="hidden"
+              name="customizationTypeIds"
+              value={id}
+            />
+          ))}
+
+          {selectedOptions.map((id) => (
+            <input
+              key={"o" + id}
+              type="hidden"
+              name="customizationOptionIds"
+              value={id}
+            />
+          ))}
 
           {/* NAVN + PRIS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -110,7 +204,6 @@ export default function ProductForm({ mode, product = null, action }) {
                 <p className="mt-1 text-xs text-red-500">{errors.price}</p>
               )}
             </div>
-
           </div>
 
           {/* KATEGORI */}
@@ -192,6 +285,84 @@ export default function ProductForm({ mode, product = null, action }) {
             </div>
           </div>
 
+          {/* TILPASNINGER */}
+          <div className="border-t border-gray-200 pt-4">
+            <button
+              type="button"
+              onClick={() => setCustomizationsOpen((v) => !v)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">
+                  Tilpasninger
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Vælg hvilke tilpasningsmuligheder dette produkt skal have.
+                </p>
+              </div>
+              <span className="text-xs text-gray-500">
+                {customizationsOpen ? "Skjul" : "Vis"}
+              </span>
+            </button>
+
+            {customizationsOpen && (
+              <div className="mt-3 space-y-2">
+                {customizationData.length === 0 && (
+                  <p className="text-xs text-gray-500">
+                    Der er endnu ikke oprettet nogen tilpasningstyper.
+                  </p>
+                )}
+
+                {customizationData.map((type) => {
+                  const isOpen = openTypes.has(type.id);
+
+                  return (
+                    <div
+                      key={type.id}
+                      className="border border-gray-200 rounded-lg"
+                    >
+                      {/* TYPE CHECKBOX */}
+                      <label className="flex items-center justify-between px-3 py-2 cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedTypes.includes(type.id)}
+                            onChange={() => toggleType(type.id)}
+                          />
+                          <span className="text-sm font-medium text-gray-800">
+                            {type.name}
+                          </span>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {isOpen ? "−" : "+"}
+                        </span>
+                      </label>
+
+                      {/* OPTIONS */}
+                      {isOpen && (
+                        <div className="border-t border-gray-200 px-3 py-2 space-y-1">
+                          {type.options.map((opt) => (
+                            <label
+                              key={opt.id}
+                              className="flex items-center gap-2 text-sm"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedSet.has(opt.id)}
+                                onChange={() => toggleOption(opt.id)}
+                              />
+                              <span>{opt.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
           {/* BILLEDEUPLOAD */}
           <div className="border-t border-gray-200 pt-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -265,5 +436,8 @@ export default function ProductForm({ mode, product = null, action }) {
     </div>
   );
 }
+
+
+
 
 

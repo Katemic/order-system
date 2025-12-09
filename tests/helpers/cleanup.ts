@@ -44,30 +44,7 @@ export function resetMockData() {
             },
             image: "/assets/defaultBillede.jpg",
             category: "Brød",
-            active: true,
-            "customizationOptions": {
-                "Topping": [
-                    {
-                        "id": 101,
-                        "name": "Friske hindbær"
-                    },
-                    {
-                        "id": 102,
-                        "name": "Hvid chokolade"
-                    }
-                ],
-                "Størrelse": [
-                    {
-                        "id": 201,
-                        "name": "Lille"
-                    },
-                    {
-                        "id": 202,
-                        "name": "Stor"
-                    }
-                ]
-            }
-
+            active: true
         },
         {
             id: 3,
@@ -344,4 +321,40 @@ export function resetMockDataOrders() {
     ];
 
     fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
+}
+
+export function resetMockCustomizationData() {
+  const testFile = path.join(process.cwd(), "mock.customizations.test.json");
+
+  const defaultData = {
+    "types": [
+      {
+        "id": 1,
+        "name": "Topping",
+        "options": [
+          { "id": 101, "name": "Friske hindbær" },
+          { "id": 102, "name": "Hvid chokolade" },
+          { "id": 103, "name": "Andet, se note" }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Størrelse",
+        "options": [
+          { "id": 201, "name": "Lille" },
+          { "id": 202, "name": "Stor" },
+          { "id": 203, "name": "Andet, se note" }
+        ]
+      }
+    ],
+    "productLinks": {
+      "1": [],
+      "2": [101, 103, 102, 201, 203],
+      "3": [],
+      "4": [],
+      "5": []
+    }
+  };
+
+  fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
 }

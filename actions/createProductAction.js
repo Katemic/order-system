@@ -1,3 +1,4 @@
+// actions/createProductAction.js
 "use server";
 
 import { redirect } from "next/navigation";
@@ -6,13 +7,12 @@ import { createProduct } from "@/lib/products";
 import { isValidProductCategory } from "@/lib/productCategories";
 import fs from "fs";
 import path from "path";
+import { setProductCustomizations } from "@/lib/customizations";
 
 export async function createProductAction(prevState, formData) {
   const values = Object.fromEntries(formData);
-
   const fieldErrors = {};
 
-  // ------ SERVER VALIDERING ------
   if (!values.name) fieldErrors.name = "Skal udfyldes";
   if (!values.price) fieldErrors.price = "Skal udfyldes";
   if (!isValidProductCategory(values.category))
@@ -22,7 +22,11 @@ export async function createProductAction(prevState, formData) {
     return {
       success: false,
       fieldErrors,
-      values,
+      values: {
+        ...values,
+        customizationOptionIds: formData.getAll("customizationOptionIds"),
+        customizationTypeIds: formData.getAll("customizationTypeIds")
+      }
     };
   }
 
@@ -54,8 +58,14 @@ export async function createProductAction(prevState, formData) {
     Water_content: Number(values.Water_content),
   };
 
+  // ---------- CUSTOMIZATIONS ----------
+  const customizationOptionIds = formData
+    .getAll("customizationOptionIds")
+    .map((v) => Number(v));
+
   // ---------- SAVE ----------
-  await createProduct({
+  // Sørg for at createProduct returnerer den nye række inkl. id
+  const product = await createProduct({
     name: values.name,
     price: parseFloat(values.price),
     ingredients: values.ingredients || "Udfyldes senere...",
@@ -64,6 +74,9 @@ export async function createProductAction(prevState, formData) {
     image: imagePath,
   });
 
+  await setProductCustomizations(product.id, customizationOptionIds);
+
   revalidatePath("/products");
   redirect("/products?created=true");
 }
+
