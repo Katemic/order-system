@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toggleProductActive } from "../actions/toggleProductActiveAction";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import { sortCustomizationOptions } from "@/lib/sortCustomizationOptions";
 
 export default function ProductModal({ product, onClose }) {
   const [isPending, startTransition] = useTransition();
@@ -210,11 +211,8 @@ export default function ProductModal({ product, onClose }) {
                             md:grid-cols-2 
                             lg:grid-cols-3 
                             gap-1">
-                          {options.map((opt) => (
-                            <li
-                              key={opt.id}
-                              className="flex items-center gap-2"
-                            >
+                          {sortCustomizationOptions(options).map(opt => (
+                            <li key={opt.id} className="flex items-center gap-2">
                               • {opt.name}
                             </li>
                           ))}

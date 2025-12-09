@@ -22,7 +22,11 @@ export async function createProductAction(prevState, formData) {
     return {
       success: false,
       fieldErrors,
-      values,
+      values: {
+        ...values,
+        customizationOptionIds: formData.getAll("customizationOptionIds"),
+        customizationTypeIds: formData.getAll("customizationTypeIds")
+      }
     };
   }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -37,32 +37,74 @@ export default function ProductForm({
     setImagePreview(URL.createObjectURL(file));
   }
 
-    const [customizationsOpen, setCustomizationsOpen] = useState(false);
+  // ---------- INITIAL TYPE & OPTION STATE ----------
+  const initiallySelectedTypes = customizationData
+    .filter((type) =>
+      type.options.some((opt) =>
+        selectedCustomizationOptionIds.includes(opt.id)
+      )
+    )
+    .map((t) => t.id);
 
-  const initiallyOpenTypes = new Set();
+  const [selectedTypes, setSelectedTypes] = useState(initiallySelectedTypes);
+  const [selectedOptions, setSelectedOptions] = useState(
+    selectedCustomizationOptionIds
+  );
 
-  customizationData.forEach((type) => {
-    const hasSelected = type.options.some((opt) =>
-      selectedCustomizationOptionIds.includes(opt.id)
-    );
-    if (hasSelected) {
-      initiallyOpenTypes.add(type.id);
+  const [customizationsOpen, setCustomizationsOpen] = useState(false);
+
+  // ---------- HYDRATE AFTER VALIDATION ERROR ----------
+  useEffect(() => {
+    if (values.customizationTypeIds) {
+      setSelectedTypes(values.customizationTypeIds.map(Number));
     }
+    if (values.customizationOptionIds) {
+      setSelectedOptions(values.customizationOptionIds.map(Number));
+    }
+  }, [values]);
+
+  // ---------- SELECT / DESELECT TYPE ----------
+function toggleType(typeId) {
+  setSelectedTypes((prev) => {
+    const isSelected = prev.includes(typeId);
+    const newSelectedTypes = isSelected
+      ? prev.filter((id) => id !== typeId)
+      : [...prev, typeId];
+
+    // Fjern alle options under typen der blev un-checket
+    if (isSelected) {
+      const type = customizationData.find((t) => t.id === typeId);
+      if (type) {
+        setSelectedOptions((prevOptions) =>
+          prevOptions.filter(
+            (optId) => !type.options.some((o) => o.id === optId)
+          )
+        );
+      }
+    }
+
+    // Hvis ingen typer er valgt → fjern ALLE valgte options
+    if (newSelectedTypes.length === 0) {
+      setSelectedOptions([]);
+    }
+
+    return newSelectedTypes;
   });
+}
 
-  const [openTypes, setOpenTypes] = useState(initiallyOpenTypes);
 
-  const selectedSet = new Set(selectedCustomizationOptionIds);
-
-  function toggleTypeOpen(typeId) {
-    setOpenTypes((prev) => {
-      const next = new Set(prev);
-      if (next.has(typeId)) next.delete(typeId);
-      else next.add(typeId);
-      return next;
-    });
+  // ---------- SELECT / DESELECT OPTION ----------
+  function toggleOption(optionId) {
+    setSelectedOptions((prev) =>
+      prev.includes(optionId)
+        ? prev.filter((id) => id !== optionId)
+        : [...prev, optionId]
+    );
   }
 
+  // Sets for easier checks
+  const openTypes = new Set(selectedTypes);
+  const selectedSet = new Set(selectedOptions);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8 pt-20">
@@ -93,6 +135,25 @@ export default function ProductForm({
               <input type="hidden" name="existingImage" value={product.image} />
             </>
           )}
+
+          {/* Hidden synced TYPE + OPTION values */}
+          {selectedTypes.map((id) => (
+            <input
+              key={"t" + id}
+              type="hidden"
+              name="customizationTypeIds"
+              value={id}
+            />
+          ))}
+
+          {selectedOptions.map((id) => (
+            <input
+              key={"o" + id}
+              type="hidden"
+              name="customizationOptionIds"
+              value={id}
+            />
+          ))}
 
           {/* NAVN + PRIS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -143,7 +204,6 @@ export default function ProductForm({
                 <p className="mt-1 text-xs text-red-500">{errors.price}</p>
               )}
             </div>
-
           </div>
 
           {/* KATEGORI */}
@@ -224,7 +284,8 @@ export default function ProductForm({
               ))}
             </div>
           </div>
-                    {/* TILPASNINGER */}
+
+          {/* TILPASNINGER */}
           <div className="border-t border-gray-200 pt-4">
             <button
               type="button"
@@ -260,14 +321,13 @@ export default function ProductForm({
                       key={type.id}
                       className="border border-gray-200 rounded-lg"
                     >
-                      {/* Titel-linje med checkbox */}
+                      {/* TYPE CHECKBOX */}
                       <label className="flex items-center justify-between px-3 py-2 cursor-pointer">
                         <div className="flex items-center gap-2">
                           <input
                             type="checkbox"
-                            // titlens checkbox styrer blot om sektionen er "åben"
-                            checked={isOpen}
-                            onChange={() => toggleTypeOpen(type.id)}
+                            checked={selectedTypes.includes(type.id)}
+                            onChange={() => toggleType(type.id)}
                           />
                           <span className="text-sm font-medium text-gray-800">
                             {type.name}
@@ -278,7 +338,7 @@ export default function ProductForm({
                         </span>
                       </label>
 
-                      {/* Options under titlen */}
+                      {/* OPTIONS */}
                       {isOpen && (
                         <div className="border-t border-gray-200 px-3 py-2 space-y-1">
                           {type.options.map((opt) => (
@@ -288,9 +348,8 @@ export default function ProductForm({
                             >
                               <input
                                 type="checkbox"
-                                name="customizationOptionIds"
-                                value={opt.id}
-                                defaultChecked={selectedSet.has(opt.id)}
+                                checked={selectedSet.has(opt.id)}
+                                onChange={() => toggleOption(opt.id)}
                               />
                               <span>{opt.name}</span>
                             </label>
@@ -303,7 +362,6 @@ export default function ProductForm({
               </div>
             )}
           </div>
-
 
           {/* BILLEDEUPLOAD */}
           <div className="border-t border-gray-200 pt-4">
@@ -378,5 +436,8 @@ export default function ProductForm({
     </div>
   );
 }
+
+
+
 
 

@@ -11,7 +11,7 @@ export default async function CreateProductPage() {
       mode="create"
       action={createProductAction}
       customizationData={customizationData}
-      selectedCustomizationOptionIds={[]} // ingen ved opret
+      selectedCustomizationOptionIds={[]} //empty on create
     />
   );
 }
