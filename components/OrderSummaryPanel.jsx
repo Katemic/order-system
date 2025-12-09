@@ -22,11 +22,39 @@ export default function OrderSummaryPanel({ orderItems, total, hasItems, errors 
                   <span>{(item.price * item.quantity).toFixed(2)} kr.</span>
                 </div>
 
+                {/* NOTE */}
                 {item.note && (
                   <p className="mt-1 text-xs text-neutral-600">
                     Note: {item.note}
                   </p>
                 )}
+
+                {item.customizations &&
+                  Object.keys(item.customizations).length > 0 && (
+                    <div className="mt-1 text-xs text-neutral-600 space-y-1">
+                      {Object.entries(item.customizations).map(
+                        ([typeName, options]) => {
+                          if (!Array.isArray(options) || options.length === 0)
+                            return null;
+
+                          const labels = options
+                            .map((opt) =>
+                              typeof opt === "object" && opt !== null
+                                ? opt.name ?? opt.id
+                                : String(opt)
+                            )
+                            .join(", ");
+
+                          return (
+                            <p key={typeName}>
+                              <span className="font-medium">{typeName}:</span>{" "}
+                              {labels}
+                            </p>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
               </div>
             ))}
           </div>

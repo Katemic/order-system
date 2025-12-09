@@ -29,13 +29,14 @@ export default function CreateOrderClient({ products }) {
     }
   }, [orderItems]);
 
-  const handleAddToOrder = ({ product, quantity, note }) => {
+  const handleAddToOrder = ({ product, quantity, note, customizations }) => {
     const item = {
       productId: product.id,
       name: product.name,
       price: product.price,
       quantity,
       note,
+      customizations: customizations || {},
     };
 
     setOrderItems((prev) => [...prev, item]);
@@ -50,33 +51,45 @@ export default function CreateOrderClient({ products }) {
     }
   };
 
-  // Fjern produkt
   const handleRemoveItem = (index) => {
     setOrderItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Edit item (fra liste)
   const [editingItemState, setEditingItemState] = useState(null);
 
   const handleEditItem = (index) => {
     const item = orderItems[index];
+    if (!item) return;
     setEditingItemState({ index, item });
   };
 
-  const handleSaveEditedItem = ({ quantity, note }) => {
+  const handleSaveEditedItem = ({ quantity, note, customizations }) => {
     setOrderItems((prev) => {
       const updated = [...prev];
       updated[editingItemState.index] = {
         ...updated[editingItemState.index],
         quantity,
         note,
+        customizations: customizations || {},
       };
       return updated;
     });
     setEditingItemState(null);
   };
 
+  const getProductForEdit = (item) => {
+    const productId = item.productId;
+    const fullProduct = products.find((p) => String(p.id) === String(productId));
 
+    if (fullProduct) return fullProduct;
+
+    return {
+      id: productId,
+      name: item.name,
+      price: item.price,
+      customizationOptions: {},
+    };
+  };
 
   return (
     <div className="flex gap-8 items-start">
@@ -97,13 +110,10 @@ export default function CreateOrderClient({ products }) {
 
       {editingItemState && (
         <OrderProductModal
-          product={{
-            id: editingItemState.item.productId,
-            name: editingItemState.item.name,
-            price: editingItemState.item.price,
-          }}
+          product={getProductForEdit(editingItemState.item)}
           initialQuantity={editingItemState.item.quantity}
           initialNote={editingItemState.item.note}
+          initialCustomizations={editingItemState.item.customizations || {}}
           mode="edit"
           onConfirm={handleSaveEditedItem}
           onClose={() => setEditingItemState(null)}
@@ -112,4 +122,3 @@ export default function CreateOrderClient({ products }) {
     </div>
   );
 }
-

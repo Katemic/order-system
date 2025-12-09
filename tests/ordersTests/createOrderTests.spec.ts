@@ -271,6 +271,109 @@ test('You can add more products to the order and summary shows the correct info'
   await expect(summary.getByText('Ingen produkter i bestillingen endnu.')).toBeVisible();
 });
 
+test("create-order: produktmodal shows customizations, if the producs has customizationOptions", async ({ page }) => {
+  await page.goto("http://localhost:3000/");
+  await page.getByRole("link", { name: "Opret bestilling" }).click();
+
+  // Open a product that you know has customizations
+  await page.getByRole("button", { name: /Surdejsbrød 32.5 kr\./ }).click();
+
+  const modal = page.locator("div.fixed.inset-0");
+  await expect(modal).toBeVisible();
+
+  // Summary / header for customizations (e.g. "Tilpasninger (valgfri)")
+  const customSummary = modal.locator("summary", { hasText: /Tilpasninger/i });
+  await expect(customSummary).toBeVisible();
+
+  // Expand customizations
+  await customSummary.click();
+
+  // There should be at least one checkbox inside the customizations section
+  const firstCheckbox = modal.locator("details input[type='checkbox']").first();
+  await expect(firstCheckbox).toBeVisible();
+});
+
+test("create-order: selected customizations are shown in order summary", async ({ page }) => {
+  await page.goto("http://localhost:3000/");
+  await page.getByRole("link", { name: "Opret bestilling" }).click();
+
+  // Open a product with customizations
+  await page.getByRole("button", { name: /Surdejsbrød 32.5 kr\./ }).click();
+
+  const modal = page.locator("div.fixed.inset-0");
+  await expect(modal).toBeVisible();
+
+  // Expand customizations
+  const customSummary = modal.locator("summary", { hasText: /Tilpasninger/i });
+  await customSummary.click();
+
+  // Get first option label in the customizations section
+  const firstOptionLabel = modal.locator("details label").first();
+  await expect(firstOptionLabel).toBeVisible();
+
+  const labelText = (await firstOptionLabel.innerText()).trim();
+
+  // Click on the label (so the checkbox gets selected)
+  await firstOptionLabel.click();
+
+  // Add to order
+  await modal.getByRole("button", { name: "Tilføj til ordre" }).click();
+
+  // OrderSummary on the right side
+  const summary = page.locator("aside", { hasText: "Bestilling" });
+  await expect(summary).toBeVisible();
+
+  const firstLine = summary.locator("div.border-b").first();
+
+  // The line itself should contain the customization text
+  await expect(firstLine.getByText(labelText)).toBeVisible();
+});
+
+test("create-order: editing a line preserves selected customizations in modal", async ({ page }) => {
+  await page.goto("http://localhost:3000/");
+  await page.getByRole("link", { name: "Opret bestilling" }).click();
+
+  // Open a product with customizations
+  await page.getByRole("button", { name: /Surdejsbrød 32.5 kr\./ }).click();
+  const modal = page.locator("div.fixed.inset-0");
+  await expect(modal).toBeVisible();
+
+  // Expand customizations
+  const customSummary = modal.locator("summary", { hasText: /Tilpasninger/i });
+  await customSummary.click();
+
+  // Select first option label and remember text
+  const firstOptionLabel = modal.locator("details label").first();
+  await expect(firstOptionLabel).toBeVisible();
+  const labelText = (await firstOptionLabel.innerText()).trim();
+
+  await firstOptionLabel.click();
+
+  // Add to order
+  await modal.getByRole("button", { name: "Tilføj til ordre" }).click();
+
+  const summary = page.locator("aside", { hasText: "Bestilling" });
+  await expect(summary).toBeVisible();
+
+  // Click on the first line to edit
+  const firstLine = summary.locator("div.border-b").first();
+  await firstLine.click();
+
+  const editModal = page.locator("div.fixed.inset-0");
+  await expect(editModal).toBeVisible();
+
+  // Expand customizations again
+  const editCustomSummary = editModal.locator("summary", { hasText: /Tilpasninger/i });
+  await editCustomSummary.click();
+
+  // Find the option we selected before – using text
+  const selectedLabel = editModal.locator("details label", { hasText: labelText }).first();
+  await expect(selectedLabel).toBeVisible();
+
+  const checkbox = selectedLabel.locator("input[type='checkbox']");
+  await expect(checkbox).toBeChecked();
+});
+
 test('closing product modal by clicking outside the modal', async ({ page }) => {
   await page.goto('http://localhost:3000/');
 

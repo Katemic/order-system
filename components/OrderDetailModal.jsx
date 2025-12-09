@@ -47,25 +47,57 @@ export default function OrderDetailModal({ order, onClose }) {
           <div>
             <h3 className="text-lg font-semibold mb-2">Produkter</h3>
 
-            {/* Juster h'jde her i max værdi */}
+            {/* Juster højde her i max-værdi */}
             <div className="border rounded-lg divide-y max-h-110 overflow-y-auto">
               {order.order_items.map((item, i) => (
                 <div key={i} className="p-3 text-sm">
                   <div className="flex justify-between">
                     <span>{item.products?.name || "Ukendt produkt"}</span>
                     <span>
-                      {item.quantity} stk — {(item.quantity * (item.products?.price ?? 0))} kr.
+                      {item.quantity} stk —{" "}
+                      {(item.quantity * (item.products?.price ?? 0))} kr.
                     </span>
                   </div>
 
+                  {/* NOTE PÅ LINJEN */}
                   {item.item_note && (
                     <p className="text-neutral-600 text-xs mt-1">
                       Note: {item.item_note}
                     </p>
                   )}
+
+                  {item.customizations &&
+                    Object.keys(item.customizations).length > 0 && (
+                      <div className="mt-1 text-xs text-neutral-600 space-y-1">
+                        {Object.entries(item.customizations).map(
+                          ([typeName, options]) => {
+                            if (!Array.isArray(options) || options.length === 0)
+                              return null;
+
+                            const labels = options
+                              .map((opt) =>
+                                typeof opt === "object" && opt !== null
+                                  ? opt.name ?? opt.id
+                                  : String(opt)
+                              )
+                              .join(", ");
+
+                            return (
+                              <p key={typeName}>
+                                <span className="font-medium">
+                                  {typeName}:
+                                </span>{" "}
+                                {labels}
+                              </p>
+                            );
+                          }
+                        )}
+                      </div>
+                    )}
                 </div>
               ))}
             </div>
+
             <Link
               href={`/orders/${order.id}/editProducts`}
               className="block w-full mt-4 px-4 py-3 rounded-lg 
@@ -74,7 +106,6 @@ export default function OrderDetailModal({ order, onClose }) {
             >
               Redigér produkter
             </Link>
-
           </div>
 
           {/* HØJRE – KUNDEINFO */}
@@ -139,12 +170,10 @@ export default function OrderDetailModal({ order, onClose }) {
             >
               Slet bestilling
             </button>
-
-
           </div>
-
         </div>
       </div>
+
       {showDelete && (
         <DeleteConfirmModal
           item={order}
@@ -153,12 +182,6 @@ export default function OrderDetailModal({ order, onClose }) {
           onDeleteComplete={onClose}
         />
       )}
-
     </div>
   );
 }
-
-
-
-
-

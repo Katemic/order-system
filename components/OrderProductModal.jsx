@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function OrderProductModal({
@@ -11,42 +11,56 @@ export default function OrderProductModal({
   mode = "add",
   initialQuantity = 1,
   initialNote = "",
+  initialCustomizations = {},
 }) {
   const router = useRouter();
 
-  // Brug initial værdier ved edit
   const [quantity, setQuantity] = useState(initialQuantity);
   const [note, setNote] = useState(initialNote);
+  const [selectedCustomizations, setSelectedCustomizations] = useState(
+    initialCustomizations || {}
+  );
 
-  const { name, price } = product;
+  const { name, price, customizationOptions } = product;
 
-  // Håndter "Gem" eller "Tilføj"
+  const handleToggleCustomization = (typeName, option) => {
+    setSelectedCustomizations((prev) => {
+      const prevForType = prev[typeName] || [];
+      const isSelected = prevForType.some((o) => o.id === option.id);
+
+      const nextForType = isSelected
+        ? prevForType.filter((o) => o.id !== option.id)
+        : [...prevForType, option];
+
+      return {
+        ...prev,
+        [typeName]: nextForType,
+      };
+    });
+  };
+
   const handleSubmit = () => {
     const qty = Number(quantity) || 1;
+    const trimmedNote = note.trim();
+
+    const payload = {
+      quantity: qty,
+      note: trimmedNote,
+      customizations: selectedCustomizations,
+    };
 
     if (mode === "edit" && onConfirm) {
-      onConfirm({
-        quantity: qty,
-        note: note.trim(),
-      });
+      onConfirm(payload);
     } else if (onAdd) {
-      onAdd({
-        product,
-        quantity: qty,
-        note: note.trim(),
-      });
+      onAdd({ product, ...payload });
     }
 
-    if (onClose) onClose();
+    onClose?.();
   };
 
   const handleCancel = () => {
-    if (onClose) onClose();
-
-    // Kun create-mode skal redirecte til createOrder
-    if (mode === "add") {
-      router.push("/createOrder");
-    }
+    onClose?.();
+    if (mode === "add") router.push("/createOrder");
   };
 
   return (
@@ -56,7 +70,7 @@ export default function OrderProductModal({
       role="dialog"
     >
       <div
-        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-xl rounded-2xl bg-white p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col gap-5">
@@ -89,6 +103,61 @@ export default function OrderProductModal({
                 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
+
+          {customizationOptions &&
+            Object.keys(customizationOptions).length > 0 && (
+              <details className="group border border-neutral-300 rounded-lg px-4 py-3 bg-neutral-50 shadow-sm">
+                <summary className="cursor-pointer list-none flex justify-between items-center font-medium text-sm text-neutral-800 hover:text-neutral-900">
+                  <span>Tilpasninger (valgfrit)</span>
+                  <span className="transition-transform group-open:rotate-90 text-neutral-500">
+                    ▶
+                  </span>
+                </summary>
+
+                <div className="mt-3 flex flex-col gap-4 max-h-64 overflow-y-auto pr-1">
+                  {Object.entries(customizationOptions).map(
+                    ([typeName, options]) => (
+                      <div
+                        key={typeName}
+                        className="border rounded-md p-3 bg-neutral-50"
+                      >
+                        <p className="text-neutral-900 text-base font-semibold mb-2">
+                          {typeName}
+                        </p>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                          {options.map((opt) => {
+                            const isChecked =
+                              selectedCustomizations[typeName]?.some(
+                                (o) => o.id === opt.id
+                              );
+
+                            return (
+                              <label
+                                key={opt.id}
+                                className="inline-flex items-center gap-2 cursor-pointer"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={!!isChecked}
+                                  onChange={() =>
+                                    handleToggleCustomization(typeName, opt)
+                                  }
+                                  className="h-4 w-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500"
+                                />
+                                <span className="text-neutral-700 text-sm">
+                                  {opt.name}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </details>
+            )}
 
           {/* Note */}
           <div className="flex flex-col gap-1">
@@ -127,10 +196,8 @@ export default function OrderProductModal({
               {mode === "edit" ? "Gem ændringer" : "Tilføj til ordre"}
             </button>
           </div>
-
         </div>
       </div>
     </div>
   );
 }
-

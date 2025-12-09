@@ -86,56 +86,63 @@ test('Leveringsordrer er markeret med rød tekst', async ({ page }) => {
 
 //Order modal tests
 
-test("modal åbner med korrekte ordreoplysninger", async ({ page }) => {
-    await page.goto("/orders");
+test("modal opens with the correct order details and show customizations", async ({ page }) => {
+  await page.goto("/orders");
 
-    // Klik på en specifik test-ordre (fx ID 1)
-    await page.getByText("Hans Jensen").click();
+  // Click on Hans Jensen (order #1 in your mocks)
+  await page.getByText("Hans Jensen").click();
 
-    // Modal skal være synlig
-    const modal = page.getByRole("dialog");
-    await expect(modal).toBeVisible();
+  // Modal should be visible
+  const modal = page.getByRole("dialog");
+  await expect(modal).toBeVisible();
 
-    // Bestillings ID
-    await expect(modal.getByText("Bestilling #1")).toBeVisible();
+  // Order ID
+  await expect(modal.getByText("Bestilling #1")).toBeVisible();
 
-    // Betjent af
-    await expect(modal.getByText(/Betjent af/i)).toBeVisible();
+  // Served by
+  await expect(modal.getByText(/Betjent af/i)).toBeVisible();
 
-    // Kundens navn
-    await expect(modal.getByText("Hans Jensen")).toBeVisible();
+  // Customer name
+  await expect(modal.getByText("Hans Jensen")).toBeVisible();
 
-    // Telefon
-    await expect(modal.getByText("22223333")).toBeVisible();
+  // Phone
+  await expect(modal.getByText("22223333")).toBeVisible();
 
-    // Type (levering/afhentning) – tjek begge farver muligt
-    await expect(modal.getByText(/Levering:|Afhentning:/)).toBeVisible();
+  // Type (delivery/pickup)
+  await expect(modal.getByText(/Levering:|Afhentning:/)).toBeVisible();
 
-    // Tidspunkt
-    await expect(modal.getByText(/Tidspunkt:/)).toBeVisible();
+  // Times
+  await expect(modal.getByText(/Tidspunkt:/)).toBeVisible();
 
-    // Betalt / ikke betalt
-    await expect(modal.getByText(/✔️|❌/)).toBeVisible();
+  // Paid / not paid
+  await expect(modal.getByText(/✔️|❌/)).toBeVisible();
 
-    // Totalpris
-    await expect(modal.getByText("I alt")).toBeVisible();
+  // Total price
+  await expect(modal.getByText("I alt")).toBeVisible();
 
-    // Produkter liste container
-    await expect(modal.getByRole('heading', { name: 'Produkter' })).toBeVisible();
+  // Products list container
+  await expect(
+    modal.getByRole("heading", { name: "Produkter" })
+  ).toBeVisible();
 
-    // Mindst ét produkt fra mockdata
-    await expect(modal.getByText("Rundstykker")).toBeVisible();
+  // Products from mock data
+  await expect(modal.getByText("Franskbrød")).toBeVisible();
+  await expect(modal.getByText("Rundstykker")).toBeVisible();
 
-    // Enhedspris + antal
-    await expect(modal.getByText(/stk —/)).toHaveCount(2);
+  // Unit price + quantity (there are two lines in the mock with stk as unit)
+  await expect(modal.getByText(/stk —/)).toHaveCount(2);
 
-    // Noter
-    await expect(modal.getByText(/mere brød/)).toBeVisible();
-    await expect(modal.getByText(/Skær i halve/)).toBeVisible();
+  // Notes
+  await expect(modal.getByText(/mere brød/)).toBeVisible();     
+  await expect(modal.getByText(/Skær i halve/)).toBeVisible();  
 
+  // Check that the type is displayed
+  await expect(modal.getByText(/Topping:/)).toBeVisible();
 
+  // Check that both options are visible somewhere in the modal's product list
+  await expect(modal.getByText(/Friske hindbær/)).toBeVisible();
+  await expect(modal.getByText(/Hvid chokolade/)).toBeVisible();
 });
-
 
 test("modal kan lukkes via kryds", async ({ page }) => {
   await page.goto("/orders");

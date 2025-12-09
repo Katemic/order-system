@@ -29,6 +29,18 @@ function isTestMode() {
   return process.env.TEST_ENV === "true";
 }
 
+function readCustomizationMock() {
+  const filePath = path.join(
+    process.cwd(),
+    process.env.TEST_ENV === "true"
+      ? "mock.customizations.test.json"
+      : "customizations.mock.json"
+  );
+
+  const file = fs.readFileSync(filePath, "utf8");
+  return JSON.parse(file);
+}
+
 function mapDbRowToProduct(row) {
   if (!row) return null;
 
@@ -110,7 +122,33 @@ export function mapDbRowToProductWithCustomization(row) {
 
 export async function getAllProducts() {
   if (isTestMode()) {
-    return readMockData();
+    const products = readMockData();
+    const customizationMock = readCustomizationMock();
+
+    return products.map((p) => {
+      const productLinkIds = customizationMock.productLinks[p.id] || [];
+
+      // Byg customizationOptions i samme output-format som mapperen normalt laver
+      const customization = {};
+
+      for (const type of customizationMock.types) {
+        const matchedOptions = type.options.filter((opt) =>
+          productLinkIds.includes(opt.id)
+        );
+
+        if (matchedOptions.length > 0) {
+          customization[type.name] = matchedOptions.map((opt) => ({
+            id: opt.id,
+            name: opt.name,
+          }));
+        }
+      }
+
+      return {
+        ...p,                        // behold original mock struktur
+        customizationOptions: customization, 
+      };
+    });
   }
 
   const { data, error } = await supabase
