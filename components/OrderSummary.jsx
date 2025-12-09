@@ -30,7 +30,9 @@ export default function OrderSummary({
 
       <div className="flex-1 overflow-y-auto space-y-3">
         {items.length === 0 ? (
-          <p className="text-sm text-neutral-500">Ingen produkter i bestillingen endnu.</p>
+          <p className="text-sm text-neutral-500">
+            Ingen produkter i bestillingen endnu.
+          </p>
         ) : (
           items.map((item, index) => (
             <div
@@ -43,13 +45,51 @@ export default function OrderSummary({
                 onClick={() => onEditItem && onEditItem(index)}
               >
                 <div className="flex justify-between font-medium text-neutral-900">
-                  <span>{item.quantity}x {item.name}</span>
-                  <span>{(item.price * item.quantity).toFixed(2)} kr.</span>
+                  <span>
+                    {item.quantity}x {item.name}
+                  </span>
+                  <span>
+                    {(item.price * item.quantity).toFixed(2)} kr.
+                  </span>
                 </div>
 
+                {/* NOTE */}
                 {item.note && (
-                  <p className="mt-1 text-xs text-neutral-600 break-words">Note: {item.note}</p>
+                  <p className="mt-1 text-xs text-neutral-600 break-words">
+                    Note: {item.note}
+                  </p>
                 )}
+
+                {item.customizations &&
+                  Object.keys(item.customizations).length > 0 && (
+                    <div className="mt-1 text-xs text-neutral-600 space-y-1">
+                      {Object.entries(item.customizations).map(
+                        ([typeName, options]) => {
+                          if (!Array.isArray(options) || options.length === 0)
+                            return null;
+
+                          const optionLabels = options
+                            .map((opt) =>
+                              typeof opt === "string"
+                                ? opt
+                                : typeof opt === "object" && opt !== null
+                                  ? opt.name ?? opt.id
+                                  : String(opt)
+                            )
+                            .join(", ");
+
+                          return (
+                            <p key={typeName}>
+                              <span className="font-medium">
+                                {typeName}:
+                              </span>{" "}
+                              {optionLabels}
+                            </p>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
               </div>
 
               {/* FJERN PRODUKT */}
@@ -80,7 +120,8 @@ export default function OrderSummary({
             className={`flex-1 transition px-3 py-2 rounded-lg text-sm font-medium
               ${items.length === 0
                 ? "opacity-50 cursor-not-allowed bg-neutral-300 text-neutral-500 border border-neutral-300"
-                : "btn-primary"}`}
+                : "btn-primary"
+              }`}
           >
             Videre
           </button>
@@ -99,4 +140,3 @@ export default function OrderSummary({
     </aside>
   );
 }
-

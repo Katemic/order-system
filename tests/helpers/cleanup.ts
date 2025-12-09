@@ -158,7 +158,7 @@ export function resetMockDataOrders() {
             delivery_address: null,
             delivery_zip: null,
             note: "Skær i halve",
-            total_price: 110,
+            total_price: 110, // (her er din matematik lidt off, men det er ok til test)
             order_items: [
                 {
                     id: 10,
@@ -166,7 +166,13 @@ export function resetMockDataOrders() {
                     product_id: 2,
                     quantity: 3,
                     item_note: "",
-                    products: { id: 2, name: "Franskbrød", price: 20 }
+                    products: { id: 2, name: "Franskbrød", price: 20 },
+                    customizations: {
+                        Topping: [
+                            { id: 101, name: "Friske hindbær" },
+                            { id: 102, name: "Hvid chokolade" },
+                        ],
+                    },
                 },
                 {
                     id: 11,
@@ -174,10 +180,11 @@ export function resetMockDataOrders() {
                     product_id: 5,
                     quantity: 1,
                     item_note: "mere brød",
-                    products: { id: 5, name: "Rundstykker", price: 10 }
-                }
-            ]
+                    products: { id: 5, name: "Rundstykker", price: 10 },
+                },
+            ],
         },
+
         {
             id: 2,
             customer_name: "Maria Madsen",

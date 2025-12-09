@@ -52,8 +52,6 @@ export async function deleteOrder(id) {
   return { success: true };
 }
 
-
-
 export async function getAllOrders() {
   if (isTestMode()) {
     return readOrdersMock();
@@ -65,13 +63,57 @@ export async function getAllOrders() {
       *,
       order_items (
         *,
-        products (*)
+        products (*),
+        order_item_customizations (
+          option_id,
+          customization_options (
+            id,
+            name,
+            customization_types (
+              name
+            )
+          )
+        )
       )
     `)
     .order("date_needed", { ascending: true });
 
   if (error) throw error;
-  return data;
+
+  const mapped = (data || []).map((order) => ({
+    ...order,
+    order_items: (order.order_items || []).map((item) => {
+      const rawCustoms = item.order_item_customizations || [];
+      const customizations = {};
+
+      rawCustoms.forEach((row) => {
+        const opt = row.customization_options;
+        if (!opt) return;
+
+        const typeName = opt.customization_types?.name ?? "Tilpasning";
+
+        if (!customizations[typeName]) {
+          customizations[typeName] = [];
+        }
+
+        if (!customizations[typeName].some((o) => o.id === opt.id)) {
+          customizations[typeName].push({
+            id: opt.id,
+            name: opt.name,
+          });
+        }
+      });
+
+      const { order_item_customizations: _, ...rest } = item;
+
+      return {
+        ...rest,
+        customizations,
+      };
+    }),
+  }));
+
+  return mapped;
 }
 
 export async function getOrderById(id) {
@@ -130,6 +172,7 @@ export async function createOrderWithItems({
   const today = new Date();
   const dateCreated = today.toISOString().slice(0, 10);
 
+  // ───────────────────── MOCK MODE ─────────────────────
   if (isTestMode()) {
     const existingOrders = readOrdersMock();
 
@@ -157,6 +200,8 @@ export async function createOrderWithItems({
         name: item.name,
         price: item.price,
       },
+      // 🔹 gem customizations i mock-data, så UI/tests kan se dem
+      customizations: item.customizations || {},
     }));
 
     const newOrder = {
@@ -182,6 +227,9 @@ export async function createOrderWithItems({
     return { success: true, orderId: nextOrderId, mode: "mock" };
   }
 
+  // ───────────────────── DB MODE ─────────────────────
+
+  // 1) Opret selve ordren
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert({
@@ -215,6 +263,7 @@ export async function createOrderWithItems({
     };
   }
 
+  // 2) Opret order_items og få dem retur med id'er
   const itemsPayload = orderItems.map((item) => ({
     order_id: order.id,
     product_id: item.productId,
@@ -222,9 +271,10 @@ export async function createOrderWithItems({
     item_note: item.note || null,
   }));
 
-  const { error: itemsError } = await supabase
+  const { data: insertedItems, error: itemsError } = await supabase
     .from("order_items")
-    .insert(itemsPayload);
+    .insert(itemsPayload)
+    .select(); // vigtigt for at få id med
 
   if (itemsError) {
     console.error("Fejl ved oprettelse af order_items:", itemsError);
@@ -237,8 +287,51 @@ export async function createOrderWithItems({
     };
   }
 
+  // 3) Opret order_item_customizations ud fra orderItems[*].customizations
+  const customizationsPayload = [];
+
+  // vi antager samme rækkefølge: orderItems[index] matcher insertedItems[index]
+  orderItems.forEach((item, index) => {
+    const row = insertedItems[index];
+    if (!row) return;
+
+    const groups = item.customizations || {};
+
+    Object.values(groups).forEach((options) => {
+      if (!Array.isArray(options)) return;
+
+      options.forEach((opt) => {
+        if (!opt || typeof opt.id === "undefined") return;
+
+        customizationsPayload.push({
+          order_item_id: row.id,
+          option_id: opt.id,
+        });
+      });
+    });
+  });
+
+  if (customizationsPayload.length > 0) {
+    const { error: customError } = await supabase
+      .from("order_item_customizations")
+      .insert(customizationsPayload);
+
+    if (customError) {
+      console.error(
+        "Fejl ved oprettelse af order_item_customizations:",
+        customError
+      );
+      return {
+        success: false,
+        message:
+          "Bestillingen blev delvist oprettet, men der skete en fejl ved gemning af tilpasninger.",
+      };
+    }
+  }
+
   return { success: true, orderId: order.id, mode: "db" };
 }
+
 
 export async function UpdateOrderCustomerInfo({
   id,
