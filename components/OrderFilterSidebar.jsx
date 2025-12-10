@@ -98,16 +98,38 @@ export default function OrderFilterSidebar({ onItemClick }) {
     });
   }
 
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const searchValue =
+      formData.get("search")?.toString().trim() || "";
+
+    const url = new URL(window.location.href);
+
+    if (searchValue) {
+      url.searchParams.set("search", searchValue);
+    } else {
+      url.searchParams.delete("search");
+    }
+
+    if (range) {
+      url.searchParams.set("range", range);
+    }
+
+    router.push(url.toString(), { scroll: false });
+    onItemClick?.();
+  }
+
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
       {/* SØGNING */}
       <form
         action="/orders"
         method="GET"
-        onSubmit={onItemClick}
+        onSubmit={handleSearchSubmit}
         className="mb-6 grid grid-cols-[1fr_auto] gap-2"
       >
-        {/* Bevar range når man søger, så man kan søge i gamle/nye */}
         <input type="hidden" name="range" value={range} />
 
         <input
