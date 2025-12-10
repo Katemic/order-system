@@ -25,7 +25,6 @@ export async function submitOrderAction(prevState, formData) {
   const orderNote = formData.get("orderNote")?.toString().trim() || "";
 
   const orderItemsRaw = formData.get("orderItems")?.toString() || "[]";
-
   const paid = paidRaw === "on";
 
   let orderItems = [];
@@ -99,6 +98,7 @@ export async function submitOrderAction(prevState, formData) {
       success: false,
       message: "Der er fejl i formularen. Ret venligst de markerede felter.",
       errors,
+      paidChecked: paid,
     };
   }
 
@@ -130,8 +130,10 @@ export async function submitOrderAction(prevState, formData) {
   if (!dbResult.success) {
     return {
       success: false,
-      message: dbResult.message || "Der skete en fejl ved gemning af bestillingen.",
+      message:
+        dbResult.message || "Der skete en fejl ved gemning af bestillingen.",
       errors: {},
+      paidChecked: paid,
     };
   }
 
