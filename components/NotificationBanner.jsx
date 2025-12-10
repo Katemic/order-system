@@ -54,7 +54,7 @@ export default function NotificationBanner() {
 
   if (!visible) return null;
 
- let text = "";
+  let text = "";
 
   if (deleted === "true") {
     if (id) {
@@ -62,6 +62,9 @@ export default function NotificationBanner() {
     } else {
       text = `Produkt "${productName}" er slettet.`; // Produkt-sletning
     }
+  }
+  else if (created === "true" && pathname.startsWith("/customizations")) {
+    text = "Tilpasning oprettet.";
   }
   else if (created === "true") {
     text = "Bestilling er oprettet.";

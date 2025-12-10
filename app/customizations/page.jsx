@@ -1,5 +1,7 @@
 import { getCustomizationTypesWithOptions } from "@/lib/customizations";
 import CustomizationsTable from "@/components/CustomizationsTable";
+import Link from "next/link";
+import NotificationBanner from "@/components/NotificationBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -8,13 +10,26 @@ export default async function CustomizationsPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 pt-20">
-      <header className="mb-8 text-center">
+
+      {/* HEADER */}
+      <header className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
           Tilpasninger
         </h1>
+
+        <Link
+          href="/createCustomization"
+          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm"
+        >
+          Opret ny tilpasning
+        </Link>
       </header>
 
-      <CustomizationsTable customizations={customizations} />
+      <div>
+        <CustomizationsTable customizations={customizations} />
+      </div>
+      <NotificationBanner />
     </main>
   );
 }
+

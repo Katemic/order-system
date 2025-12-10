@@ -183,3 +183,60 @@ export async function setProductCustomizations(productId, optionIds) {
   return { success: true, mode: "db" };
 }
 
+export async function createCustomizationType(title, options) {
+  /* ---------- MOCK MODE ---------- */
+  if (isTestMode()) {
+    const mock = readMock();
+
+    const newId = mock.types.length
+      ? Math.max(...mock.types.map((t) => t.id)) + 1
+      : 1;
+
+    const formattedOptions = options.map((name, i) => ({
+      id: newId * 100 + (i + 1),
+      name
+    }));
+
+    mock.types.push({
+      id: newId,
+      name: title,
+      options: [
+        ...formattedOptions,
+        { id: newId * 100 + 999, name: "Andet, se note" }
+      ]
+    });
+
+    writeMock(mock);
+    return { id: newId };
+  }
+
+  /* ---------- DB ---------- */
+
+  // Step 1: Insert type
+  const { data: typeRow, error: typeErr } = await supabase
+    .from("customization_types")
+    .insert({ name: title })
+    .select("id")
+    .single();
+
+  if (typeErr) throw typeErr;
+
+  const typeId = typeRow.id;
+
+  // Step 2: Insert options
+  const rows = options.map((name) => ({
+    name,
+    type_id: typeId
+  }));
+
+  await supabase.from("customization_options").insert(rows);
+
+  // Step 3: Insert "Andet, se note"
+  await supabase.from("customization_options").insert({
+    name: "Andet, se note",
+    type_id: typeId
+  });
+
+  return { id: typeId };
+}
+
