@@ -11,6 +11,7 @@ const initialState = {
     success: false,
     message: "",
     errors: {},
+    paidChecked: false,
 };
 
 export default function CustomerInfoClient() {
@@ -68,6 +69,7 @@ export default function CustomerInfoClient() {
 
     const isPickup = form.fulfillmentType === "pickup";
     const isDelivery = form.fulfillmentType === "delivery";
+    const hasItems = orderItems.length > 0;
 
     useEffect(() => {
         if (state?.success) {
@@ -78,8 +80,6 @@ export default function CustomerInfoClient() {
             }
         }
     }, [state]);
-
-    const hasItems = !state?.success && orderItems.length > 0;
 
     return (
         <div className="space-y-6">
@@ -107,6 +107,7 @@ export default function CustomerInfoClient() {
                     Tilbage
                 </Link>
             </div>
+
             <div className="grid gap-8 md:grid-cols-[2fr_3fr] items-start">
                 <OrderSummaryPanel
                     orderItems={orderItems}
