@@ -40,20 +40,8 @@ test("Can open a type and see its options in a bulleted list (if there are types
     page,
 }) => {
     await page.goto("/customizations");
-
     const table = page.locator("table");
-    if ((await table.count()) === 0) {
-        // Nothing to test, no types
-        return;
-    }
-
     const rows = table.locator("tbody tr");
-    const rowCount = await rows.count();
-    if (rowCount === 0) {
-        // Table without rows, so we stop
-        return;
-    }
-
     const firstRow = rows.first();
     const details = firstRow.locator("details");
     const summary = details.locator("summary");
@@ -80,9 +68,6 @@ test("options are displayed in a grid (up to 4 columns) on desktop if the type h
     await page.goto("/customizations");
 
     const table = page.locator("table");
-    if ((await table.count()) === 0) {
-        return;
-    }
 
     const firstRow = table.locator("tbody tr").first();
     const details = firstRow.locator("details");
@@ -91,9 +76,6 @@ test("options are displayed in a grid (up to 4 columns) on desktop if the type h
     await summary.click();
 
     const optionsList = details.locator("ul").first();
-    if ((await optionsList.count()) === 0) {
-        return;
-    }
 
     await expect(optionsList).toBeVisible();
 
