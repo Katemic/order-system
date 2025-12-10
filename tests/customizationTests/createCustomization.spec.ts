@@ -30,7 +30,7 @@ test("Create page shows title input and empty options input", async ({ page }) =
     await page.goto("/createCustomization");
 
     // Title input should be visible
-    await expect(page.getByLabel(/Titel/i)).toBeVisible();
+    await expect(page.locator('input[name="title"]')).toBeVisible();
 
     // Options input should be visible
     await expect(page.getByPlaceholder("Skriv en mulighed…")).toBeVisible();
