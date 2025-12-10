@@ -15,7 +15,6 @@ export default function Sidebar({ selectedCategory, onItemClick, basePath = "/pr
         <form
           action={basePath}
           method="GET"
-          onSubmit={onItemClick}
           className="mb-4 grid grid-cols-[1fr_auto] gap-2 overflow-hidden"
         >
           <input
