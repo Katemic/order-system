@@ -125,7 +125,7 @@ export async function setProductCustomizations(productId, optionIds) {
     mock.productLinks[productId] = Array.from(new Set(selected));
     writeMock(mock);
 
-    return { success: true, mode: "mock" };
+    return { success: true};
   }
 
   /* ------------ REAL DATABASE ------------- */
@@ -180,7 +180,7 @@ export async function setProductCustomizations(productId, optionIds) {
 
   await supabase.from("product_customization_options").insert(rows);
 
-  return { success: true, mode: "db" };
+  return { success: true };
 }
 
 export async function createCustomizationType(title, options) {
@@ -238,5 +238,31 @@ export async function createCustomizationType(title, options) {
   });
 
   return { id: typeId };
+}
+
+export async function deleteCustomization(id) {
+  /* ---------- MOCK ---------- */
+  if (isTestMode()) {
+    const mock = readMock();
+
+    // Fjern typen
+    mock.types = mock.types.filter(t => t.id !== Number(id));
+
+    // Fjern alle links i productLinks
+    for (const pId of Object.keys(mock.productLinks)) {
+      mock.productLinks[pId] = mock.productLinks[pId].filter(optId =>
+        !mock.types.some(t => t.options.some(o => o.id === optId))
+      );
+    }
+
+    writeMock(mock);
+    return { success: true};
+  }
+
+  /* ---------- REAL DATABASE ---------- */
+  await supabase.from("customization_options").delete().eq("type_id", id);
+  await supabase.from("customization_types").delete().eq("id", id);
+
+  return { success: true};
 }
 

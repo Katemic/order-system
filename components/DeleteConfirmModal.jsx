@@ -3,7 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { deleteProductAction } from "@/actions/deleteProductAction";
 import { deleteOrderAction } from "@/actions/deleteOrderAction";
-//import { deleteCustomizationAction } from "@/actions/deleteCustomizationAction";
+import { deleteCustomizationAction } from "@/actions/deleteCustomizationAction";
 
 const DELETE_CONFIG = {
   product: {
@@ -16,11 +16,11 @@ const DELETE_CONFIG = {
     deleteAction: deleteOrderAction,
     name: () => ""
   },
-  // customization: {
-  //   title: (item) => `Tilpasningen “${item.name}” bliver permanent slettet.`,
-  //   deleteAction: deleteCustomizationAction,
-  //   name: (item) => item.name || ""
-  // }
+  customization: {
+    title: (item) => `Tilpasningen “${item.name}” bliver permanent slettet.`,
+    deleteAction: deleteCustomizationAction,
+    name: (item) => item.name || ""
+  }
 };
 
 export default function DeleteConfirmModal({ item, type, onClose, onDeleteComplete }) {

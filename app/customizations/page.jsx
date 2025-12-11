@@ -2,6 +2,7 @@ import { getCustomizationTypesWithOptions } from "@/lib/customizations";
 import CustomizationsTable from "@/components/CustomizationsTable";
 import Link from "next/link";
 import NotificationBanner from "@/components/NotificationBanner";
+import CustomizationsTableWrapper from "@/components/CustomizationsTableWrapper";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,7 @@ export default async function CustomizationsPage() {
       </header>
 
       <div>
-        <CustomizationsTable customizations={customizations} />
+        <CustomizationsTableWrapper customizations={customizations} />
       </div>
       <NotificationBanner />
     </main>
