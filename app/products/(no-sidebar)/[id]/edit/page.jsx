@@ -1,4 +1,4 @@
-// app/products/[id]/edit/page.jsx
+
 import ProductForm from "@/components/ProductForm";
 import { updateProductAction } from "@/actions/updateProductAction";
 import { getProductById } from "@/lib/products";

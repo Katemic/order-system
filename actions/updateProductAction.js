@@ -1,4 +1,4 @@
-// actions/updateProductAction.js
+
 "use server";
 
 import fs from "fs";

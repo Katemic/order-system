@@ -1,4 +1,10 @@
+"use client";
+import { useState } from "react";
+
 export default function CustomizationsTable({ customizations }) {
+
+    const [showDelete, setShowDelete] = useState(false);
+
     if (!customizations || customizations.length === 0) {
         return (
             <p className="text-sm text-neutral-500">

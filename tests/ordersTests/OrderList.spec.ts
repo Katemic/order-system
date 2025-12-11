@@ -25,7 +25,7 @@ test('Viser i dags bestillinger på /orders', async ({ page }) => {
 
     const rows = await page.locator('table tbody tr').count();
 
-    expect(rows).toBe(1); // antal mock-ordrer du har
+    expect(rows).toBe(1); 
 });
 
 
@@ -89,7 +89,6 @@ test('Leveringsordrer er markeret med rød tekst', async ({ page }) => {
 test("modal opens with the correct order details and show customizations", async ({ page }) => {
   await page.goto("/orders");
 
-  // Click on Hans Jensen (order #1 in your mocks)
   await page.getByText("Hans Jensen").click();
 
   // Modal should be visible
