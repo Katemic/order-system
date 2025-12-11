@@ -2,358 +2,357 @@ import fs from "fs";
 import path from "path";
 
 export function resetMockData() {
-    const testFile = path.join(process.cwd(), "mockdata.test.json");
-    const defaultData = [
-        {
-            id: 1,
-            name: "Hvedebrød",
-            price: 28.5,
-            ingredients: "Hvedemel, vand, gær, salt",
-            nutrition: {
-                Energy_kcal: 250,
-                Energy_kJ: 1046,
-                Fat: 2.0,
-                Saturated_fatty_acids: 0.3,
-                Carbohydrates: 48,
-                Sugars: 2,
-                Dietary_fiber: 3,
-                Protein: 9,
-                Salt: 1.2,
-                Water_content: 36
-            },
-            image: "/assets/defaultBillede.jpg",
-            category: "Brød",
-            active: true
-        },
-        {
-            id: 2,
-            name: "Surdejsbrød",
-            price: 32.5,
-            ingredients: "Hvedemel, vand, surdej (hvede), salt",
-            nutrition: {
-                Energy_kcal: 240,
-                Energy_kJ: 1000,
-                Fat: 1.2,
-                Saturated_fatty_acids: 0.2,
-                Carbohydrates: 47,
-                Sugars: 1,
-                Dietary_fiber: 3.5,
-                Protein: 8.5,
-                Salt: 1.4,
-                Water_content: 37
-            },
-            image: "/assets/defaultBillede.jpg",
-            category: "Brød",
-            active: true
-        },
-        {
-            id: 3,
-            name: "Hindbærtærte",
-            price: 45,
-            ingredients: "Hvedemel, smør, sukker, æg, hindbær",
-            nutrition: {
-                Energy_kcal: 350,
-                Energy_kJ: 1464,
-                Fat: 18,
-                Saturated_fatty_acids: 10,
-                Carbohydrates: 42,
-                Sugars: 24,
-                Dietary_fiber: 2,
-                Protein: 5,
-                Salt: 0.6,
-                Water_content: 20
-            },
-            image: "/assets/defaultBillede.jpg",
-            category: "Konditor",
-            active: true
-        },
-        {
-            id: 4,
-            name: "Chokoladekage",
-            price: 48,
-            ingredients: "Hvedemel, kakao, sukker, smør, æg",
-            nutrition: {
-                Energy_kcal: 420,
-                Energy_kJ: 1757,
-                Fat: 22,
-                Saturated_fatty_acids: 13,
-                Carbohydrates: 50,
-                Sugars: 30,
-                Dietary_fiber: 3,
-                Protein: 6,
-                Salt: 0.7,
-                Water_content: 18
-            },
-            image: "/assets/defaultBillede.jpg",
-            category: "Konditor",
-            active: true
-        },
-        {
-            id: 5,
-            name: "Spandauer",
-            price: 22,
-            ingredients: "Blød dej, smør, remonce, syltetøj",
-            nutrition: {
-                Energy_kcal: 360,
-                Energy_kJ: 1507,
-                Fat: 16,
-                Saturated_fatty_acids: 9,
-                Carbohydrates: 48,
-                Sugars: 18,
-                Dietary_fiber: 2,
-                Protein: 5,
-                Salt: 0.8,
-                Water_content: 22
-            },
-            image: "/assets/defaultBillede.jpg",
-            category: "Wienerbrød",
-            active: true
-        }
-    ];
+  const testFile = path.join(process.cwd(), "mockdata.test.json");
+  const defaultData = [
+    {
+      id: 1,
+      name: "Hvedebrød",
+      price: 28.5,
+      ingredients: "Hvedemel, vand, gær, salt",
+      nutrition: {
+        Energy_kcal: 250,
+        Energy_kJ: 1046,
+        Fat: 2.0,
+        Saturated_fatty_acids: 0.3,
+        Carbohydrates: 48,
+        Sugars: 2,
+        Dietary_fiber: 3,
+        Protein: 9,
+        Salt: 1.2,
+        Water_content: 36,
+      },
+      image: "/assets/defaultBillede.jpg",
+      category: "Brød",
+      active: true,
+    },
+    {
+      id: 2,
+      name: "Surdejsbrød",
+      price: 32.5,
+      ingredients: "Hvedemel, vand, surdej (hvede), salt",
+      nutrition: {
+        Energy_kcal: 240,
+        Energy_kJ: 1000,
+        Fat: 1.2,
+        Saturated_fatty_acids: 0.2,
+        Carbohydrates: 47,
+        Sugars: 1,
+        Dietary_fiber: 3.5,
+        Protein: 8.5,
+        Salt: 1.4,
+        Water_content: 37,
+      },
+      image: "/assets/defaultBillede.jpg",
+      category: "Brød",
+      active: true,
+    },
+    {
+      id: 3,
+      name: "Hindbærtærte",
+      price: 45,
+      ingredients: "Hvedemel, smør, sukker, æg, hindbær",
+      nutrition: {
+        Energy_kcal: 350,
+        Energy_kJ: 1464,
+        Fat: 18,
+        Saturated_fatty_acids: 10,
+        Carbohydrates: 42,
+        Sugars: 24,
+        Dietary_fiber: 2,
+        Protein: 5,
+        Salt: 0.6,
+        Water_content: 20,
+      },
+      image: "/assets/defaultBillede.jpg",
+      category: "Konditor",
+      active: true,
+    },
+    {
+      id: 4,
+      name: "Chokoladekage",
+      price: 48,
+      ingredients: "Hvedemel, kakao, sukker, smør, æg",
+      nutrition: {
+        Energy_kcal: 420,
+        Energy_kJ: 1757,
+        Fat: 22,
+        Saturated_fatty_acids: 13,
+        Carbohydrates: 50,
+        Sugars: 30,
+        Dietary_fiber: 3,
+        Protein: 6,
+        Salt: 0.7,
+        Water_content: 18,
+      },
+      image: "/assets/defaultBillede.jpg",
+      category: "Konditor",
+      active: true,
+    },
+    {
+      id: 5,
+      name: "Spandauer",
+      price: 22,
+      ingredients: "Blød dej, smør, remonce, syltetøj",
+      nutrition: {
+        Energy_kcal: 360,
+        Energy_kJ: 1507,
+        Fat: 16,
+        Saturated_fatty_acids: 9,
+        Carbohydrates: 48,
+        Sugars: 18,
+        Dietary_fiber: 2,
+        Protein: 5,
+        Salt: 0.8,
+        Water_content: 22,
+      },
+      image: "/assets/defaultBillede.jpg",
+      category: "Wienerbrød",
+      active: true,
+    },
+  ];
 
-    fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
-
+  fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
 }
 
 export function resetMockDataOrders() {
-    const testFile = path.join(process.cwd(), "mock.orders.test.json");
+  const testFile = path.join(process.cwd(), "mock.orders.test.json");
 
-    const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toISOString().slice(0, 10);
 
-    const defaultData = [
+  const defaultData = [
+    {
+      id: 1,
+      customer_name: "Hans Jensen",
+      customer_phone: "22223333",
+      date_needed: today,
+      date_created: today,
+      taken_by: "Louise",
+      paid: false,
+      delivery_type: "pickup",
+      pickup_time: "08:00-09:00",
+      delivery_time: null,
+      delivery_address: null,
+      delivery_zip: null,
+      note: "Skær i halve",
+      total_price: 110, 
+      order_items: [
         {
-            id: 1,
-            customer_name: "Hans Jensen",
-            customer_phone: "22223333",
-            date_needed: today,
-            date_created: today,
-            taken_by: "Louise",
-            paid: false,
-            delivery_type: "pickup",
-            pickup_time: "08:00-09:00",
-            delivery_time: null,
-            delivery_address: null,
-            delivery_zip: null,
-            note: "Skær i halve",
-            total_price: 110, // (her er din matematik lidt off, men det er ok til test)
-            order_items: [
-                {
-                    id: 10,
-                    order_id: 1,
-                    product_id: 2,
-                    quantity: 3,
-                    item_note: "",
-                    products: { id: 2, name: "Franskbrød", price: 20 },
-                    customizations: {
-                        Topping: [
-                            { id: 101, name: "Friske hindbær" },
-                            { id: 102, name: "Hvid chokolade" },
-                        ],
-                    },
-                },
-                {
-                    id: 11,
-                    order_id: 1,
-                    product_id: 5,
-                    quantity: 1,
-                    item_note: "mere brød",
-                    products: { id: 5, name: "Rundstykker", price: 10 },
-                },
+          id: 10,
+          order_id: 1,
+          product_id: 2,
+          quantity: 3,
+          item_note: "",
+          products: { id: 2, name: "Franskbrød", price: 20 },
+          customizations: {
+            Topping: [
+              { id: 101, name: "Friske hindbær" },
+              { id: 102, name: "Hvid chokolade" },
             ],
+          },
         },
+        {
+          id: 11,
+          order_id: 1,
+          product_id: 5,
+          quantity: 1,
+          item_note: "mere brød",
+          products: { id: 5, name: "Rundstykker", price: 10 },
+        },
+      ],
+    },
 
+    {
+      id: 2,
+      customer_name: "Maria Madsen",
+      customer_phone: "44556677",
+      date_needed: "2026-02-10",
+      date_created: "2025-12-06",
+      taken_by: "Thomas",
+      paid: true,
+      delivery_type: "delivery",
+      pickup_time: null,
+      delivery_time: "11:00",
+      delivery_address: "Bagervej 14",
+      delivery_zip: "9800",
+      note: "",
+      total_price: 84,
+      order_items: [
         {
-            id: 2,
-            customer_name: "Maria Madsen",
-            customer_phone: "44556677",
-            date_needed: "2025-12-10",
-            date_created: "2025-12-06",
-            taken_by: "Thomas",
-            paid: true,
-            delivery_type: "delivery",
-            pickup_time: null,
-            delivery_time: "11:00",
-            delivery_address: "Bagervej 14",
-            delivery_zip: "9800",
-            note: "",
-            total_price: 84,
-            order_items: [
-                {
-                    id: 12,
-                    order_id: 2,
-                    product_id: 4,
-                    quantity: 2,
-                    item_note: "",
-                    products: { id: 4, name: "Kanelstang", price: 42 }
-                }
-            ]
+          id: 12,
+          order_id: 2,
+          product_id: 4,
+          quantity: 2,
+          item_note: "",
+          products: { id: 4, name: "Kanelstang", price: 42 },
         },
+      ],
+    },
+    {
+      id: 3,
+      customer_name: "Peter Larsen",
+      customer_phone: "87654321",
+      date_needed: "2026-02-11",
+      date_created: "2025-12-08",
+      taken_by: "Anna",
+      paid: false,
+      delivery_type: "pickup",
+      pickup_time: "09:00",
+      delivery_time: null,
+      delivery_address: null,
+      delivery_zip: null,
+      note: "Ikke skåret",
+      total_price: 60,
+      order_items: [
         {
-            id: 3,
-            customer_name: "Peter Larsen",
-            customer_phone: "87654321",
-            date_needed: "2025-12-11",
-            date_created: "2025-12-08",
-            taken_by: "Anna",
-            paid: false,
-            delivery_type: "pickup",
-            pickup_time: "09:00",
-            delivery_time: null,
-            delivery_address: null,
-            delivery_zip: null,
-            note: "Ikke skåret",
-            total_price: 60,
-            order_items: [
-                {
-                    id: 13,
-                    order_id: 3,
-                    product_id: 6,
-                    quantity: 5,
-                    item_note: "Ekstra sprøde",
-                    products: { id: 6, name: "Chokoladebolle", price: 12 }
-                }
-            ]
+          id: 13,
+          order_id: 3,
+          product_id: 6,
+          quantity: 5,
+          item_note: "Ekstra sprøde",
+          products: { id: 6, name: "Chokoladebolle", price: 12 },
         },
+      ],
+    },
+    {
+      id: 4,
+      customer_name: "Frederikke Holm",
+      customer_phone: "99887766",
+      date_needed: "2026-02-11",
+      date_created: "2025-12-09",
+      taken_by: "Louise",
+      paid: true,
+      delivery_type: "delivery",
+      pickup_time: null,
+      delivery_time: "14:00-16:00",
+      delivery_address: "Park Allé 5",
+      delivery_zip: "9830",
+      note: "",
+      total_price: 150,
+      order_items: [
         {
-            id: 4,
-            customer_name: "Frederikke Holm",
-            customer_phone: "99887766",
-            date_needed: "2025-12-11",
-            date_created: "2025-12-09",
-            taken_by: "Louise",
-            paid: true,
-            delivery_type: "delivery",
-            pickup_time: null,
-            delivery_time: "14:00-16:00",
-            delivery_address: "Park Allé 5",
-            delivery_zip: "9830",
-            note: "",
-            total_price: 150,
-            order_items: [
-                {
-                    id: 14,
-                    order_id: 4,
-                    product_id: 7,
-                    quantity: 3,
-                    item_note: "",
-                    products: { id: 7, name: "Sandwich", price: 50 }
-                }
-            ]
+          id: 14,
+          order_id: 4,
+          product_id: 7,
+          quantity: 3,
+          item_note: "",
+          products: { id: 7, name: "Sandwich", price: 50 },
         },
+      ],
+    },
+    {
+      id: 5,
+      customer_name: "Kasper Nielsen",
+      customer_phone: "11112222",
+      date_needed: "2026-02-12",
+      date_created: "2025-12-10",
+      taken_by: "Anna",
+      paid: false,
+      delivery_type: "pickup",
+      pickup_time: "07:30",
+      delivery_time: null,
+      delivery_address: null,
+      delivery_zip: null,
+      note: "",
+      total_price: 90,
+      order_items: [
         {
-            id: 5,
-            customer_name: "Kasper Nielsen",
-            customer_phone: "11112222",
-            date_needed: "2025-12-12",
-            date_created: "2025-12-10",
-            taken_by: "Anna",
-            paid: false,
-            delivery_type: "pickup",
-            pickup_time: "07:30",
-            delivery_time: null,
-            delivery_address: null,
-            delivery_zip: null,
-            note: "",
-            total_price: 90,
-            order_items: [
-                {
-                    id: 15,
-                    order_id: 5,
-                    product_id: 3,
-                    quantity: 2,
-                    item_note: "",
-                    products: { id: 3, name: "Rugbrød", price: 45 }
-                }
-            ]
+          id: 15,
+          order_id: 5,
+          product_id: 3,
+          quantity: 2,
+          item_note: "",
+          products: { id: 3, name: "Rugbrød", price: 45 },
         },
+      ],
+    },
+    {
+      id: 6,
+      customer_name: "Sofie Sørensen",
+      customer_phone: "23456789",
+      date_needed: "2026-02-13",
+      date_created: "2025-12-11",
+      taken_by: "Thomas",
+      paid: true,
+      delivery_type: "delivery",
+      pickup_time: null,
+      delivery_time: "10:00",
+      delivery_address: "Havnevej 3",
+      delivery_zip: "9870",
+      note: "Stil ved døren",
+      total_price: 168,
+      order_items: [
         {
-            id: 6,
-            customer_name: "Sofie Sørensen",
-            customer_phone: "23456789",
-            date_needed: "2025-12-13",
-            date_created: "2025-12-11",
-            taken_by: "Thomas",
-            paid: true,
-            delivery_type: "delivery",
-            pickup_time: null,
-            delivery_time: "10:00",
-            delivery_address: "Havnevej 3",
-            delivery_zip: "9870",
-            note: "Stil ved døren",
-            total_price: 168,
-            order_items: [
-                {
-                    id: 16,
-                    order_id: 6,
-                    product_id: 8,
-                    quantity: 4,
-                    item_note: "",
-                    products: { id: 8, name: "Napoleonshat", price: 42 }
-                }
-            ]
+          id: 16,
+          order_id: 6,
+          product_id: 8,
+          quantity: 4,
+          item_note: "",
+          products: { id: 8, name: "Napoleonshat", price: 42 },
         },
+      ],
+    },
+    {
+      id: 7,
+      customer_name: "Nina Kristensen",
+      customer_phone: "33445566",
+      date_needed: "2026-02-13",
+      date_created: "2025-12-11",
+      taken_by: "Anna",
+      paid: false,
+      delivery_type: "pickup",
+      pickup_time: "12:00",
+      delivery_time: null,
+      delivery_address: null,
+      delivery_zip: null,
+      note: "Ingen rosiner",
+      total_price: 75,
+      order_items: [
         {
-            id: 7,
-            customer_name: "Nina Kristensen",
-            customer_phone: "33445566",
-            date_needed: "2025-12-13",
-            date_created: "2025-12-11",
-            taken_by: "Anna",
-            paid: false,
-            delivery_type: "pickup",
-            pickup_time: "12:00",
-            delivery_time: null,
-            delivery_address: null,
-            delivery_zip: null,
-            note: "Ingen rosiner",
-            total_price: 75,
-            order_items: [
-                {
-                    id: 17,
-                    order_id: 7,
-                    product_id: 9,
-                    quantity: 3,
-                    item_note: "",
-                    products: { id: 9, name: "Hvedestang", price: 25 }
-                }
-            ]
-        }
-    ];
+          id: 17,
+          order_id: 7,
+          product_id: 9,
+          quantity: 3,
+          item_note: "",
+          products: { id: 9, name: "Hvedestang", price: 25 },
+        },
+      ],
+    },
+  ];
 
-    fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
+  fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
 }
 
 export function resetMockCustomizationData() {
   const testFile = path.join(process.cwd(), "mock.customizations.test.json");
 
   const defaultData = {
-    "types": [
+    types: [
       {
-        "id": 1,
-        "name": "Topping",
-        "options": [
-          { "id": 101, "name": "Friske hindbær" },
-          { "id": 102, "name": "Hvid chokolade" },
-          { "id": 103, "name": "Andet, se note" }
-        ]
+        id: 1,
+        name: "Topping",
+        options: [
+          { id: 101, name: "Friske hindbær" },
+          { id: 102, name: "Hvid chokolade" },
+          { id: 103, name: "Andet, se note" },
+        ],
       },
       {
-        "id": 2,
-        "name": "Størrelse",
-        "options": [
-          { "id": 201, "name": "Lille" },
-          { "id": 202, "name": "Stor" },
-          { "id": 203, "name": "Andet, se note" }
-        ]
-      }
+        id: 2,
+        name: "Størrelse",
+        options: [
+          { id: 201, name: "Lille" },
+          { id: 202, name: "Stor" },
+          { id: 203, name: "Andet, se note" },
+        ],
+      },
     ],
-    "productLinks": {
+    productLinks: {
       "1": [],
       "2": [101, 103, 102, 201, 203],
       "3": [],
       "4": [],
-      "5": []
-    }
+      "5": [],
+    },
   };
 
   fs.writeFileSync(testFile, JSON.stringify(defaultData, null, 2), "utf8");
