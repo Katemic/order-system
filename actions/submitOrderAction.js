@@ -27,6 +27,21 @@ export async function submitOrderAction(prevState, formData) {
   const orderItemsRaw = formData.get("orderItems")?.toString() || "[]";
   const paid = paidRaw === "on";
 
+  const values = {
+    orderDate,
+    customerName,
+    phone,
+    agreedPrice: agreedPriceRaw,
+    orderedBy,
+    paid,
+    fulfillmentType,
+    pickupTime,
+    address,
+    zip,
+    deliveryTime,
+    orderNote,
+  };
+
   let orderItems = [];
   try {
     const parsed = JSON.parse(orderItemsRaw);
@@ -98,7 +113,7 @@ export async function submitOrderAction(prevState, formData) {
       success: false,
       message: "Der er fejl i formularen. Ret venligst de markerede felter.",
       errors,
-      paidChecked: paid,
+      values,
     };
   }
 
@@ -133,7 +148,7 @@ export async function submitOrderAction(prevState, formData) {
       message:
         dbResult.message || "Der skete en fejl ved gemning af bestillingen.",
       errors: {},
-      paidChecked: paid,
+      values,
     };
   }
 
