@@ -26,8 +26,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
   const hasDateFilter = !!date || !!from || !!to;
 
   const isTodaySelected =
-    (!from && !to && date === todayStr) ||
-    (!date && !from && !to && !range);
+    (!from && !to && date === todayStr) || (!date && !from && !to && !range);
 
   function update(params) {
     const url = new URL(window.location.href);
@@ -102,8 +101,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const searchValue =
-      formData.get("search")?.toString().trim() || "";
+    const searchValue = formData.get("search")?.toString().trim() || "";
 
     const url = new URL(window.location.href);
 
@@ -133,13 +131,14 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <input type="hidden" name="range" value={range} />
 
         <input
-          key={search || "empty"}
+          key={`search-${search}-${range}`}
           type="text"
           name="search"
           placeholder="Søg bestillinger…"
           defaultValue={search}
           className={inputClasses}
         />
+
         <button
           type="submit"
           className="px-4 py-2 text-sm font-medium rounded-md 
@@ -158,6 +157,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Vælg dato</label>
         <DateInput
+          key={`date-${date}-${range}`}
           prefix="date"
           value={date}
           onCommit={handleDateChange}
@@ -170,6 +170,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <label className="block text-sm font-medium mb-1">Periode</label>
 
         <DateInput
+          key={`from-${from}-${range}`}
           prefix="from"
           value={from}
           onCommit={handleFromChange}
@@ -177,6 +178,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         />
 
         <DateInput
+          key={`to-${to}-${range}`}
           prefix="to"
           value={to}
           onCommit={handleToChange}

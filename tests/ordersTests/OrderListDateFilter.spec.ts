@@ -49,7 +49,7 @@ test("filtering on a single date works", async ({ page }) => {
   const singleDate = page.locator('input[type="date"]').first();
   await expect(singleDate).toBeVisible();
 
-  await page.locator('input[type="date"]').first().fill("2025-12-12");
+  await page.locator('input[type="date"]').first().fill("2026-02-12");
 
   // Get all visible rows after filtering
   const rows = page.locator("table tbody tr");
@@ -57,7 +57,7 @@ test("filtering on a single date works", async ({ page }) => {
 
   // Check the date
   const dateCell = rows.first().locator("td").nth(1); 
-  await expect(dateCell).toHaveText("12.12.2025"); 
+  await expect(dateCell).toHaveText("12.02.2026"); 
 });
 
 test("filtering on a date range works", async ({ page }) => {
@@ -69,9 +69,9 @@ test("filtering on a date range works", async ({ page }) => {
 
     const inputs = page.getByRole('textbox');
 
-    await inputs.nth(2).fill("2025-12-12"); // fromDate
+    await inputs.nth(2).fill("2026-02-12"); // fromDate
     await sleep(1000); 
-    await inputs.nth(3).fill("2025-12-13"); // toDate
+    await inputs.nth(3).fill("2026-02-13"); // toDate
 
     const rows = page.locator("table tbody tr");
     await expect(rows).toHaveCount(3); 
@@ -82,7 +82,7 @@ test("filtering on a date range works", async ({ page }) => {
     for (const d of dates) {
         const [day, month, year] = d.split(".");
         const iso = `${year}-${month}-${day}`;
-        expect(iso >= "2025-12-12" && iso <= "2025-12-13").toBeTruthy();
+        expect(iso >= "2026-02-12" && iso <= "2026-02-13").toBeTruthy();
     }
 });
 
@@ -108,7 +108,7 @@ test('"Alle bestillinger" nulstiller filtrering', async ({ page }) => {
     const rows = page.locator("table tbody tr");
 
     // Filtrer først
-    await page.locator('input[type="date"]').first().fill("2025-12-13");
+    await page.locator('input[type="date"]').first().fill("2026-02-13");
     await expect(rows).toHaveCount(2);
 
 
@@ -167,7 +167,7 @@ test("orders: 'Kun leveringer' combined with date filter", async ({ page }) => {
 
   // Select date 2025-12-13 (Sofie = delivery, Nina = pickup)
   const dateInput = page.locator('input[type="date"]').first();
-  await dateInput.fill("2025-12-13");
+  await dateInput.fill("2026-02-13");
 
   await expect(page.getByText("Sofie Sørensen")).toBeVisible();
   await expect(page.getByText("Nina Kristensen")).toBeVisible();
