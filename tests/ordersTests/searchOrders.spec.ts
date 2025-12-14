@@ -43,7 +43,6 @@ test('Search resets when chosing all orders', async ({ page }) => {
   const rows = page.locator('tbody tr');
 
   // Sørg for at vi er i "Alle bestillinger"-tilstand,
-  // så baseline 7 rækker giver mening
   await page.getByRole('button', { name: 'Alle bestillinger' }).click();
 
   // Vent til eventuel search er væk

@@ -58,18 +58,17 @@ export default function NotificationBanner() {
 
   if (deleted === "true") {
     if (id) {
-      text = `Bestilling #${id} er slettet.`;   // Ordre-sletning
+      text = `Bestilling #${id} er slettet.`; // Ordre-sletning
+    } else if (deleted === "true" && pathname.startsWith("/customizations")) {
+      text = `Tilpasning "${productName}" er slettet.`;
     } else {
       text = `Produkt "${productName}" er slettet.`; // Produkt-sletning
     }
-  }
-  else if (created === "true" && pathname.startsWith("/customizations")) {
+  } else if (created === "true" && pathname.startsWith("/customizations")) {
     text = "Tilpasning oprettet.";
-  }
-  else if (created === "true") {
+  } else if (created === "true") {
     text = "Bestilling er oprettet.";
-  }
-  else {
+  } else {
     text = "Bestilling er opdateret.";
   }
   const bgColor = deleted === "true" ? "bg-red-600" : "bg-emerald-600";

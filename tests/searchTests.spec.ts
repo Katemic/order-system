@@ -47,7 +47,6 @@ test('searching for an invalid word returns no results', async ({ page }) => {
   await expect(grid).toBeVisible();
 
   // Wait for either cards or no-results message
-  // (Playwright will continue as soon as one of them is found)
   const noResults = grid.getByText('Ingen produkter fundet.');
 
   await expect(noResults).toBeVisible();
