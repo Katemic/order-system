@@ -125,23 +125,27 @@ export async function getOrderById(id) {
 
   const { data, error } = await supabase
     .from("orders")
-    .select(
-      `
+    .select(`
       *,
       order_items(
-        id,
-        order_id,
-        product_id,
-        quantity,
-        item_note,
+        *,
         products (
           id,
           name,
           price
+        ),
+        order_item_customizations (
+          option_id,
+          customization_options (
+            id,
+            name,
+            customization_types (
+              name
+            )
+          )
         )
       )
-    `
-    )
+    `)
     .eq("id", id)
     .single();
 
@@ -150,8 +154,42 @@ export async function getOrderById(id) {
     return null;
   }
 
-  return data;
+  const mapped = {
+    ...data,
+    order_items: (data.order_items || []).map((item) => {
+      const rawCustoms = item.order_item_customizations || [];
+      const customizations = {};
+
+      rawCustoms.forEach((row) => {
+        const opt = row.customization_options;
+        if (!opt) return;
+
+        const typeName = opt.customization_types?.name ?? "Tilpasning";
+
+        if (!customizations[typeName]) {
+          customizations[typeName] = [];
+        }
+
+        if (!customizations[typeName].some((o) => o.id === opt.id)) {
+          customizations[typeName].push({
+            id: opt.id,
+            name: opt.name,
+          });
+        }
+      });
+
+      const { order_item_customizations: _, ...rest } = item;
+
+      return {
+        ...rest,
+        customizations,
+      };
+    }),
+  };
+
+  return mapped;
 }
+
 
 export async function createOrderWithItems({
   orderDate,
@@ -200,7 +238,6 @@ export async function createOrderWithItems({
         name: item.name,
         price: item.price,
       },
-      // 🔹 gem customizations i mock-data, så UI/tests kan se dem
       customizations: item.customizations || {},
     }));
 
@@ -417,7 +454,6 @@ export async function updateOrderItems({ orderId, items }) {
     0
   );
 
-  // ---------- TEST MODE (mock) ----------
   if (isTestMode()) {
     const orders = readOrdersMock();
     const index = orders.findIndex((o) => o.id === Number(orderId));
@@ -447,6 +483,7 @@ export async function updateOrderItems({ orderId, items }) {
         name: item.name,
         price: item.price,
       },
+      customizations: item.customizations || {},
     }));
 
     orders[index] = {
@@ -458,6 +495,39 @@ export async function updateOrderItems({ orderId, items }) {
     writeOrdersMock(orders);
 
     return { success: true };
+  }
+
+  const { data: existingItems, error: existingError } = await supabase
+    .from("order_items")
+    .select("id")
+    .eq("order_id", orderId);
+
+  if (existingError) {
+    console.error("Fejl ved hentning af eksisterende order_items:", existingError);
+    return {
+      success: false,
+      message: "Kunne ikke opdatere bestilling (hent order_items).",
+    };
+  }
+
+  const existingIds = (existingItems || []).map((row) => row.id);
+
+  if (existingIds.length > 0) {
+    const { error: delCustomError } = await supabase
+      .from("order_item_customizations")
+      .delete()
+      .in("order_item_id", existingIds);
+
+    if (delCustomError) {
+      console.error(
+        "Fejl ved sletning af gamle order_item_customizations:",
+        delCustomError
+      );
+      return {
+        success: false,
+        message: "Kunne ikke opdatere bestilling (slet tilpasninger).",
+      };
+    }
   }
 
   // 1) Slet eksisterende order_items
@@ -474,7 +544,7 @@ export async function updateOrderItems({ orderId, items }) {
     };
   }
 
-  // 2) Indsæt nye order_items
+  // 2) Indsæt nye order_items og få dem retur med id'er
   const rows = items.map((item) => ({
     order_id: orderId,
     product_id: item.productId,
@@ -482,9 +552,10 @@ export async function updateOrderItems({ orderId, items }) {
     item_note: item.note || null,
   }));
 
-  const { error: insertError } = await supabase
+  const { data: insertedItems, error: insertError } = await supabase
     .from("order_items")
-    .insert(rows);
+    .insert(rows)
+    .select();
 
   if (insertError) {
     console.error("Fejl ved indsættelse af order_items:", insertError);
@@ -494,7 +565,48 @@ export async function updateOrderItems({ orderId, items }) {
     };
   }
 
-  // 3) Opdater orders.total_price
+  // 3) Indsæt nye order_item_customizations
+  const customizationsPayload = [];
+
+  items.forEach((item, index) => {
+    const row = insertedItems[index];
+    if (!row) return;
+
+    const groups = item.customizations || {};
+
+    Object.values(groups).forEach((options) => {
+      if (!Array.isArray(options)) return;
+
+      options.forEach((opt) => {
+        if (!opt || typeof opt.id === "undefined") return;
+
+        customizationsPayload.push({
+          order_item_id: row.id,
+          option_id: opt.id,
+        });
+      });
+    });
+  });
+
+  if (customizationsPayload.length > 0) {
+    const { error: customError } = await supabase
+      .from("order_item_customizations")
+      .insert(customizationsPayload);
+
+    if (customError) {
+      console.error(
+        "Fejl ved oprettelse af order_item_customizations:",
+        customError
+      );
+      return {
+        success: false,
+        message:
+          "Bestillingens produkter blev opdateret, men der skete en fejl ved gemning af tilpasninger.",
+      };
+    }
+  }
+
+  // 4) Opdater orders.total_price
   const { error: updateError } = await supabase
     .from("orders")
     .update({ total_price: totalPrice })
@@ -508,5 +620,5 @@ export async function updateOrderItems({ orderId, items }) {
     };
   }
 
-  return { success: true};
+  return { success: true };
 }

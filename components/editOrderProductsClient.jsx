@@ -7,13 +7,23 @@ import OrderSummary from "./OrderSummary";
 import OrderProductModal from "./OrderProductModal";
 import { updateOrderItemsAction } from "@/actions/updateOrderItemsAction";
 
-export default function EditProductsClient({ orderId, initialItems, products }) {
+export default function EditProductsClient({
+  orderId,
+  initialItems,
+  products,
+}) {
   const router = useRouter();
 
-  const [orderItems, setOrderItems] = useState(initialItems);
+  const [orderItems, setOrderItems] = useState(
+    initialItems.map((item) => ({
+      ...item,
+      customizations: item.customizations || {},
+    }))
+  );
+
   const [editingItemState, setEditingItemState] = useState(null);
 
-  const handleAddToOrder = ({ product, quantity, note }) => {
+  const handleAddToOrder = ({ product, quantity, note, customizations }) => {
     setOrderItems((prev) => [
       ...prev,
       {
@@ -22,6 +32,7 @@ export default function EditProductsClient({ orderId, initialItems, products }) 
         price: product.price,
         quantity,
         note,
+        customizations: customizations || {},
       },
     ]);
   };
@@ -30,10 +41,17 @@ export default function EditProductsClient({ orderId, initialItems, products }) 
     const item = orderItems[index];
     if (!item) return;
 
-    setEditingItemState({ index, item });
+    const fullProduct =
+      products.find((p) => Number(p.id) === Number(item.productId)) || null;
+
+    setEditingItemState({
+      index,
+      item,
+      product: fullProduct,
+    });
   };
 
-  const handleSaveEditedItem = ({ quantity, note }) => {
+  const handleSaveEditedItem = ({ quantity, note, customizations }) => {
     const { index } = editingItemState;
 
     setOrderItems((prev) => {
@@ -42,6 +60,7 @@ export default function EditProductsClient({ orderId, initialItems, products }) 
         ...updated[index],
         quantity,
         note,
+        customizations: customizations || {},
       };
       return updated;
     });
@@ -60,12 +79,12 @@ export default function EditProductsClient({ orderId, initialItems, products }) 
       orderId,
       items: orderItems,
     });
+
+    router.push("/orders");
   };
 
   return (
     <div className="flex flex-col gap-4">
-
-      {/* ← Tilbage-knap */}
       <button
         type="button"
         onClick={() => router.push("/orders")}
@@ -89,6 +108,7 @@ export default function EditProductsClient({ orderId, initialItems, products }) 
           onEditItem={handleEditItemFromList}
           onRemoveItem={handleRemoveItemFromList}
           onProceed={handleProceed}
+          proceedLabel="Gem ændringer"
           showReset={false}
         />
 
@@ -99,9 +119,14 @@ export default function EditProductsClient({ orderId, initialItems, products }) 
               id: editingItemState.item.productId,
               name: editingItemState.item.name,
               price: editingItemState.item.price,
+              customizationOptions:
+                editingItemState.product?.customizationOptions || {},
             }}
             initialQuantity={editingItemState.item.quantity}
             initialNote={editingItemState.item.note}
+            initialCustomizations={
+              editingItemState.item.customizations || {}
+            }
             mode="edit"
             onConfirm={handleSaveEditedItem}
             onClose={() => setEditingItemState(null)}
@@ -111,4 +136,3 @@ export default function EditProductsClient({ orderId, initialItems, products }) 
     </div>
   );
 }
-

@@ -165,7 +165,7 @@ test("orders: 'Kun leveringer' filter only shows delivery orders and can be togg
 test("orders: 'Kun leveringer' combined with date filter", async ({ page }) => {
   await page.goto(`${BASE_URL}/orders`);
 
-  // Select date 2025-12-13 (Sofie = delivery, Nina = pickup)
+  // Select date 2026-02-13 (Sofie = delivery, Nina = pickup)
   const dateInput = page.locator('input[type="date"]').first();
   await dateInput.fill("2026-02-13");
 

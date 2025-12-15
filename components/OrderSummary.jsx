@@ -9,6 +9,7 @@ export default function OrderSummary({
   onRemoveItem,
   onProceed,
   showReset = true, // create-mode default
+  proceedLabel,
 }) {
   const router = useRouter();
 
@@ -23,6 +24,8 @@ export default function OrderSummary({
   };
 
   const useProceed = onProceed || handleDefaultProceed;
+
+  const buttonLabel = proceedLabel || (onProceed ? "Gem ændringer" : "Videre");
 
   return (
     <aside className="w-full max-w-sm bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm sticky top-24 max-h-[calc(100vh-8rem)] flex flex-col">
@@ -48,9 +51,7 @@ export default function OrderSummary({
                   <span>
                     {item.quantity}x {item.name}
                   </span>
-                  <span>
-                    {(item.price * item.quantity).toFixed(2)} kr.
-                  </span>
+                  <span>{(item.price * item.quantity).toFixed(2)} kr.</span>
                 </div>
 
                 {/* NOTE */}
@@ -73,16 +74,14 @@ export default function OrderSummary({
                               typeof opt === "string"
                                 ? opt
                                 : typeof opt === "object" && opt !== null
-                                  ? opt.name ?? opt.id
-                                  : String(opt)
+                                ? opt.name ?? opt.id
+                                : String(opt)
                             )
                             .join(", ");
 
                           return (
                             <p key={typeName}>
-                              <span className="font-medium">
-                                {typeName}:
-                              </span>{" "}
+                              <span className="font-medium">{typeName}:</span>{" "}
                               {optionLabels}
                             </p>
                           );
@@ -95,6 +94,7 @@ export default function OrderSummary({
               {/* FJERN PRODUKT */}
               {onRemoveItem && (
                 <button
+                  type="button"
                   onClick={() => onRemoveItem(index)}
                   className="text-red-500 hover:text-red-700 text-lg leading-none px-1"
                 >
@@ -118,12 +118,13 @@ export default function OrderSummary({
             onClick={useProceed}
             disabled={items.length === 0}
             className={`flex-1 transition px-3 py-2 rounded-lg text-sm font-medium
-              ${items.length === 0
-                ? "opacity-50 cursor-not-allowed bg-neutral-300 text-neutral-500 border border-neutral-300"
-                : "btn-primary"
+              ${
+                items.length === 0
+                  ? "opacity-50 cursor-not-allowed bg-neutral-300 text-neutral-500 border border-neutral-300"
+                  : "btn-primary"
               }`}
           >
-            Videre
+            {buttonLabel}
           </button>
 
           {showReset && (
