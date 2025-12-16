@@ -32,13 +32,8 @@ export default async function EditProductsPage({ params, searchParams }) {
 
   if (!order) {
     notFound();
-    // return (
-    //   <div className="p-10 text-center text-red-600">
-    //     Kunne ikke finde bestillingen.
-    //   </div>
-    // );
   }
-  
+
   const categoryParam =
     typeof resolvedSearchParams?.category === "string"
       ? resolvedSearchParams.category
@@ -49,7 +44,6 @@ export default async function EditProductsPage({ params, searchParams }) {
       ? resolvedSearchParams.search.toLowerCase().trim()
       : "";
 
-  // hent produkter
   const allProducts = await getAllProducts();
   const activeProducts = allProducts.filter((p) => p.active !== false);
 
@@ -72,13 +66,13 @@ export default async function EditProductsPage({ params, searchParams }) {
     }
   }
 
-  // Map order_items til klient tilstand (guard hvis undefined)
   const mappedItems = (order.order_items || []).map((item) => ({
     productId: item.product_id,
     name: item.products?.name ?? "Ukendt produkt",
     price: item.products?.price ?? 0,
     quantity: item.quantity ?? 1,
     note: item.item_note || "",
+    customizations: item.customizations || {},
   }));
 
   return (
@@ -95,5 +89,3 @@ export default async function EditProductsPage({ params, searchParams }) {
     </main>
   );
 }
-
-

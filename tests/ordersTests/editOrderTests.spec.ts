@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
@@ -9,64 +9,44 @@ test.afterAll(() => {
   resetMockDataOrders();
 });
 
-test('edit order: prefilled values, update, redirect and updated-banner', async ({ page }) => {
-  // 1) Go to orders overview
-  await page.goto('http://localhost:3000/orders');
+test("edit order: prefilled values, update, redirect and updated-banner", async ({ page }) => {
+  await page.goto("http://localhost:3000/orders");
 
-  // 2) Find an existing order for "Hans Jensen"
-  // Click on the row or button that opens the detail modal
-  const hansRow = page.getByRole('row', { name: /Hans Jensen/ });
+  const hansRow = page.getByRole("row", { name: /Hans Jensen/ });
   await hansRow.click();
 
-  // 3) OrderDetailModal should now be visible
-  const modal = page.locator('div.fixed.inset-0');
+  const modal = page.locator("div.fixed.inset-0");
   await expect(modal).toBeVisible();
 
-  // 4) Click on "Edit customer info" (Link in the modal)
-  await modal.getByRole('link', { name: 'Redigér kundeoplysninger' }).click();
+  await modal.getByRole("link", { name: "Redigér kundeoplysninger" }).click();
 
-  // 5) We are now on /orders/[id]/editCustomerInfo
   await expect(page).toHaveURL(/\/orders\/\d+\/editCustomerInfo/);
 
-  // H1 / header on the page
   await expect(
-    page.getByRole('heading', { name: /Rediger kundeoplysninger|Kundeoplysninger/, level: 1 })
+    page.getByRole("heading", {
+      name: /Rediger kundeoplysninger|Kundeoplysninger/,
+      level: 1,
+    })
   ).toBeVisible();
 
-  // 6) The form should be prefilled with existing data
-  await expect(page.getByLabel('Navn på kunde')).toHaveValue('Hans Jensen');
+  await expect(page.getByLabel("Navn på kunde")).toHaveValue("Hans Jensen");
 
-  // Date from mock might be in the past relative to the test, so we set it to a safe future date
-  //await page.getByLabel('Dato').fill('2099-01-01');
+  await page.getByLabel("Navn på kunde").fill("Hans Jensen (redigeret)");
 
-  // 7) Edit the customer name
-  await page.getByLabel('Navn på kunde').fill('Hans Jensen (redigeret)');
+  await page.getByRole("button", { name: /Gem ændringer/ }).click();
 
-  // 8) Submit the form
-  await page
-    .getByRole('button', { name: /Gem ændringer/ })
-    .click();
-
-  // 9) After successful update → redirect to /orders?updated=true
   await expect(page).toHaveURL(/\/orders(\?updated=true)?/);
 
-  // 10) Notification banner shows that the order is updated
-  await expect(
-    page.getByText('Bestilling er opdateret.')
-  ).toBeVisible();
+  await expect(page.getByText("Bestilling er opdateret.")).toBeVisible();
 
-  // 11) The updated customer should now be visible in the order list UI
-  await expect(
-    page.getByText('Hans Jensen (redigeret)')
-  ).toBeVisible();
+  await expect(page.getByText("Hans Jensen (redigeret)")).toBeVisible();
 });
-
 
 test('Order detail modal shows "Redigér produkter" button', async ({ page }) => {
   await page.goto("/orders");
   await page.getByText("Hans Jensen").click();
-  const editBtn = page.getByRole("link", { name: "Redigér produkter" });
 
+  const editBtn = page.getByRole("link", { name: "Redigér produkter" });
   await expect(editBtn).toBeVisible();
 });
 
@@ -77,25 +57,21 @@ test("Edit products page loads existing order items", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/orders\/1\/editProducts/);
 
-  // Bekræft at produkter er vist i OrderSummary
-  const firstItem = page.getByText(/3x Franskbrød/i).first();
-  await expect(firstItem).toBeVisible();
-  const secondItem = page.getByText(/1x Rundstykker/i).first();
-  await expect(secondItem).toBeVisible();
-  const note = page.getByText(/mere brød/i).first();
-  await expect(note).toBeVisible();
+  await expect(page.getByText(/3x Franskbrød/i).first()).toBeVisible();
+  await expect(page.getByText(/1x Rundstykker/i).first()).toBeVisible();
+  await expect(page.getByText(/mere brød/i).first()).toBeVisible();
 });
 
 test("Clicking an item opens edit modal with current quantity and note", async ({ page }) => {
   await page.goto("/orders/1/editProducts");
 
-  const firstItem = page.getByText(/1x Rundstykker/).first();
-  await firstItem.click();
+  const item = page.getByText(/1x Rundstykker/i).first();
+  await item.click();
 
   const modal = page.getByRole("dialog");
-
   await expect(modal).toBeVisible();
-  await expect(modal.getByLabel("Antal")).toHaveValue("1"); // fx ordre har quantity 2
+
+  await expect(modal.getByLabel("Antal")).toHaveValue("1");
   await expect(modal.getByLabel("Note (valgfri)")).toHaveValue("mere brød");
 });
 
@@ -104,7 +80,6 @@ test("Item can be removed from list", async ({ page }) => {
 
   const itemsBefore = await page.locator("aside div.border-b").count();
 
-  // Tryk på ✕ på første produkt
   await page.locator("button:text('✕')").first().click();
 
   const itemsAfter = await page.locator("aside div.border-b").count();
@@ -112,29 +87,104 @@ test("Item can be removed from list", async ({ page }) => {
   expect(itemsAfter).toBe(itemsBefore - 1);
 });
 
+test("Edit products: can add customizations in modal and they show in OrderSummary", async ({ page }) => {
+  await page.goto("/orders/1/editProducts");
+
+  // Click Franskbrød
+  const franskItem = page.getByText(/3x Franskbrød/i).first();
+  await franskItem.click();
+
+  const modal = page.getByRole("dialog");
+  await expect(modal).toBeVisible();
+
+  // Open "Customizations"
+  const detailsSummary = modal.locator("summary", {
+    hasText: "Tilpasninger (valgfrit)",
+  });
+  await expect(detailsSummary).toBeVisible();
+  await detailsSummary.click();
+
+  // Select a couple of specific options
+  const hindbaer = modal.getByRole("checkbox", { name: /Friske hindbær/i });
+  const hvidChoko = modal.getByRole("checkbox", { name: /Hvid chokolade/i });
+
+  await hindbaer.check();
+  await hvidChoko.check();
+
+  // Save changes
+  await modal.getByRole("button", { name: "Gem ændringer" }).click();
+
+  // Now OrderSummary should show customizations under the Franskbrød line
+  const summary = page.locator("aside", { hasText: "Bestilling" });
+  await expect(summary).toBeVisible();
+
+  const franskLine = summary.locator("div.border-b", { hasText: "3x Franskbrød" }).first();
+  await expect(franskLine).toBeVisible();
+
+  await expect(franskLine.getByText(/Topping:/)).toBeVisible();
+  await expect(franskLine.getByText(/Friske hindbær/i)).toBeVisible();
+  await expect(franskLine.getByText(/Hvid chokolade/i)).toBeVisible();
+});
+
+test("Edit products: saving persists customizations and shows them in order detail modal", async ({ page }) => {
+  await page.goto("/orders/1/editProducts");
+
+  // Open modal via Franskbrød
+  await page.getByText(/3x Franskbrød/i).first().click();
+
+  const modal = page.getByRole("dialog");
+  await expect(modal).toBeVisible();
+
+  // Open customizations
+  const detailsSummary = modal.locator("summary", {
+    hasText: "Tilpasninger (valgfrit)",
+  });
+  await detailsSummary.click();
+
+  // Choose an option
+  const hindbaer = modal.getByRole("checkbox", { name: /Friske hindbær/i });
+  await hindbaer.check();
+
+  // Save changes
+  await modal.getByRole("button", { name: "Gem ændringer" }).click();
+
+  // Save entire order
+  await page.getByRole("button", { name: "Gem ændringer" }).click();
+
+  // Redirect to /orders?updated=true
+  await expect(page).toHaveURL(/orders\?updated=true/);
+  await expect(page.getByText("Bestilling er opdateret.")).toBeVisible();
+
+  // Open order details again
+  await page.getByText("Hans Jensen").click();
+  const detailModal = page.locator("div.fixed.inset-0");
+  await expect(detailModal).toBeVisible();
+
+  // Here we expect the customization to be visible somewhere in the list of products
+  await expect(detailModal.getByText(/Topping:/)).toBeVisible();
+  await expect(detailModal.getByText(/Friske hindbær/i)).toBeVisible();
+});
+
 test("Saving edited order redirects and shows notification", async ({ page }) => {
   await page.goto("/orders/1/editProducts");
 
   const firstItem = page.getByText(/1x Rundstykker/).first();
   await firstItem.click();
+
   const modal = page.getByRole("dialog");
   await modal.getByLabel("Antal").fill("10");
   await modal.getByRole("button", { name: "Gem ændringer" }).click();
 
-  // Tryk videre
-  await page.getByRole("button", { name: "Videre" }).click();
+  await page.getByRole("button", { name: "Gem ændringer" }).click();
 
-  // Redirect til /orders
   await expect(page).toHaveURL(/orders\?updated=true/);
-
-  // Banner skal vises
   await expect(page.getByText("Bestilling er opdateret.")).toBeVisible();
 
-  // Bekræft at ændring er gemt ved at åbne detaljer for ordren
   await page.getByText("Hans Jensen").click();
-  const detailModal = page.locator('div.fixed.inset-0');
+  const detailModal = page.locator("div.fixed.inset-0");
   await expect(detailModal).toBeVisible();
-  await expect(detailModal.getByText('Rundstykker10 stk — 100 kr.')).toBeVisible();
+
+  await expect(detailModal.getByText("Rundstykker10 stk — 100 kr.")).toBeVisible();
 });
 
 test("Back button returns to orders page", async ({ page }) => {
@@ -144,4 +194,3 @@ test("Back button returns to orders page", async ({ page }) => {
 
   await expect(page).toHaveURL("/orders");
 });
-
