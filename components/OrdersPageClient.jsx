@@ -24,7 +24,6 @@ export default function OrdersPageClient({ orders }) {
       <div className="mb-4 flex justify-end">
         <PrintOrdersButton />
       </div>
-
       <OrdersTable orders={filtered} />
     </div>
   );
