@@ -85,6 +85,7 @@ function mapProductToDbPayload(product) {
     protein: nutrition.Protein,
     salt: nutrition.Salt,
     water_content: nutrition.Water_content,
+    production_category: product.production_category,
   };
 }
 

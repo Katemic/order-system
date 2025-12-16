@@ -24,6 +24,7 @@ export function resetMockData() {
       image: "/assets/defaultBillede.jpg",
       category: "Brød",
       active: true,
+      production_category: "Bager",
     },
     {
       id: 2,
@@ -45,6 +46,7 @@ export function resetMockData() {
       image: "/assets/defaultBillede.jpg",
       category: "Brød",
       active: true,
+      production_category: "Bager"
     },
     {
       id: 3,
@@ -66,6 +68,7 @@ export function resetMockData() {
       image: "/assets/defaultBillede.jpg",
       category: "Konditor",
       active: true,
+      production_category: "Konditor"
     },
     {
       id: 4,
@@ -87,6 +90,7 @@ export function resetMockData() {
       image: "/assets/defaultBillede.jpg",
       category: "Konditor",
       active: true,
+      production_category: "Konditor"
     },
     {
       id: 5,
@@ -108,6 +112,7 @@ export function resetMockData() {
       image: "/assets/defaultBillede.jpg",
       category: "Wienerbrød",
       active: true,
+      production_category: "Bager"
     },
   ];
 

@@ -4,7 +4,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createProduct } from "@/lib/products";
-import { isValidProductCategory } from "@/lib/productCategories";
+import { isValidProductCategory, isValidProductionCategory } from "@/lib/categories";
 import fs from "fs";
 import path from "path";
 import { setProductCustomizations } from "@/lib/customizations";
@@ -17,7 +17,8 @@ export async function createProductAction(prevState, formData) {
   if (!values.price) fieldErrors.price = "Skal udfyldes";
   if (!isValidProductCategory(values.category))
     fieldErrors.category = "Vælg en kategori";
-
+  if (!isValidProductionCategory(values.production_category))
+    fieldErrors.production_category = "Vælg en produktionskategori";
   if (Object.keys(fieldErrors).length > 0) {
     return {
       success: false,
@@ -70,6 +71,7 @@ export async function createProductAction(prevState, formData) {
     price: parseFloat(values.price),
     ingredients: values.ingredients || "Udfyldes senere...",
     category: values.category,
+    production_category: values.production_category,
     nutrition,
     image: imagePath,
   });
