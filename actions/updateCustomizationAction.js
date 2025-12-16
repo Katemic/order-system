@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { updateCustomizationType } from "@/lib/customizations";
+import { updateCustomization } from "@/lib/customizations";
 
 export async function updateCustomizationAction(id, prevState, formData) {
   const title = formData.get("title")?.trim() ?? "";
@@ -22,7 +22,7 @@ export async function updateCustomizationAction(id, prevState, formData) {
     };
   }
 
-  await updateCustomizationType(id, title, options);
+  await updateCustomization(id, title, options);
 
   revalidatePath("/customizations");
   redirect("/customizations?updated=true");

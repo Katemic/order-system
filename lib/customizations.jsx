@@ -303,7 +303,7 @@ export async function getCustomizationById(id) {
   };
 }
 
-export async function updateCustomizationType(id, title, options) {
+export async function updateCustomization(id, title, options) {
   if (isTestMode()) {
   const mock = readMock();
   const type = mock.types.find(t => t.id === Number(id));
