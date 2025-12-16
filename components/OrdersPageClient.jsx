@@ -21,9 +21,11 @@ export default function OrdersPageClient({ orders }) {
 
   return (
     <div className="p-6 pt-20">
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Bestillinger</h1>
         <PrintOrdersButton />
       </div>
+
       <OrdersTable orders={filtered} />
     </div>
   );
