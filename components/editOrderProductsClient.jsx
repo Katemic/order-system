@@ -79,8 +79,6 @@ export default function EditProductsClient({
       orderId,
       items: orderItems,
     });
-
-    router.push("/orders");
   };
 
   return (
