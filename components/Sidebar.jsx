@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
+import { PRODUCT_CATEGORIES } from "@/lib/categories";
 
 const CATEGORIES = [...PRODUCT_CATEGORIES, "Alle", "Arkiverede"];
 

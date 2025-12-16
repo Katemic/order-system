@@ -105,7 +105,7 @@ test('product-modal shows all data and buttons for Hvedebrød', async ({ page })
   await expect(title).toHaveText('Hvedebrød');
 
   // 3) Category
-  const category = page.locator('.modal-category');
+  const category = page.locator('.modal-category').first();
   await expect(category).toBeVisible();
   await expect(category).toHaveText('Brød');
 
@@ -215,7 +215,7 @@ test('default /products shows only products with category Bread', async ({ page 
     await card.click();
 
     // Check category in modal
-    const categoryLabel = page.locator('.modal-category');
+    const categoryLabel = page.locator('.modal-category').first();
     await expect(categoryLabel).toBeVisible();
     await expect(categoryLabel).toHaveText('Brød');
 
@@ -259,7 +259,7 @@ test('filtering on Konditor shows only Konditor products and marks the category 
 
     await card.click();
 
-    const categoryLabel = page.locator('.modal-category');
+    const categoryLabel = page.locator('.modal-category').first();
     await expect(categoryLabel).toBeVisible();
     await expect(categoryLabel).toHaveText('Konditor');
 

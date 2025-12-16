@@ -32,9 +32,13 @@ test('checks all fields and buttons are present on create product page and the b
     await expect(container.getByText('Pris *')).toBeVisible();
     await expect(container.getByText('kr')).toBeVisible();
 
-    await expect(container.getByRole('combobox')).toBeVisible();
+    await expect(container.getByRole('combobox').first()).toBeVisible();
 
-    await expect(container.getByText('Kategori *')).toBeVisible();
+    await expect(container.getByText('Kategori *').first()).toBeVisible();
+
+    await expect(container.getByRole('combobox').nth(1)).toBeVisible();
+
+    await expect(container.getByText('Produktionskategori *')).toBeVisible();
 
     await expect(container.getByText('Ingredienser')).toBeVisible();
 
@@ -63,7 +67,7 @@ test('checks all fields and buttons are present on create product page and the b
     // assert exactly 12 visible input elements and 1 visible text/textarea
     await expect(page.locator('input:visible')).toHaveCount(12);
     await expect(page.locator('textarea:visible, [role="textbox"]:visible')).toHaveCount(1);
-    await expect(page.getByRole('combobox')).toHaveCount(1);
+    await expect(page.getByRole('combobox')).toHaveCount(2);
 
 
     //check that all back buttons work as expected
@@ -82,8 +86,9 @@ test('Shows error messages when not all requred fields have been filled out', as
     //required fields have stars to indicate they are required
     await expect(page.getByText('Produktnavn *')).toContainText('*');
     await expect(page.getByText('Pris *')).toContainText('*');
-    await expect(page.getByText('Kategori *')).toContainText('*');
-    await expect(page.getByText('*')).toHaveCount(3);
+    await expect(page.getByText('Kategori *').first()).toContainText('*');
+    await expect(page.getByText('Produktionskategori *')).toContainText('*');
+    await expect(page.getByText('*')).toHaveCount(4);
 
     //click create without filling out any fields
     await page.getByRole('button', { name: 'Opret' }).click();
@@ -98,18 +103,21 @@ test('Shows error messages when not all requred fields have been filled out', as
 
     //category
     await expect(page.getByText('Vælg en kategori')).toBeVisible();
-    await expect(page.getByRole('combobox')).toHaveClass(/border-red-500/);
+    await expect(page.getByRole('combobox').first()).toHaveClass(/border-red-500/);
+
+    await expect(page.getByText('Vælg en produktionskategori')).toBeVisible();
+    await expect(page.getByRole('combobox').nth(1)).toHaveClass(/border-red-500/);
 
     //general error message is shown
     await expect(page.getByText('Udfyld venligst alle påkrævede felter.')).toBeVisible();
 });
 
-test('All categories are available ', async ({ page }) => {
+test('All categories are available', async ({ page }) => {
     await gotoProducts(page);
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
 
     // verify combobox options
-    const combobox = page.getByRole('combobox');
+    const combobox = page.getByRole('combobox').first();
     const options = combobox.locator('option');
 
     // total count
@@ -136,6 +144,21 @@ test('All categories are available ', async ({ page }) => {
     const first = options.first();
     await expect(first).toHaveText('Vælg kategori');
 
+    const combobox2 = page.getByRole('combobox').nth(1);
+    const options2 = combobox2.locator('option');
+
+    // total count
+    await expect(options2).toHaveCount(4);
+
+    // texts in order
+    const texts2 = await options2.allTextContents();
+    expect(texts2).toEqual([
+        'Vælg produktionskategori',
+        'Bager',
+        'Konditor',
+        'Andet'
+    ]);
+
 });
 
 test('Creates a new product when all required fields are filled out', async ({ page }) => {
@@ -147,7 +170,8 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await page.locator('input[name="name"]').fill('TestBrød');
     await page.locator('input[name="price"]').click();
     await page.locator('input[name="price"]').fill('50');
-    await page.getByRole('combobox').selectOption('Brød');
+    await page.getByRole('combobox').first().selectOption('Brød');
+    await page.getByRole('combobox').nth(1).selectOption('Bager');
     await page.locator('textarea[name="ingredients"]').click();
     await page.locator('textarea[name="ingredients"]').fill('Meeeeeget sukker');
     await page.locator('input[name="Energy_kcal"]').click();
@@ -170,8 +194,9 @@ test('Creates a new product when all required fields are filled out', async ({ p
     await page.locator('input[name="Salt"]').fill('9');
     await page.locator('input[name="Water_content"]').click();
     await page.locator('input[name="Water_content"]').fill('10');
-    sleep(1000); // give some time to visually see the filled form before submission
+    sleep(2000); // give some time to visually see the filled form before submission
     await expect(page.getByRole('button', { name: 'Opret' })).toBeVisible();
+    sleep(1000);
     await page.getByRole('button', { name: 'Opret' }).click();
 
     //check that we are redirected to products page and see modal
@@ -185,6 +210,7 @@ test('Creates a new product when all required fields are filled out', async ({ p
     // verify that the modal shows the correct information
     await expect(page.locator('h2').filter({ hasText: 'TestBrød' })).toBeVisible();
     await expect(page.getByRole('paragraph').filter({ hasText: 'Brød' })).toBeVisible();
+    await expect(page.getByText('Produktion: Bager')).toBeVisible();
     await expect(page.getByText('50 kr')).toBeVisible();
     await expect(page.getByText('Meeeeeget sukker')).toBeVisible();
     await expect(page.getByText('Energi (kcal)1')).toBeVisible();
@@ -206,7 +232,8 @@ test('Default values are shown when nonrequired fields arent shown', async ({ pa
     await page.locator('input[name="name"]').fill('defaultTest');
     await page.locator('input[name="price"]').click();
     await page.locator('input[name="price"]').fill('10');
-    await page.getByRole('combobox').selectOption('Brød');
+    await page.getByRole('combobox').first().selectOption('Brød');
+    await page.getByRole('combobox').nth(1).selectOption('Bager');
     await page.getByRole('button', { name: 'Opret' }).click();
    
     const overlay = page.locator('div.fixed.inset-0');

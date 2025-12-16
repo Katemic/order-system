@@ -38,7 +38,7 @@ test('Category picker is available with all options and the products category is
     await page.getByRole('link', { name: 'Rediger produkt' }).click();
 
     // verify combobox options
-    const combobox = page.getByRole('combobox');
+    const combobox = page.getByRole('combobox').first();
     const options = combobox.locator('option');
 
     // total count
@@ -61,8 +61,25 @@ test('Category picker is available with all options and the products category is
         'Kørsel'
     ]);
 
-    // verify selected value
+    // first option should be disabled and selected
     await expect(combobox).toHaveValue('Brød');
+
+    const combobox2 = page.getByRole('combobox').nth(1);
+    const options2 = combobox2.locator('option');
+
+    // total count
+    await expect(options2).toHaveCount(4);
+
+    // texts in order
+    const texts2 = await options2.allTextContents();
+    expect(texts2).toEqual([
+        'Vælg produktionskategori',
+        'Bager',
+        'Konditor',
+        'Andet'
+    ]);
+
+    await expect(combobox2).toHaveValue('Bager');
 
 });
 
@@ -84,9 +101,12 @@ test('All fields are present on edit product page', async ({ page }) => {
     await expect(container.getByText('Pris *')).toBeVisible();
     await expect(container.getByText('kr')).toBeVisible();
 
-    await expect(container.getByRole('combobox')).toBeVisible();
+    await expect(container.getByRole('combobox').first()).toBeVisible();
 
-    await expect(container.getByText('Kategori *')).toBeVisible();
+    await expect(container.getByText('Kategori *').first()).toBeVisible();
+
+    await expect(container.getByRole('combobox').nth(1)).toBeVisible();
+    await expect(container.getByText('Produktionskategori *')).toBeVisible()
 
     await expect(container.getByText('Ingredienser')).toBeVisible();
 
@@ -115,7 +135,7 @@ test('All fields are present on edit product page', async ({ page }) => {
     // assert exactly 12 visible input elements and 1 visible text/textarea
     await expect(page.locator('input:visible')).toHaveCount(12);
     await expect(page.locator('textarea:visible, [role="textbox"]:visible')).toHaveCount(1);
-    await expect(page.getByRole('combobox')).toHaveCount(1);
+    await expect(page.getByRole('combobox')).toHaveCount(2);
 
 });
 
@@ -128,7 +148,8 @@ test('Editing a product updates its data correctly', async ({ page }) => {
     await page.locator('input[name="name"]').fill('Hvedebrød2');
     await page.locator('input[name="price"]').click();
     await page.locator('input[name="price"]').fill('30');
-    await page.getByRole('combobox').selectOption('Morgenbrød');
+    await page.getByRole('combobox').first().selectOption('Morgenbrød');
+    await page.getByRole('combobox').nth(1).selectOption('Konditor');
     await page.getByText('Hvedemel, vand, gær, salt').click();
     await page.getByText('Hvedemel, vand, gær, salt').fill('EDIT');
     await page.locator('input[name="Energy_kcal"]').fill('1');
@@ -152,6 +173,8 @@ test('Editing a product updates its data correctly', async ({ page }) => {
 
     // CATEGORY
     await expect(page.getByRole('main').getByText('Morgenbrød')).toBeVisible();
+
+    await expect(page.getByRole('main').getByText('Konditor')).toBeVisible();
 
     // PRICE
     await expect(page.getByText("30 kr.")).toBeVisible();

@@ -104,7 +104,8 @@ test('Product saves customizations correctly', async ({ page }) => {
     await page.locator('input[name="name"]').fill('Testkage');
 
     await page.locator('input[name="price"]').fill('50');
-    await page.getByRole('combobox').selectOption('Brød');
+    await page.getByRole('combobox').first().selectOption('Brød');
+    await page.getByRole('combobox').nth(1).selectOption('Bager');
 
     await page.getByRole('button', { name: /Opret/i }).click();
 

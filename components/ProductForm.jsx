@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
+import { PRODUCT_CATEGORIES, PRODUCTION_CATEGORIES } from "@/lib/categories";
 
 export default function ProductForm({
   mode,
@@ -23,6 +23,11 @@ export default function ProductForm({
     fieldErrors: {},
     values: {},
   });
+
+  const [category, setCategory] = useState(product?.category ?? "");
+  const [productionCategory, setProductionCategory] = useState(
+    product?.production_category ?? ""
+  );
 
   const errors = state.fieldErrors || {};
   const values = state.values || {};
@@ -64,34 +69,33 @@ export default function ProductForm({
   }, [values]);
 
   // ---------- SELECT / DESELECT TYPE ----------
-function toggleType(typeId) {
-  setSelectedTypes((prev) => {
-    const isSelected = prev.includes(typeId);
-    const newSelectedTypes = isSelected
-      ? prev.filter((id) => id !== typeId)
-      : [...prev, typeId];
+  function toggleType(typeId) {
+    setSelectedTypes((prev) => {
+      const isSelected = prev.includes(typeId);
+      const newSelectedTypes = isSelected
+        ? prev.filter((id) => id !== typeId)
+        : [...prev, typeId];
 
-    // Fjern alle options under typen der blev un-checket
-    if (isSelected) {
-      const type = customizationData.find((t) => t.id === typeId);
-      if (type) {
-        setSelectedOptions((prevOptions) =>
-          prevOptions.filter(
-            (optId) => !type.options.some((o) => o.id === optId)
-          )
-        );
+      // Fjern alle options under typen der blev un-checket
+      if (isSelected) {
+        const type = customizationData.find((t) => t.id === typeId);
+        if (type) {
+          setSelectedOptions((prevOptions) =>
+            prevOptions.filter(
+              (optId) => !type.options.some((o) => o.id === optId)
+            )
+          );
+        }
       }
-    }
 
-    // Hvis ingen typer er valgt → fjern ALLE valgte options
-    if (newSelectedTypes.length === 0) {
-      setSelectedOptions([]);
-    }
+      // Hvis ingen typer er valgt → fjern ALLE valgte options
+      if (newSelectedTypes.length === 0) {
+        setSelectedOptions([]);
+      }
 
-    return newSelectedTypes;
-  });
-}
-
+      return newSelectedTypes;
+    });
+  }
 
   // ---------- SELECT / DESELECT OPTION ----------
   function toggleOption(optionId) {
@@ -109,7 +113,6 @@ function toggleType(typeId) {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8 pt-20">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
-
         {/* HEADER */}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">
@@ -127,7 +130,6 @@ function toggleType(typeId) {
 
         {/* FORM */}
         <form className="space-y-6" action={formAction}>
-
           {/* Hidden fields only for edit */}
           {mode === "edit" && (
             <>
@@ -157,7 +159,6 @@ function toggleType(typeId) {
 
           {/* NAVN + PRIS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
             {/* NAVN */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -214,7 +215,8 @@ function toggleType(typeId) {
 
             <select
               name="category"
-              defaultValue={getValue("category", product?.category ?? "")}
+              value={values.category ?? category}
+              onChange={(e) => setCategory(e.target.value)}
               className={`w-full rounded-lg border px-3 py-2 text-sm ${
                 errors.category ? "border-red-500" : "border-gray-300"
               }`}
@@ -232,6 +234,39 @@ function toggleType(typeId) {
 
             {errors.category && (
               <p className="mt-1 text-xs text-red-500">{errors.category}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Produktionskategori <span className="text-red-500">*</span>
+            </label>
+
+            <select
+              name="production_category"
+              value={values.production_category ?? productionCategory}
+              onChange={(e) => setProductionCategory(e.target.value)}
+              className={`w-full rounded-lg border px-3 py-2 text-sm ${
+                errors.production_category
+                  ? "border-red-500"
+                  : "border-gray-300"
+              }`}
+            >
+              <option value="" disabled>
+                Vælg produktionskategori
+              </option>
+
+              {PRODUCTION_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+
+            {errors.production_category && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.production_category}
+              </p>
             )}
           </div>
 
@@ -400,7 +435,6 @@ function toggleType(typeId) {
 
           {/* KNAPPER */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-
             {Object.keys(errors).length > 0 && (
               <p className="text-red-600 text-sm font-medium mr-auto">
                 Udfyld venligst alle påkrævede felter.
@@ -428,16 +462,9 @@ function toggleType(typeId) {
                 ? "Opret"
                 : "Gem ændringer"}
             </button>
-
           </div>
-
         </form>
       </div>
     </div>
   );
 }
-
-
-
-
-

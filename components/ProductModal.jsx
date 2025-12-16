@@ -23,6 +23,7 @@ export default function ProductModal({ product, onClose }) {
     category,
     image,
     active,
+    production_category,
   } = product;
 
   const nutritionLabels = {
@@ -73,8 +74,8 @@ export default function ProductModal({ product, onClose }) {
       ? "Arkiverer..."
       : "Arkiver"
     : isPending
-      ? "Genaktiverer..."
-      : "Genaktiver";
+    ? "Genaktiverer..."
+    : "Genaktiver";
 
   const confirmButtonClasses = isArchiveConfirm
     ? "bg-red-600 hover:bg-red-700 text-white border-red-500"
@@ -138,9 +139,12 @@ export default function ProductModal({ product, onClose }) {
                 <h2 className="modal-title text-2xl font-bold">{name}</h2>
 
                 {category && (
-                  <p className="modal-category text-neutral-500">
-                    {category}
-                  </p>
+                  <p className="modal-category text-neutral-500">{category}</p>
+                )}
+                {production_category && (
+                  <span className="modal-category text-neutral-500">
+                    Produktion: {production_category}
+                  </span>
                 )}
               </div>
 
@@ -175,55 +179,58 @@ export default function ProductModal({ product, onClose }) {
                       return (
                         <div key={key} className="flex justify-between gap-2">
                           <dt className="text-neutral-600">{label}</dt>
-                          <dd className="modal-value font-medium">
-                            {value}
-                          </dd>
+                          <dd className="modal-value font-medium">{value}</dd>
                         </div>
                       );
                     })}
                   </dl>
                 </div>
               )}
-              {product.customizationOptions && Object.keys(product.customizationOptions).length > 0 && (
-                <div className="mt-6">
-                  <h3 className="modal-section-title font-semibold text-lg mb-2">
-                    Mulige tilpasninger
-                  </h3>
+              {product.customizationOptions &&
+                Object.keys(product.customizationOptions).length > 0 && (
+                  <div className="mt-6">
+                    <h3 className="modal-section-title font-semibold text-lg mb-2">
+                      Mulige tilpasninger
+                    </h3>
 
-                  <div className="flex flex-col gap-3">
-                    {Object.entries(product.customizationOptions).map(([typeName, options]) => (
-                      <details
-                        key={typeName}
-                        className="group border border-neutral-200 rounded-lg px-4 py-2 bg-neutral-50"
-                      >
-                        <summary
-                          className="cursor-pointer list-none flex justify-between items-center font-medium text-neutral-800 hover:text-neutral-900"
-                        >
-                          {typeName}
+                    <div className="flex flex-col gap-3">
+                      {Object.entries(product.customizationOptions).map(
+                        ([typeName, options]) => (
+                          <details
+                            key={typeName}
+                            className="group border border-neutral-200 rounded-lg px-4 py-2 bg-neutral-50"
+                          >
+                            <summary className="cursor-pointer list-none flex justify-between items-center font-medium text-neutral-800 hover:text-neutral-900">
+                              {typeName}
 
-                          <span className="transition-transform group-open:rotate-90 text-neutral-500">
-                            ▶
-                          </span>
-                        </summary>
-                        {/* //ændre antal af kolonner her */}
-                        <ul className="mt-2 ml-1 text-sm text-neutral-700 
+                              <span className="transition-transform group-open:rotate-90 text-neutral-500">
+                                ▶
+                              </span>
+                            </summary>
+                            {/* //ændre antal af kolonner her */}
+                            <ul
+                              className="mt-2 ml-1 text-sm text-neutral-700 
                             grid grid-cols-1 
                             md:grid-cols-2 
                             lg:grid-cols-3 
-                            gap-1">
-                          {sortCustomizationOptions(options).map(opt => (
-                            <li key={opt.id} className="flex items-center gap-2">
-                              • {opt.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </details>
-                    ))}
+                            gap-1"
+                            >
+                              {sortCustomizationOptions(options).map((opt) => (
+                                <li
+                                  key={opt.id}
+                                  className="flex items-center gap-2"
+                                >
+                                  • {opt.name}
+                                </li>
+                              ))}
+                            </ul>
+                          </details>
+                        )
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
-
 
             {/* HØJRE SIDE */}
             {image && (
@@ -251,9 +258,10 @@ export default function ProductModal({ product, onClose }) {
                     onClick={handleMainActionClick}
                     disabled={isPending}
                     className={`w-full px-4 py-2 rounded-lg border font-medium transition
-                      ${active
-                        ? "border-red-400 text-red-600 hover:bg-red-50"
-                        : "border-green-400 text-green-600 hover:bg-green-50"
+                      ${
+                        active
+                          ? "border-red-400 text-red-600 hover:bg-red-50"
+                          : "border-green-400 text-green-600 hover:bg-green-50"
                       }
                       ${isPending ? "opacity-70 cursor-wait" : ""}
                     `}
@@ -261,8 +269,8 @@ export default function ProductModal({ product, onClose }) {
                     {isPending
                       ? "Opdaterer..."
                       : active
-                        ? "Arkiver"
-                        : "Genaktiver"}
+                      ? "Arkiver"
+                      : "Genaktiver"}
                   </button>
                   <button
                     onClick={() => setShowDelete(true)}
@@ -286,6 +294,5 @@ export default function ProductModal({ product, onClose }) {
         />
       )}
     </div>
-
   );
 }
