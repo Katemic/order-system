@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function CustomizationsTable({ customizations, onDeleteClick }) {
   if (!customizations || customizations.length === 0) {
     return (
@@ -52,7 +54,13 @@ export default function CustomizationsTable({ customizations, onDeleteClick }) {
                     </p>
                   )}
 
-                  <div className="flex justify-end mt-1">
+                  <div className="flex justify-end gap-2 mt-3">
+                    <Link
+                      href={`/customizations/${type.id}/edit`}
+                      className="px-4 py-2 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 text-sm"
+                    >
+                      Rediger
+                    </Link>
                     <button
                       type="button"
                       onClick={(e) => {

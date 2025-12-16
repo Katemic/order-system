@@ -266,3 +266,121 @@ export async function deleteCustomization(id) {
   return { success: true};
 }
 
+
+export async function getCustomizationById(id) {
+  if (isTestMode()) {
+    const mock = readMock();
+    const type = mock.types.find(t => t.id === Number(id));
+    if (!type) return null;
+
+    return {
+      id: type.id,
+      name: type.name,
+      options: type.options.filter(
+        o => o.name.toLowerCase() !== "andet, se note"
+      )
+    };
+  }
+
+  const { data, error } = await supabase
+    .from("customization_types")
+    .select(`
+      id,
+      name,
+      customization_options ( id, name )
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error) return null;
+
+  return {
+    id: data.id,
+    name: data.name,
+    options: data.customization_options.filter(
+      o => o.name.toLowerCase() !== "andet, se note"
+    )
+  };
+}
+
+export async function updateCustomizationType(id, title, options) {
+  if (isTestMode()) {
+  const mock = readMock();
+  const type = mock.types.find(t => t.id === Number(id));
+  if (!type) return;
+
+  type.name = title;
+
+  const existing = type.options.filter(
+    o => o.name.toLowerCase() !== "andet, se note"
+  );
+
+  const existingNames = existing.map(o => o.name);
+
+  const newOptions = [
+    ...existing.filter(o => options.includes(o.name)),
+    ...options
+      .filter(name => !existingNames.includes(name))
+      .map((name, i) => ({
+        id: Date.now() + i,
+        name
+      }))
+  ];
+
+  type.options = [
+    ...newOptions,
+    type.options.find(o => o.name.toLowerCase() === "andet, se note")
+  ];
+
+  writeMock(mock);
+  return { success: true };
+}
+
+  
+  // Opdater titel
+  await supabase
+    .from("customization_types")
+    .update({ name: title })
+    .eq("id", id);
+
+  // Hent eksisterende options (uden "andet")
+  const { data: existingOptions } = await supabase
+    .from("customization_options")
+    .select("id, name")
+    .eq("type_id", id)
+    .neq("name", "Andet, se note");
+
+  const existingNames = existingOptions.map(o => o.name);
+
+  const toInsert = options
+    .filter(name => !existingNames.includes(name))
+    .map(name => ({
+      name,
+      type_id: id
+    }));
+
+
+  const toDelete = existingOptions
+    .filter(o => !options.includes(o.name))
+    .map(o => o.id);
+
+  // Indsæt nye
+  if (toInsert.length > 0) {
+    await supabase.from("customization_options").insert(toInsert);
+  }
+
+  // Slet fjernede
+  if (toDelete.length > 0) {
+    await supabase
+      .from("customization_options")
+      .delete()
+      .in("id", toDelete);
+  }
+
+  // "Andet, se note" bevares uændret
+  return { success: true };
+}
+
+
+
+
