@@ -68,7 +68,10 @@ export default function NotificationBanner() {
     text = "Tilpasning oprettet.";
   } else if (created === "true") {
     text = "Bestilling er oprettet.";
-  } else {
+  } else if (updated === "true" && pathname.startsWith("/customizations")) {
+    text = "Tilpasning opdateret.";
+  }
+  else {
     text = "Bestilling er opdateret.";
   }
   const bgColor = deleted === "true" ? "bg-red-600" : "bg-emerald-600";
