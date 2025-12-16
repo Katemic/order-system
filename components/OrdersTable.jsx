@@ -8,8 +8,7 @@ export default function OrdersTable({ orders }) {
 
   return (
     <>
-      <div className="p-6">
-        <h1 className="text-2xl font-semibold mb-6 pt-6">Bestillinger</h1>
+      <div className="p-3">
 
         <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
           <table className="min-w-full bg-white">
