@@ -1,4 +1,3 @@
-// components/OrdersPrintView.jsx
 export default function OrdersPrintView({ orders }) {
   if (!orders || orders.length === 0) {
     return (

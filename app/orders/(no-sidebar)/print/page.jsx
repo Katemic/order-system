@@ -1,4 +1,3 @@
-// app/orders/print/page.jsx
 import { getAllOrders } from "@/lib/orders";
 import { sortOrders, formatDate } from "@/lib/orderHelpers";
 import { applyOrdersFilters } from "@/lib/orderFilters";
@@ -13,7 +12,6 @@ export default async function OrdersPrintPage({ searchParams }) {
   let orders = await getAllOrders();
   orders = sortOrders(orders);
 
-  // samme mapping som /orders
   orders = orders.map((order) => ({
     ...order,
     date_needed_raw: order.date_needed,
