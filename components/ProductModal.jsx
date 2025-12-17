@@ -9,7 +9,7 @@ import { sortCustomizationOptions } from "@/lib/sortCustomizationOptions";
 
 export default function ProductModal({ product, onClose }) {
   const [isPending, startTransition] = useTransition();
-  const [confirmMode, setConfirmMode] = useState(null); // "archive" | "reactivate" | null
+  const [confirmMode, setConfirmMode] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
 
   if (!product) return null;
@@ -40,24 +40,18 @@ export default function ProductModal({ product, onClose }) {
   };
 
   const handleMainActionClick = () => {
-    if (active) {
-      setConfirmMode("archive");
-    } else {
-      setConfirmMode("reactivate");
-    }
+    setConfirmMode(active ? "archive" : "reactivate");
   };
 
   const handleConfirm = () => {
     startTransition(async () => {
       await toggleProductActive(id, active);
       setConfirmMode(null);
-      if (onClose) onClose();
+      onClose?.();
     });
   };
 
-  const handleCancel = () => {
-    setConfirmMode(null);
-  };
+  const handleCancel = () => setConfirmMode(null);
 
   const isArchiveConfirm = confirmMode === "archive";
 
@@ -88,13 +82,12 @@ export default function ProductModal({ product, onClose }) {
     >
       <div
         className="
-    relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl 
-    max-h-[90vh] overflow-y-auto     /* Mobil/tablet: modal scroller */
-    md:max-h-none md:overflow-visible  /* Desktop: ingen modal-scroll */
-  "
+          relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl 
+          max-h-[90vh] overflow-y-auto
+          md:max-h-none md:overflow-visible
+        "
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Luk-knap */}
         <button
           onClick={onClose}
           className="modal-close-button absolute right-4 top-4 text-2xl"
@@ -103,11 +96,9 @@ export default function ProductModal({ product, onClose }) {
           ✕
         </button>
 
-        {/* ===== CONFIRM VIEW ===== */}
         {confirmMode !== null ? (
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-bold">{confirmTitle}</h2>
-
             <p className="text-neutral-700">{confirmDescription}</p>
 
             <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-end">
@@ -131,9 +122,7 @@ export default function ProductModal({ product, onClose }) {
             </div>
           </div>
         ) : (
-          /* ===== NORMAL PRODUCT VIEW ===== */
           <div className="flex flex-col md:flex-row gap-6">
-            {/* VENSTRE SIDE - skærm højde nedenfor*/}
             <div className="flex-1 md:max-h-[60vh] md:overflow-y-auto pr-2">
               <div className="mb-4">
                 <h2 className="modal-title text-2xl font-bold">{name}</h2>
@@ -186,6 +175,7 @@ export default function ProductModal({ product, onClose }) {
                   </dl>
                 </div>
               )}
+
               {product.customizationOptions &&
                 Object.keys(product.customizationOptions).length > 0 && (
                   <div className="mt-6">
@@ -202,24 +192,14 @@ export default function ProductModal({ product, onClose }) {
                           >
                             <summary className="cursor-pointer list-none flex justify-between items-center font-medium text-neutral-800 hover:text-neutral-900">
                               {typeName}
-
                               <span className="transition-transform group-open:rotate-90 text-neutral-500">
                                 ▶
                               </span>
                             </summary>
-                            {/* //ændre antal af kolonner her */}
-                            <ul
-                              className="mt-2 ml-1 text-sm text-neutral-700 
-                            grid grid-cols-1 
-                            md:grid-cols-2 
-                            lg:grid-cols-3 
-                            gap-1"
-                            >
+
+                            <ul className="mt-2 ml-1 text-sm text-neutral-700 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
                               {sortCustomizationOptions(options).map((opt) => (
-                                <li
-                                  key={opt.id}
-                                  className="flex items-center gap-2"
-                                >
+                                <li key={opt.id} className="flex items-center gap-2">
                                   • {opt.name}
                                 </li>
                               ))}
@@ -232,7 +212,6 @@ export default function ProductModal({ product, onClose }) {
                 )}
             </div>
 
-            {/* HØJRE SIDE */}
             {image && (
               <div className="modal-image-wrapper flex flex-col items-center gap-4">
                 <div className="w-full aspect-square rounded-xl bg-neutral-100 overflow-hidden flex items-center justify-center">
@@ -272,6 +251,7 @@ export default function ProductModal({ product, onClose }) {
                       ? "Arkiver"
                       : "Genaktiver"}
                   </button>
+
                   <button
                     onClick={() => setShowDelete(true)}
                     className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
