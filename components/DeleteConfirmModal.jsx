@@ -29,7 +29,7 @@ export default function DeleteConfirmModal({ item, type, onClose, onDeleteComple
 
   const { title, deleteAction, name } = DELETE_CONFIG[type];
 
-  // Behold query params
+  // Keep query params
   const currentUrl = searchParams.toString()
     ? `${pathname}?${searchParams.toString()}`
     : pathname;

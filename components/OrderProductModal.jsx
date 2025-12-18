@@ -70,7 +70,7 @@ export default function OrderProductModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col gap-5">
-          {/* Header */}
+          {/*Header*/}
           <div>
             <h2 className="text-2xl font-bold text-neutral-900">{name}</h2>
             {price != null && (
@@ -80,7 +80,7 @@ export default function OrderProductModal({
             )}
           </div>
 
-          {/* Antal */}
+          {/*Quantity*/}
           <div className="flex flex-col gap-1">
             <label
               htmlFor="order-quantity"
@@ -99,7 +99,7 @@ export default function OrderProductModal({
             />
           </div>
 
-          {/* Tilpasninger */}
+          {/*Customizations*/}
           {customizationOptions && Object.keys(customizationOptions).length > 0 && (
             <details className="group border border-neutral-300 rounded-lg px-4 py-3 bg-neutral-50 shadow-sm">
               <summary className="cursor-pointer list-none flex justify-between items-center font-medium text-sm text-neutral-800 hover:text-neutral-900">
@@ -149,7 +149,7 @@ export default function OrderProductModal({
             </details>
           )}
 
-          {/* Note */}
+          {/*Note*/}
           <div className="flex flex-col gap-1">
             <label
               htmlFor="order-note"
@@ -168,7 +168,7 @@ export default function OrderProductModal({
             />
           </div>
 
-          {/* Knapper */}
+          {/*Buttons*/}
           <div className="mt-2 flex justify-end gap-3">
             <button type="button" onClick={handleCancel} className="btn-secondary">
               Annuller

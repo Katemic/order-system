@@ -121,7 +121,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
 
   return (
     <nav className="h-full flex flex-col px-4 py-6 text-neutral-700">
-      {/* SØGNING */}
+      {/*SEARCH*/}
       <form
         action="/orders"
         method="GET"
@@ -148,12 +148,12 @@ export default function OrderFilterSidebar({ onItemClick }) {
         </button>
       </form>
 
-      {/* DATO-FILTER */}
+      {/*DATE FILTER*/}
       <div className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
         Filtrer dato
       </div>
 
-      {/* ENKELT DATO */}
+      {/*SINGLE DATE*/}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Vælg dato</label>
         <DateInput
@@ -165,7 +165,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         />
       </div>
 
-      {/* PERIODE */}
+      {/*PERIOD*/}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Periode</label>
 
@@ -186,7 +186,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         />
       </div>
 
-      {/* KUN LEVERINGER */}
+      {/*ONLY DELIVERIES*/}
       <label className="inline-flex items-center gap-2 text-sm mt-2 cursor-pointer">
         <input
           type="checkbox"
@@ -197,7 +197,7 @@ export default function OrderFilterSidebar({ onItemClick }) {
         <span>Kun leveringer</span>
       </label>
 
-      {/* ACTION-KNAPPER + RANGE */}
+      {/*ACTION BUTTONS + RANGE*/}
       <div className="mt-auto flex flex-col gap-3">
         <button
           type="button"
