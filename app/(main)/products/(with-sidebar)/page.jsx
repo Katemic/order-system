@@ -59,6 +59,8 @@ export default async function ProductsPage(props) {
         variant="products"
       />
 
+      <CreatedModal />
+      <UpdatedModal />
       <NotificationBanner />
     </main>
   );
