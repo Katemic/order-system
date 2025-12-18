@@ -33,7 +33,7 @@ test('You can search for products in an order', async ({ page }) => {
   await page.waitForURL(/search=br%C3%B8d/i); // encoded "brød" → br%C3%B8d
 
   const rows = page.locator('tbody tr');
-  await expect(rows).toHaveCount(2);
+  await expect(rows).toHaveCount(3);
 
 });
 
@@ -56,7 +56,7 @@ test('Search resets when chosing all orders', async ({ page }) => {
 
   await page.waitForURL(/search=br%C3%B8d/i);
 
-  await expect(rows).toHaveCount(2);
+  await expect(rows).toHaveCount(3);
 
   await page.getByRole('button', { name: 'Alle bestillinger' }).click();
 

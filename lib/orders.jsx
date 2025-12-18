@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import fs from "fs";
 import path from "path";
+import { getAllProducts } from "@/lib/products";
 
 function isTestMode() {
   return process.env.TEST_ENV === "true";
@@ -52,7 +53,26 @@ export async function deleteOrder(id) {
 
 export async function getAllOrders() {
   if (isTestMode()) {
-    return readOrdersMock();
+    const orders = readOrdersMock();
+
+    // Hent produkter fra separat mock (samme som products-lib bruger)
+    const products = await getAllProducts();
+    const productLookup = Object.fromEntries(products.map((p) => [p.id, p]));
+
+    // "Join" products ind på hver order_item
+    return (orders || []).map((order) => ({
+      ...order,
+      order_items: (order.order_items || []).map((item) => {
+        const fullProduct =
+          productLookup[item.product_id] || item.products || null;
+
+        return {
+          ...item,
+          products: fullProduct, // ✅ nu har den category/production_category osv.
+          customizations: item.customizations || {}, // hvis du har dem i mock
+        };
+      }),
+    }));
   }
 
   const { data, error } = await supabase
