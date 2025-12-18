@@ -19,8 +19,6 @@ export default async function EditCustomerInfoPage({ params }) {
 
     return (
 <main className="mx-auto max-w-5xl px-4 py-8 pt-20 space-y-6">
-            
-            {/* Header med tilbage-knap */}
             <div className="flex items-center justify-between mb-6">
                 <h1 className="page-title">Rediger kundeoplysninger</h1>
 

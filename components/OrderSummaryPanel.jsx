@@ -22,7 +22,6 @@ export default function OrderSummaryPanel({ orderItems, total, hasItems, errors 
                   <span>{(item.price * item.quantity).toFixed(2)} kr.</span>
                 </div>
 
-                {/* NOTE */}
                 {item.note && (
                   <p className="mt-1 text-xs text-neutral-600">
                     Note: {item.note}

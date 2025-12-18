@@ -8,7 +8,6 @@ export async function deleteOrderAction(formData) {
     const id = Number(formData.get("id"));
     const currentUrl = formData.get("currentUrl");
 
-
     await deleteOrder(id);
 
     revalidatePath("/orders");
@@ -17,5 +16,4 @@ export async function deleteOrderAction(formData) {
     const redirectUrl = `${currentUrl}${separator}deleted=true&id=${id}`;
 
     redirect(redirectUrl);
-
 }

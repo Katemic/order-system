@@ -2,9 +2,6 @@ import fs from "fs";
 import path from "path";
 import { supabase } from "@/lib/supabaseClient";
 
-// ------------------ //
-// INTERNAL UTILITIES //
-// ------------------ //
 export function getMockFilePath() {
   const isTest = process.env.TEST_ENV === "true";
 
@@ -92,10 +89,8 @@ function mapProductToDbPayload(product) {
 export function mapDbRowToProductWithCustomization(row) {
   const base = mapDbRowToProduct(row);
 
-  // Hvis row ikke eksisterer, returnér base (null håndtering)
   if (!base) return base;
 
-  // Konverter customization til grupperet format
   const customization = {};
 
   for (const pco of row.product_customization_options ?? []) {
@@ -119,8 +114,6 @@ export function mapDbRowToProductWithCustomization(row) {
   };
 }
 
-//-------database functions from here-------------- 
-
 export async function getAllProducts() {
   if (isTestMode()) {
     const products = readMockData();
@@ -129,7 +122,6 @@ export async function getAllProducts() {
     return products.map((p) => {
       const productLinkIds = customizationMock.productLinks[p.id] || [];
 
-      // Byg customizationOptions i samme output-format som mapperen normalt laver
       const customization = {};
 
       for (const type of customizationMock.types) {
@@ -146,7 +138,7 @@ export async function getAllProducts() {
       }
 
       return {
-        ...p,                        // behold original mock struktur
+        ...p,                      
         customizationOptions: customization, 
       };
     });
@@ -178,11 +170,6 @@ export async function getAllProducts() {
   return data.map(mapDbRowToProductWithCustomization);
 }
 
-/**
- * Get 1 product by ID
- * - In test mode → search in mock JSON
- * - In production → Postgres via Supabase
- */
 export async function getProductById(id) {
   if (isTestMode()) {
     const data = readMockData();
@@ -200,10 +187,8 @@ export async function getProductById(id) {
   return mapDbRowToProduct(data);
 }
 
-// ---------- DATABASE + MOCK CREATE PRODUCT ----------
 export async function createProduct(product) {
   if (isTestMode()) {
-    // ---------- WRITE TO MOCK JSON ----------
     const data = readMockData();
 
     const ids = data.map((p) => p.id);
@@ -216,7 +201,6 @@ export async function createProduct(product) {
     return newProduct;
   }
 
-  // ---------- WRITE TO SUPABASE ----------
   const payload = {
     ...mapProductToDbPayload(product),
     active: true,
@@ -235,12 +219,11 @@ export async function createProduct(product) {
 
 export async function updateProduct(id, updates) {
   if (isTestMode()) {
-    // ---------- MOCK MODE ----------
+    //MOCK
     const data = readMockData();
     const index = data.findIndex((p) => p.id === id);
     if (index === -1) return null;
 
-    // Merge mock nutrition object
     data[index] = {
       ...data[index],
       ...updates,
@@ -254,7 +237,7 @@ export async function updateProduct(id, updates) {
     return data[index];
   }
 
-  // ---------- DATABASE MODE ----------
+  //DATABASE
   const payload = mapProductToDbPayload(updates);
 
   const { data, error } = await supabase
@@ -284,7 +267,7 @@ export async function deleteProduct(id) {
     return { success: true };
   }
 
-  // ---------- DATABASE ----------
+  //DATABASE
   const { error } = await supabase
     .from("products")
     .delete()
@@ -300,7 +283,7 @@ export async function deleteProduct(id) {
 
 export async function updateProductActiveBool(id, active) {
   if (isTestMode()) {
-    // ---------- MOCK MODE ----------
+    //MOCK
     const data = readMockData();
     const index = data.findIndex((p) => p.id === id);
     if (index === -1) return null;
@@ -314,7 +297,7 @@ export async function updateProductActiveBool(id, active) {
     return data[index];
   }
 
-  // ---------- DATABASE MODE ----------
+  //DATABASE
   const { data, error } = await supabase
     .from("products")
     .update({ active })
