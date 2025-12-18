@@ -443,16 +443,30 @@ export default function ProductForm({
 
             <button
               type="button"
+              disabled={isPending}
               onClick={() => router.push("/products")}
-              className="px-4 py-2 rounded-lg border border-gray-300 text-sm"
+              className={`
+                px-4 py-2 rounded-lg border text-sm transition
+                ${
+                  isPending
+                    ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                    : "border-gray-300 hover:bg-gray-50"
+                }
+              `}
             >
               Annuller
             </button>
-
             <button
               type="submit"
               disabled={isPending}
-              className="px-5 py-2.5 rounded-lg bg-emerald-600 text-sm text-white disabled:opacity-60"
+              className={`
+                px-5 py-2.5 rounded-lg text-sm text-white font-medium transition
+                ${
+                  isPending
+                    ? "bg-emerald-400 cursor-wait"
+                    : "bg-emerald-600 hover:bg-emerald-700"
+                }
+              `}
             >
               {isPending
                 ? mode === "create"
@@ -462,6 +476,7 @@ export default function ProductForm({
                 ? "Opret"
                 : "Gem ændringer"}
             </button>
+
           </div>
         </form>
       </div>
