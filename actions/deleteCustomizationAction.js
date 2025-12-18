@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 
 export async function deleteCustomizationAction(formData) {
   const id = formData.get("id");
-  const name = encodeURIComponent(formData.get("name"));
   const currentUrl = formData.get("currentUrl");
 
   await deleteCustomization(id);
@@ -14,7 +13,7 @@ export async function deleteCustomizationAction(formData) {
   revalidatePath("/customizations");
 
   const separator = currentUrl.includes("?") ? "&" : "?";
-  const redirectUrl = `${currentUrl}${separator}deleted=true&name=${name}`;
+  const redirectUrl = `${currentUrl}${separator}deleted=true`;
 
   redirect(redirectUrl);
 }

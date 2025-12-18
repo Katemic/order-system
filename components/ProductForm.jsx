@@ -18,7 +18,6 @@ export default function ProductForm({
   const initialImage = product?.image ?? null;
   const [imagePreview, setImagePreview] = useState(initialImage);
 
-  // Server action state
   const [state, formAction, isPending] = useActionState(action, {
     fieldErrors: {},
     values: {},
@@ -42,7 +41,6 @@ export default function ProductForm({
     setImagePreview(URL.createObjectURL(file));
   }
 
-  // ---------- INITIAL TYPE & OPTION STATE ----------
   const initiallySelectedTypes = customizationData
     .filter((type) =>
       type.options.some((opt) =>
@@ -58,7 +56,7 @@ export default function ProductForm({
 
   const [customizationsOpen, setCustomizationsOpen] = useState(false);
 
-  // ---------- HYDRATE AFTER VALIDATION ERROR ----------
+  //HYDRATE AFTER VALIDATION ERROR
   useEffect(() => {
     if (values.customizationTypeIds) {
       setSelectedTypes(values.customizationTypeIds.map(Number));
@@ -68,7 +66,7 @@ export default function ProductForm({
     }
   }, [values]);
 
-  // ---------- SELECT / DESELECT TYPE ----------
+  //SELECT / DESELECT TYPE
   function toggleType(typeId) {
     setSelectedTypes((prev) => {
       const isSelected = prev.includes(typeId);
@@ -76,7 +74,7 @@ export default function ProductForm({
         ? prev.filter((id) => id !== typeId)
         : [...prev, typeId];
 
-      // Fjern alle options under typen der blev un-checket
+      // Remove all options under the type that was unchecked
       if (isSelected) {
         const type = customizationData.find((t) => t.id === typeId);
         if (type) {
@@ -88,7 +86,7 @@ export default function ProductForm({
         }
       }
 
-      // Hvis ingen typer er valgt → fjern ALLE valgte options
+      // If no types are selected, remove ALL selected options
       if (newSelectedTypes.length === 0) {
         setSelectedOptions([]);
       }
@@ -97,7 +95,7 @@ export default function ProductForm({
     });
   }
 
-  // ---------- SELECT / DESELECT OPTION ----------
+  //SELECT / DESELECT OPTION
   function toggleOption(optionId) {
     setSelectedOptions((prev) =>
       prev.includes(optionId)
@@ -111,7 +109,7 @@ export default function ProductForm({
   const selectedSet = new Set(selectedOptions);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8 pt-20">
+    <div className="min-h-screen flex items-center justify-center px-4 py-8 pt-20">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
         {/* HEADER */}
         <div className="flex items-center justify-between mb-6">
@@ -157,9 +155,8 @@ export default function ProductForm({
             />
           ))}
 
-          {/* NAVN + PRIS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* NAVN */}
+            {/*NAME*/}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Produktnavn <span className="text-red-500">*</span>
@@ -179,7 +176,7 @@ export default function ProductForm({
               )}
             </div>
 
-            {/* PRIS */}
+            {/*PRICE*/}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Pris <span className="text-red-500">*</span>
@@ -207,7 +204,7 @@ export default function ProductForm({
             </div>
           </div>
 
-          {/* KATEGORI */}
+          {/*CATEGORY*/}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Kategori <span className="text-red-500">*</span>
@@ -270,7 +267,7 @@ export default function ProductForm({
             )}
           </div>
 
-          {/* INGREDIENSER */}
+          {/*INGREDIENTS*/}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Ingredienser
@@ -284,7 +281,7 @@ export default function ProductForm({
             />
           </div>
 
-          {/* NÆRINGSINDHOLD */}
+          {/*NUTRITION*/}
           <div className="border-t border-gray-200 pt-4">
             <h2 className="text-sm font-semibold text-gray-900 mb-3">
               Næringsindhold pr. 100 g
@@ -320,7 +317,7 @@ export default function ProductForm({
             </div>
           </div>
 
-          {/* TILPASNINGER */}
+          {/*CUSTOMIZATIONS*/}
           <div className="border-t border-gray-200 pt-4">
             <button
               type="button"
@@ -356,7 +353,7 @@ export default function ProductForm({
                       key={type.id}
                       className="border border-gray-200 rounded-lg"
                     >
-                      {/* TYPE CHECKBOX */}
+                      {/*TYPE CHECKBOX*/}
                       <label className="flex items-center justify-between px-3 py-2 cursor-pointer">
                         <div className="flex items-center gap-2">
                           <input
@@ -373,7 +370,7 @@ export default function ProductForm({
                         </span>
                       </label>
 
-                      {/* OPTIONS */}
+                      {/*OPTIONS*/}
                       {isOpen && (
                         <div className="border-t border-gray-200 px-3 py-2 space-y-1">
                           {type.options.map((opt) => (
@@ -398,7 +395,7 @@ export default function ProductForm({
             )}
           </div>
 
-          {/* BILLEDEUPLOAD */}
+          {/*IMAGE UPLOAD*/}
           <div className="border-t border-gray-200 pt-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Billedeupload
@@ -433,7 +430,7 @@ export default function ProductForm({
             </div>
           </div>
 
-          {/* KNAPPER */}
+          {/*BUTTONS*/}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
             {Object.keys(errors).length > 0 && (
               <p className="text-red-600 text-sm font-medium mr-auto">
@@ -443,16 +440,30 @@ export default function ProductForm({
 
             <button
               type="button"
+              disabled={isPending}
               onClick={() => router.push("/products")}
-              className="px-4 py-2 rounded-lg border border-gray-300 text-sm"
+              className={`
+                px-4 py-2 rounded-lg border text-sm transition
+                ${
+                  isPending
+                    ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                    : "border-gray-300 hover:bg-gray-50"
+                }
+              `}
             >
               Annuller
             </button>
-
             <button
               type="submit"
               disabled={isPending}
-              className="px-5 py-2.5 rounded-lg bg-emerald-600 text-sm text-white disabled:opacity-60"
+              className={`
+                px-5 py-2.5 rounded-lg text-sm text-white font-medium transition
+                ${
+                  isPending
+                    ? "bg-emerald-400 cursor-wait"
+                    : "bg-emerald-600 hover:bg-emerald-700"
+                }
+              `}
             >
               {isPending
                 ? mode === "create"
@@ -462,6 +473,7 @@ export default function ProductForm({
                 ? "Opret"
                 : "Gem ændringer"}
             </button>
+
           </div>
         </form>
       </div>

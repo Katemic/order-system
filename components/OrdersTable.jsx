@@ -42,13 +42,10 @@ export default function OrdersTable({ orders }) {
                   >
                     <td className="px-4 py-3 whitespace-nowrap">{order.customer_name}</td>
 
-                    {/* Dato er allerede formateret server-side */}
                     <td className="px-4 py-3 whitespace-nowrap">{order.date_needed}</td>
 
-                    {/* Tidspunkt */}
                     <td className="px-4 py-3 whitespace-nowrap">{time || "—"}</td>
 
-                    {/* Type */}
                     <td className="px-4 py-3 whitespace-nowrap">
                       {isDelivery ? (
                         <span className="text-red-600 font-medium">Levering</span>
@@ -57,12 +54,10 @@ export default function OrdersTable({ orders }) {
                       )}
                     </td>
 
-                    {/* Antal produkter */}
                     <td className="px-4 py-3 whitespace-nowrap">
                       {order.order_items.length}
                     </td>
 
-                    {/* Pris */}
                     <td className="px-4 py-3 whitespace-nowrap">
                       {order.total_price} kr.
                     </td>
@@ -81,7 +76,6 @@ export default function OrdersTable({ orders }) {
         </div>
       </div>
 
-      {/* Modal */}
       {selectedOrder && (
         <OrderDetailModal
           order={selectedOrder}

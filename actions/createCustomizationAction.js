@@ -10,7 +10,6 @@ export async function createCustomizationAction(prevState, formData) {
 
     const fieldErrors = {};
 
-    // VALIDATION
     if (!title) fieldErrors.title = "Titel er påkrævet.";
     if (options.length === 0) fieldErrors.options = "Du skal tilføje mindst én mulighed.";
 
@@ -22,9 +21,7 @@ export async function createCustomizationAction(prevState, formData) {
         };
     }
 
-
     await createCustomizationType(title, options);
-
 
     revalidatePath("/customizations");
     redirect("/customizations?created=true");

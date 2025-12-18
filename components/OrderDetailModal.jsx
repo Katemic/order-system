@@ -23,7 +23,7 @@ export default function OrderDetailModal({ order, onClose }) {
         role="dialog"
         aria-modal="true"
       >
-        {/* Luk-knap */}
+        {/*Close-button*/}
         <button
           onClick={onClose}
           className="absolute right-4 top-4 text-2xl"
@@ -32,7 +32,7 @@ export default function OrderDetailModal({ order, onClose }) {
           ✕
         </button>
 
-        {/* Titel */}
+        {/*Title*/}
         <h2 className="text-2xl font-bold mb-1">
           Bestilling #{order.id}
         </h2>
@@ -40,14 +40,13 @@ export default function OrderDetailModal({ order, onClose }) {
           Betjent af {order.taken_by} den {order.date_created}
         </p>
 
-        {/* GRID */}
+        {/*GRID*/}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          {/* VENSTRE – PRODUKTER */}
+          {/*LEFT – PRODUCTS*/}
           <div>
             <h3 className="text-lg font-semibold mb-2">Produkter</h3>
 
-            {/* Juster højde her i max-værdi */}
             <div className="border rounded-lg divide-y max-h-110 overflow-y-auto">
               {order.order_items.map((item, i) => (
                 <div key={i} className="p-3 text-sm">
@@ -59,7 +58,7 @@ export default function OrderDetailModal({ order, onClose }) {
                     </span>
                   </div>
 
-                  {/* NOTE PÅ LINJEN */}
+                  {/*NOTE ON LINE*/}
                   {item.item_note && (
                     <p className="text-neutral-600 text-xs mt-1">
                       Note: {item.item_note}
@@ -108,7 +107,7 @@ export default function OrderDetailModal({ order, onClose }) {
             </Link>
           </div>
 
-          {/* HØJRE – KUNDEINFO */}
+          {/*RIGHT – CUSTOMER INFO*/}
           <div>
             <h3 className="text-lg font-semibold mb-2">Kunde</h3>
 
@@ -161,7 +160,7 @@ export default function OrderDetailModal({ order, onClose }) {
               Redigér kundeoplysninger
             </Link>
 
-            {/* SLET-KNAP */}
+            {/*DELETE BUTTON*/}
             <button
               onClick={() => setShowDelete(true)}
               className="block w-full mt-4 px-4 py-3 rounded-lg 

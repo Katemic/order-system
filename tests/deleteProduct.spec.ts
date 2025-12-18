@@ -28,7 +28,7 @@ test('Can delete product and it gets removed from the product list and notificat
 
   // Toast message
   await expect(
-    page.getByText('Produkt "Hvedebrød" er slettet')
+    page.getByText('Produkt er slettet')
   ).toBeVisible();
 
   // Wait for the modal to disappear

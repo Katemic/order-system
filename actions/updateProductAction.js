@@ -1,4 +1,3 @@
-
 "use server";
 
 import fs from "fs";
@@ -82,7 +81,7 @@ export async function updateProductAction(prevState, formData) {
   await setProductCustomizations(id, customizationOptionIds);
 
   revalidatePath("/products");
-  redirect(`/products?updated=true&productId=${id}`);
+  redirect(`/products?updated=true`);
 }
 
 

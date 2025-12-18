@@ -1,5 +1,4 @@
 import { getCustomizationTypesWithOptions } from "@/lib/customizations";
-import CustomizationsTable from "@/components/CustomizationsTable";
 import Link from "next/link";
 import NotificationBanner from "@/components/NotificationBanner";
 import CustomizationsTableWrapper from "@/components/CustomizationsTableWrapper";
@@ -11,13 +10,10 @@ export default async function CustomizationsPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 pt-20">
-
-      {/* HEADER */}
       <header className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
           Tilpasninger
         </h1>
-
         <Link
           href="/createCustomization"
           className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm"
@@ -25,7 +21,6 @@ export default async function CustomizationsPage() {
           Opret ny tilpasning
         </Link>
       </header>
-
       <div>
         <CustomizationsTableWrapper customizations={customizations} />
       </div>

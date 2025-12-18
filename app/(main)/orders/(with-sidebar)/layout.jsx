@@ -7,25 +7,25 @@ export default function OrdersLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-      <div className="min-h-screen flex bg-neutral-50">
+      <div className="min-h-screen flex">
         
-        {/* ---------------- DESKTOP SIDEBAR ---------------- */}
+        {/*DESKTOP SIDEBAR*/}
         <aside className="hidden md:flex fixed top-16 left-0 w-64 h-[calc(100vh-64px)]
                           border-r border-neutral-200 bg-white z-40">
           <OrderFilterSidebar />
         </aside>
 
-        {/* ---------------- MOBILE SIDEBAR OVERLAY ---------------- */}
+        {/*MOBILE SIDEBAR OVERLAY*/}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-50 flex md:hidden">
 
-            {/* Drawer */}
+            {/*Drawer*/}
             <div className="w-64 bg-white border-r border-neutral-200 shadow-xl 
                             h-full overflow-y-auto">
               <OrderFilterSidebar onItemClick={() => setIsMobileMenuOpen(false)} />
             </div>
 
-            {/* Backdrop */}
+            {/*Backdrop*/}
             <button
               type="button"
               className="flex-1 bg-black/40"
@@ -35,10 +35,10 @@ export default function OrdersLayout({ children }) {
           </div>
         )}
 
-        {/* ---------------- MAIN CONTENT AREA ---------------- */}
+        {/*MAIN CONTENT AREA*/}
         <div className="flex-1 flex flex-col min-w-0 md:ml-64">
 
-          {/* ------ MOBILE TOP BAR (BURGER BUTTON) ------ */}
+          {/*MOBILE TOP BAR*/}
           <div className="md:hidden px-4 py-2 border-b border-neutral-200 
                           bg-white sticky top-16 z-40">
             <button
@@ -49,7 +49,7 @@ export default function OrdersLayout({ children }) {
                          hover:bg-neutral-100"
             >
 
-              {/* Burger Icon */}
+              {/*Burger Icon*/}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -67,7 +67,7 @@ export default function OrdersLayout({ children }) {
             </button>
           </div>
 
-          {/* PAGE CONTENT */}
+          {/*PAGE CONTENT*/}
           <div className="flex-1">{children}</div>
         </div>
       </div>

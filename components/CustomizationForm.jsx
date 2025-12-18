@@ -36,7 +36,7 @@ export default function CustomizationForm({
     return (
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
 
-            {/* HEADER */}
+            {/*HEADER*/}
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">
                     {mode === "create" ? "Opret tilpasning" : "Rediger tilpasning"}
@@ -51,10 +51,10 @@ export default function CustomizationForm({
                 </button>
             </div>
 
-            {/* FORM */}
+            {/*FORM*/}
             <form action={formAction} className="space-y-6">
 
-                {/* TITLE */}
+                {/*TITLE*/}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         Titel <span className="text-red-500">*</span>
@@ -72,13 +72,13 @@ export default function CustomizationForm({
                     )}
                 </div>
 
-                {/* OPTIONS INPUT */}
+                {/*OPTIONS INPUT*/}
                 <div className="border-t border-gray-200 pt-4">
                     <h2 className="text-sm font-semibold text-gray-900 mb-2">
                         Muligheder
                     </h2>
                     <p className="text-xs text-gray-500 mb-3">
-                        Tilføj mindst én mulighed. "Andet, se note" tilføjes automatisk ved oprettelse.
+                        Tilføj mindst én mulighed. &quot;Andet, se note&quot; tilføjes automatisk ved oprettelse.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-2">
@@ -111,7 +111,7 @@ export default function CustomizationForm({
                     )}
                 </div>
 
-                {/* OPTION LIST */}
+                {/*OPTION LIST*/}
                 {options.length > 0 && (
                     <div className="space-y-2">
                         {options.map((opt, idx) => (
@@ -135,36 +135,50 @@ export default function CustomizationForm({
                     </div>
                 )}
 
-                {/* BUTTONS */}
+                {/*BUTTONS*/}
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+                {!isPending && Object.keys(errors).length > 0 && (
+                    <p className="text-red-600 text-sm font-medium mr-auto">
+                    Udfyld venligst alle krævede felter.
+                    </p>
+                )}
 
-                    {Object.keys(errors).length > 0 && (
-                        <p className="text-red-600 text-sm font-medium mr-auto">
-                            Udfyld venligst alle krævede felter.
-                        </p>
-                    )}
+                <button
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => router.push("/customizations")}
+                    className={`
+                    px-4 py-2 rounded-lg border text-sm transition
+                    ${
+                        isPending
+                        ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                        : "border-gray-300 hover:bg-gray-50"
+                    }
+                    `}
+                >
+                    Annuller
+                </button>
 
-                    <button
-                        type="button"
-                        onClick={() => router.push("/customizations")}
-                        className="px-4 py-2 rounded-lg border border-gray-300 text-sm"
-                    >
-                        Annuller
-                    </button>
-
-                    <button
-                        type="submit"
-                        disabled={isPending}
-                        className="px-5 py-2.5 rounded-lg bg-emerald-600 text-sm text-white disabled:opacity-60"
-                    >
-                        {isPending
-                            ? mode === "create"
-                                ? "Opretter..."
-                                : "Gemmer..."
-                            : mode === "create"
-                                ? "Opret"
-                                : "Gem ændringer"}
-                    </button>
+                <button
+                    type="submit"
+                    disabled={isPending}
+                    className={`
+                    px-5 py-2.5 rounded-lg text-sm text-white font-medium transition
+                    ${
+                        isPending
+                        ? "bg-emerald-400 cursor-wait"
+                        : "bg-emerald-600 hover:bg-emerald-700"
+                    }
+                    `}
+                >
+                    {isPending
+                    ? mode === "create"
+                        ? "Opretter..."
+                        : "Gemmer..."
+                    : mode === "create"
+                    ? "Opret"
+                    : "Gem ændringer"}
+                </button>
                 </div>
 
                 {errors.general && (

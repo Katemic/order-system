@@ -1,7 +1,5 @@
+import { redirect } from "next/navigation";
+
 export default function Home() {
-  return (
-    <button className="bg-blue-600 text-white px-4 py-2 rounded">
-      Test!
-    </button>
-  );
+  redirect("/orders");
 }

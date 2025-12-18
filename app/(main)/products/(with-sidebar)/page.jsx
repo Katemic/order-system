@@ -1,7 +1,5 @@
 import { getAllProducts } from "@/lib/products";
 import ProductsGrid from "@/components/ProductsGrid";
-import CreatedModal from "@/components/CreatedProductModal";
-import UpdatedModal from "@/components/UpdatedModal";
 import NotificationBanner from "@/components/NotificationBanner";
 
 export const dynamic = "force-dynamic";
@@ -58,9 +56,6 @@ export default async function ProductsPage(props) {
         products={filteredProducts}
         variant="products"
       />
-
-      <CreatedModal />
-      <UpdatedModal />
 
       <NotificationBanner />
     </main>

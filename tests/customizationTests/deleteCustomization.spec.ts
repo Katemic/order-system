@@ -49,9 +49,9 @@ test("Deleting customization removes it and shows success notification", async (
 
   await page.locator("form").getByRole("button", { name: "Slet" }).click();
 
-  await expect(page).toHaveURL(/\/customizations\?deleted=true&name=Topping/);
+  await expect(page).toHaveURL(/\/customizations\?deleted=true/);
 
-  await expect(page.getByText(`Tilpasning "Topping" er slettet`)).toBeVisible();
+  await expect(page.getByText(`Tilpasning er slettet`)).toBeVisible();
 
   await expect(page.getByText("Topping▶")).not.toBeVisible();
 });
