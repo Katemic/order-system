@@ -31,7 +31,7 @@ export async function createProductAction(prevState, formData) {
     };
   }
 
-  // ---------- IMAGE ----------
+  //IMAGE
   let imagePath = "/assets/defaultBillede.jpg";
   const image = formData.get("image");
 
@@ -45,7 +45,7 @@ export async function createProductAction(prevState, formData) {
     imagePath = `/assets/${uniqueName}`;
   }
 
-  // ---------- NUTRITION ----------
+  //NUTRITION
   const nutrition = {
     Energy_kcal: Number(values.Energy_kcal),
     Energy_kJ: Number(values.Energy_kJ),
@@ -59,13 +59,12 @@ export async function createProductAction(prevState, formData) {
     Water_content: Number(values.Water_content),
   };
 
-  // ---------- CUSTOMIZATIONS ----------
+  //CUSTOMIZATIONS
   const customizationOptionIds = formData
     .getAll("customizationOptionIds")
     .map((v) => Number(v));
 
-  // ---------- SAVE ----------
-  // Sørg for at createProduct returnerer den nye række inkl. id
+  //SAVE
   const product = await createProduct({
     name: values.name,
     price: parseFloat(values.price),

@@ -6,7 +6,6 @@ function isTestMode() {
   return process.env.TEST_ENV === "true";
 }
 
-// PATH til mock-filer
 function getOrdersMockPath() {
   return path.join(
     process.cwd(),
@@ -38,7 +37,6 @@ export async function deleteOrder(id) {
     return { success: true };
   }
 
-  // ----------------- REAL DATABASE -----------------
   const { error } = await supabase
     .from("orders")
     .delete()
@@ -210,7 +208,6 @@ export async function createOrderWithItems({
   const today = new Date();
   const dateCreated = today.toISOString().slice(0, 10);
 
-  // ───────────────────── MOCK MODE ─────────────────────
   if (isTestMode()) {
     const existingOrders = readOrdersMock();
 
@@ -264,9 +261,6 @@ export async function createOrderWithItems({
     return { success: true, orderId: nextOrderId, mode: "mock" };
   }
 
-  // ───────────────────── DB MODE ─────────────────────
-
-  // 1) Opret selve ordren
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert({
@@ -300,7 +294,6 @@ export async function createOrderWithItems({
     };
   }
 
-  // 2) Opret order_items og få dem retur med id'er
   const itemsPayload = orderItems.map((item) => ({
     order_id: order.id,
     product_id: item.productId,
@@ -311,7 +304,7 @@ export async function createOrderWithItems({
   const { data: insertedItems, error: itemsError } = await supabase
     .from("order_items")
     .insert(itemsPayload)
-    .select(); // vigtigt for at få id med
+    .select();
 
   if (itemsError) {
     console.error("Fejl ved oprettelse af order_items:", itemsError);
@@ -324,10 +317,8 @@ export async function createOrderWithItems({
     };
   }
 
-  // 3) Opret order_item_customizations ud fra orderItems[*].customizations
   const customizationsPayload = [];
 
-  // vi antager samme rækkefølge: orderItems[index] matcher insertedItems[index]
   orderItems.forEach((item, index) => {
     const row = insertedItems[index];
     if (!row) return;
@@ -465,7 +456,7 @@ export async function updateOrderItems({ orderId, items }) {
       };
     }
 
-    // Find nuværende max item-id, så vi kan lave nye unikke id'er
+    // Find exsisting max item-id, so we can make new unique id's
     const allExistingItems = orders.flatMap((o) => o.order_items || []);
     const currentMaxItemId =
       allExistingItems.length > 0
@@ -530,7 +521,7 @@ export async function updateOrderItems({ orderId, items }) {
     }
   }
 
-  // 1) Slet eksisterende order_items
+  // 1) Delete existing order_items
   const { error: deleteError } = await supabase
     .from("order_items")
     .delete()
@@ -544,7 +535,7 @@ export async function updateOrderItems({ orderId, items }) {
     };
   }
 
-  // 2) Indsæt nye order_items og få dem retur med id'er
+  // 2) Insert new order_items and get them back with ids
   const rows = items.map((item) => ({
     order_id: orderId,
     product_id: item.productId,
@@ -565,7 +556,7 @@ export async function updateOrderItems({ orderId, items }) {
     };
   }
 
-  // 3) Indsæt nye order_item_customizations
+  // 3) Insert new order_item_customizations
   const customizationsPayload = [];
 
   items.forEach((item, index) => {
@@ -606,7 +597,7 @@ export async function updateOrderItems({ orderId, items }) {
     }
   }
 
-  // 4) Opdater orders.total_price
+  // 4) Update orders.total_price
   const { error: updateError } = await supabase
     .from("orders")
     .update({ total_price: totalPrice })

@@ -42,7 +42,7 @@ export default function OrderSummary({
               key={index}
               className="border-b border-neutral-200 pb-2 last:border-b-0 flex justify-between items-start gap-2 cursor-pointer"
             >
-              {/* KLIK FOR AT REDIGERE */}
+              {/*CLICK TO EDIT*/}
               <div
                 className="flex-1 text-sm"
                 onClick={() => onEditItem && onEditItem(index)}
@@ -54,7 +54,7 @@ export default function OrderSummary({
                   <span>{(item.price * item.quantity).toFixed(2)} kr.</span>
                 </div>
 
-                {/* NOTE */}
+                {/*NOTE*/}
                 {item.note && (
                   <p className="mt-1 text-xs text-neutral-600 break-words">
                     Note: {item.note}
@@ -91,7 +91,7 @@ export default function OrderSummary({
                   )}
               </div>
 
-              {/* FJERN PRODUKT */}
+              {/*REMOVE ITEM*/}
               {onRemoveItem && (
                 <button
                   type="button"
