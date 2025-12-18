@@ -16,7 +16,7 @@ export async function deleteProductAction(formData) {
 
   // Tilføj deleted=true og name=...
   const separator = currentUrl.includes("?") ? "&" : "?";
-  const redirectUrl = `${currentUrl}${separator}deleted=true&name=${name}`;
+  const redirectUrl = `${currentUrl}${separator}deleted=true`;
 
   redirect(redirectUrl);
 }
