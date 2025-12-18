@@ -15,10 +15,22 @@ export default function NotificationBanner() {
 
   const [visible, setVisible] = useState(false);
 
+  const isOrders = pathname.startsWith("/orders");
+  const isProducts = pathname.startsWith("/products");
+  const isCustomizations = pathname.startsWith("/customizations");
+
   useEffect(() => {
     if (!created && !updated && !deleted) return;
 
     setVisible(true);
+
+    if (created && isOrders) {
+      try {
+        localStorage.removeItem("orderItems");
+      } catch (err) {
+        console.error("Kunne ikke fjerne orderItems:", err);
+      }
+    }
 
     const timer = setTimeout(() => {
       setVisible(false);
@@ -36,13 +48,9 @@ export default function NotificationBanner() {
     }, 4000);
 
     return () => clearTimeout(timer);
-  }, [created, updated, deleted, searchParams, router, pathname]);
+  }, [created, updated, deleted, isOrders, searchParams, router, pathname]);
 
   if (!visible) return null;
-
-  const isOrders = pathname.startsWith("/orders");
-  const isProducts = pathname.startsWith("/products");
-  const isCustomizations = pathname.startsWith("/customizations");
 
   let text = "";
 
@@ -51,14 +59,12 @@ export default function NotificationBanner() {
     else if (isProducts) text = "Produkt er slettet.";
     else if (isCustomizations) text = "Tilpasning er slettet.";
     else text = "Element er slettet.";
-  } 
-  else if (created) {
+  } else if (created) {
     if (isOrders) text = "Bestilling er oprettet.";
     else if (isProducts) text = "Produkt er oprettet.";
     else if (isCustomizations) text = "Tilpasning er oprettet.";
     else text = "Oprettet.";
-  } 
-  else if (updated) {
+  } else if (updated) {
     if (isOrders) text = "Bestilling er opdateret.";
     else if (isProducts) text = "Produkt er opdateret.";
     else if (isCustomizations) text = "Tilpasning er opdateret.";
