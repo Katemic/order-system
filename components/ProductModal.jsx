@@ -9,7 +9,7 @@ import { sortCustomizationOptions } from "@/lib/sortCustomizationOptions";
 
 export default function ProductModal({ product, onClose }) {
   const [isPending, startTransition] = useTransition();
-  const [confirmMode, setConfirmMode] = useState(null); // "archive" | "reactivate" | null
+  const [confirmMode, setConfirmMode] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
 
   if (!product) return null;
@@ -94,7 +94,6 @@ export default function ProductModal({ product, onClose }) {
   "
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Luk-knap */}
         <button
           onClick={onClose}
           className="modal-close-button absolute right-4 top-4 text-2xl"
@@ -103,7 +102,6 @@ export default function ProductModal({ product, onClose }) {
           ✕
         </button>
 
-        {/* ===== CONFIRM VIEW ===== */}
         {confirmMode !== null ? (
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-bold">{confirmTitle}</h2>
@@ -131,9 +129,7 @@ export default function ProductModal({ product, onClose }) {
             </div>
           </div>
         ) : (
-          /* ===== NORMAL PRODUCT VIEW ===== */
           <div className="flex flex-col md:flex-row gap-6">
-            {/* VENSTRE SIDE - skærm højde nedenfor*/}
             <div className="flex-1 md:max-h-[60vh] md:overflow-y-auto pr-2">
               <div className="mb-4">
                 <h2 className="modal-title text-2xl font-bold">{name}</h2>
@@ -207,7 +203,6 @@ export default function ProductModal({ product, onClose }) {
                                 ▶
                               </span>
                             </summary>
-                            {/* //ændre antal af kolonner her */}
                             <ul
                               className="mt-2 ml-1 text-sm text-neutral-700 
                             grid grid-cols-1 
@@ -232,7 +227,6 @@ export default function ProductModal({ product, onClose }) {
                 )}
             </div>
 
-            {/* HØJRE SIDE */}
             {image && (
               <div className="modal-image-wrapper flex flex-col items-center gap-4">
                 <div className="w-full aspect-square rounded-xl bg-neutral-100 overflow-hidden flex items-center justify-center">

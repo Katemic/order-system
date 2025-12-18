@@ -27,7 +27,7 @@ export default function CustomerForm({
       )}
 
       <form className="space-y-4" action={formAction}>
-        {/* Hidden felter */}
+        {/* Hidden fields */}
         {orderId != null && (
           <input type="hidden" name="orderId" value={orderId} />
         )}
