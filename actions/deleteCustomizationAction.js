@@ -13,7 +13,7 @@ export async function deleteCustomizationAction(formData) {
   revalidatePath("/customizations");
 
   const separator = currentUrl.includes("?") ? "&" : "?";
-  const redirectUrl = `${currentUrl}${separator}deleted=true&name=${name}`;
+  const redirectUrl = `${currentUrl}${separator}deleted=true`;
 
   redirect(redirectUrl);
 }

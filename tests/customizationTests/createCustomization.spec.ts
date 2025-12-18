@@ -105,7 +105,7 @@ test("Submitting the form returns to /customizations and shows success notificat
 
 
     await expect(
-        page.getByText(/Tilpasning oprettet/i)
+        page.getByText(/Tilpasning er oprettet/i)
     ).toBeVisible();
 
     await expect(page.getByText("Ny kategori")).toBeVisible();

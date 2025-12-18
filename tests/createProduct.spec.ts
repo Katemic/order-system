@@ -161,70 +161,58 @@ test('All categories are available', async ({ page }) => {
 
 });
 
-test('Creates a new product when all required fields are filled out', async ({ page }) => {
-    await gotoProducts(page);
-    //checks that the create product button is visible
-    await expect(page.getByRole('link', { name: '+ Opret produkt' })).toBeVisible();
-    await page.getByRole('link', { name: '+ Opret produkt' }).click();
-    //makes sure we can fill out all the fields
-    await page.locator('input[name="name"]').fill('TestBrød');
-    await page.locator('input[name="price"]').click();
-    await page.locator('input[name="price"]').fill('50');
-    await page.getByRole('combobox').first().selectOption('Brød');
-    await page.getByRole('combobox').nth(1).selectOption('Bager');
-    await page.locator('textarea[name="ingredients"]').click();
-    await page.locator('textarea[name="ingredients"]').fill('Meeeeeget sukker');
-    await page.locator('input[name="Energy_kcal"]').click();
-    await page.locator('input[name="Energy_kcal"]').fill('1');
-    await page.locator('input[name="Energy_kJ"]').click();
-    await page.locator('input[name="Energy_kJ"]').fill('2');
-    await page.locator('input[name="Fat"]').click();
-    await page.locator('input[name="Fat"]').fill('3');
-    await page.locator('input[name="Saturated_fatty_acids"]').click();
-    await page.locator('input[name="Saturated_fatty_acids"]').fill('4');
-    await page.locator('input[name="Carbohydrates"]').click();
-    await page.locator('input[name="Carbohydrates"]').fill('5');
-    await page.locator('input[name="Sugars"]').click();
-    await page.locator('input[name="Sugars"]').fill('6');
-    await page.locator('input[name="Dietary_fiber"]').click();
-    await page.locator('input[name="Dietary_fiber"]').fill('7');
-    await page.locator('input[name="Protein"]').click();
-    await page.locator('input[name="Protein"]').fill('8');
-    await page.locator('input[name="Salt"]').click();
-    await page.locator('input[name="Salt"]').fill('9');
-    await page.locator('input[name="Water_content"]').click();
-    await page.locator('input[name="Water_content"]').fill('10');
-    sleep(2000); // give some time to visually see the filled form before submission
-    await expect(page.getByRole('button', { name: 'Opret' })).toBeVisible();
-    sleep(1000);
-    await page.getByRole('button', { name: 'Opret' }).click();
+test("Creates a new product when all required fields are filled out", async ({ page }) => {
+  await gotoProducts(page);
 
-    //check that we are redirected to products page and see modal
-    await expect(page).toHaveURL('http://localhost:3000/products?created=true');
-    await expect(page.getByRole('heading', { name: 'Produkt oprettet' })).toBeVisible();
+  await expect(page.getByRole("link", { name: "+ Opret produkt" })).toBeVisible();
+  await page.getByRole("link", { name: "+ Opret produkt" }).click();
 
-    await page.getByRole('button', { name: 'Luk' }).click();
-    await expect(page).toHaveURL('http://localhost:3000/products');
-    await page.getByRole('button', { name: 'TestBrød TestBrød' }).first().click();
+  await page.locator('input[name="name"]').fill("TestBrød");
+  await page.locator('input[name="price"]').fill("50");
+  await page.getByRole("combobox").first().selectOption("Brød");
+  await page.getByRole("combobox").nth(1).selectOption("Bager");
+  await page.locator('textarea[name="ingredients"]').fill("Meeeeeget sukker");
 
-    // verify that the modal shows the correct information
-    await expect(page.locator('h2').filter({ hasText: 'TestBrød' })).toBeVisible();
-    await expect(page.getByRole('paragraph').filter({ hasText: 'Brød' })).toBeVisible();
-    await expect(page.getByText('Produktion: Bager')).toBeVisible();
-    await expect(page.getByText('50 kr')).toBeVisible();
-    await expect(page.getByText('Meeeeeget sukker')).toBeVisible();
-    await expect(page.getByText('Energi (kcal)1')).toBeVisible();
-    await expect(page.getByText('Energi (kJ)2')).toBeVisible();
-    await expect(page.getByText('Fedt (g)3')).toBeVisible();
-    await expect(page.getByText('Heraf mættede fedtsyrer (g)4')).toBeVisible();
-    await expect(page.getByText('Kulhydrat (g)5')).toBeVisible();
-    await expect(page.getByText('Heraf sukkerarter (g)6')).toBeVisible();
-    await expect(page.getByText('Kostfibre (g)7')).toBeVisible();
-    await expect(page.getByText('Protein (g)8')).toBeVisible();
-    await expect(page.getByText('Salt (g)9')).toBeVisible();
-    await expect(page.getByText('Vandindhold (g)10')).toBeVisible();
-    await expect(page.getByRole('img', { name: 'TestBrød' }).nth(1)).toBeVisible();
-})
+  await page.locator('input[name="Energy_kcal"]').fill("1");
+  await page.locator('input[name="Energy_kJ"]').fill("2");
+  await page.locator('input[name="Fat"]').fill("3");
+  await page.locator('input[name="Saturated_fatty_acids"]').fill("4");
+  await page.locator('input[name="Carbohydrates"]').fill("5");
+  await page.locator('input[name="Sugars"]').fill("6");
+  await page.locator('input[name="Dietary_fiber"]').fill("7");
+  await page.locator('input[name="Protein"]').fill("8");
+  await page.locator('input[name="Salt"]').fill("9");
+  await page.locator('input[name="Water_content"]').fill("10");
+
+  await expect(page.getByRole("button", { name: "Opret" })).toBeEnabled();
+  await page.getByRole("button", { name: "Opret" }).click();
+  await expect(page).toHaveURL(/\/products\?created=true/);
+
+  const banner = page.getByRole("status");
+  await expect(banner).toBeVisible();
+  await expect(banner).toContainText("Produkt er oprettet.");
+
+  await expect(page).toHaveURL(/\/products$/);
+
+  await page.getByRole("button", { name: /TestBrød/i }).first().click();
+
+  await expect(page.locator("h2").filter({ hasText: "TestBrød" })).toBeVisible();
+  await expect(page.getByText("Produktion: Bager")).toBeVisible();
+  await expect(page.getByText("50 kr")).toBeVisible();
+  await expect(page.getByText("Meeeeeget sukker")).toBeVisible();
+  await expect(page.getByText("Energi (kcal)")).toBeVisible();
+  await expect(page.getByText("Energi (kJ)")).toBeVisible();
+  await expect(page.getByText("Fedt (g)")).toBeVisible();
+  await expect(page.getByText("Heraf mættede fedtsyrer (g)")).toBeVisible();
+  await expect(page.getByText("Kulhydrat (g)")).toBeVisible();
+  await expect(page.getByText("Heraf sukkerarter (g)")).toBeVisible();
+  await expect(page.getByText("Kostfibre (g)")).toBeVisible();
+  await expect(page.getByText("Protein (g)")).toBeVisible();
+  await expect(page.getByText("Salt (g)")).toBeVisible();
+  await expect(page.getByText("Vandindhold (g)")).toBeVisible();
+
+  await expect(page.getByRole("img", { name: "TestBrød" }).first()).toBeVisible();
+});
 
 test('Default values are shown when nonrequired fields arent shown', async ({ page }) => {
     await gotoProducts(page);
@@ -235,10 +223,6 @@ test('Default values are shown when nonrequired fields arent shown', async ({ pa
     await page.getByRole('combobox').first().selectOption('Brød');
     await page.getByRole('combobox').nth(1).selectOption('Bager');
     await page.getByRole('button', { name: 'Opret' }).click();
-   
-    const overlay = page.locator('div.fixed.inset-0');
-    await page.getByRole('button', { name: 'Luk' }).click();
-    await expect(overlay).toBeHidden();
 
     await page.getByRole('button', { name: /defaultTest/i }).click();
     //tilføj expect på ingredienser når den nye ændring er merget - er sammen med database koden
