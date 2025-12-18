@@ -109,7 +109,7 @@ export default function ProductForm({
   const selectedSet = new Set(selectedOptions);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8 pt-20">
+    <div className="min-h-screen flex items-center justify-center px-4 py-8 pt-20">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
         {/* HEADER */}
         <div className="flex items-center justify-between mb-6">

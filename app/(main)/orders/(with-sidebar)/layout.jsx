@@ -7,7 +7,7 @@ export default function OrdersLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-      <div className="min-h-screen flex bg-neutral-50">
+      <div className="min-h-screen flex">
         
         {/*DESKTOP SIDEBAR*/}
         <aside className="hidden md:flex fixed top-16 left-0 w-64 h-[calc(100vh-64px)]
