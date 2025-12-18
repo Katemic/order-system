@@ -32,7 +32,7 @@ function groupingKey(customizations, note) {
   return `${customPart}||${notePart}`;
 }
 
-//hovedfunktion
+// main function
 
 export async function getProductionList({
   date,
@@ -42,14 +42,14 @@ export async function getProductionList({
 }) {
   const orders = await getAllOrders();
 
-  /* ─── Dato-filter ─── */
+  //date filtering
   const filteredOrders = orders.filter((order) => {
     if (date) return order.date_needed === date;
     if (from && to) return order.date_needed >= from && order.date_needed <= to;
     return true;
   });
 
-  /* ─── Flad order_items ─── */
+  //flatten order_items
   const items = [];
 
   for (const order of filteredOrders) {
@@ -77,7 +77,7 @@ export async function getProductionList({
     }
   }
 
-  /* ─── Gruppér pr. produkt + customization + note ─── */
+  //group pr item type (name + custom + note)
   const productMap = {};
 
   for (const item of items) {
@@ -111,7 +111,7 @@ export async function getProductionList({
     }
   }
 
-  /* ─── Saml ─── */
+  //join
   const result = [];
 
   for (const productName of Object.keys(productMap).sort()) {
@@ -128,10 +128,21 @@ export async function getProductionList({
     result.push(...withoutCustom, ...withCustomOrNote);
   }
 
-  /* ─── Beregn tider og tidlig produktion ─── */
-  const FINAL_EARLY_LIMIT = 9 * 60; // kl 09:00
 
-  const withTimes = result.map((row) => {
+//calculate earliest ready time and early production
+const FINAL_EARLY_LIMIT = 9 * 60; // kl 09:00
+const final = [];
+
+//sort product names alphabetically (case-insensitive)
+const sortedProductNames = Object.keys(productMap).sort((a, b) =>
+  a.localeCompare(b, "da", { sensitivity: "base" })
+);
+
+for (const productName of sortedProductNames) {
+  const rows = Object.values(productMap[productName]);
+
+
+  const withTimes = rows.map((row) => {
     if (!row.readyTimes.length) {
       return {
         ...row,
@@ -141,12 +152,12 @@ export async function getProductionList({
       };
     }
 
-    const sorted = [...row.readyTimes].sort(
+    const sortedTimes = [...row.readyTimes].sort(
       (a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b)
     );
 
     const countByTime = {};
-    for (const t of sorted) {
+    for (const t of sortedTimes) {
       countByTime[t] = (countByTime[t] || 0) + 1;
     }
 
@@ -155,25 +166,35 @@ export async function getProductionList({
         ? Object.entries(countByTime)
             .filter(([time]) => parseTimeToMinutes(time) < FINAL_EARLY_LIMIT)
             .sort(([a], [b]) => parseTimeToMinutes(a) - parseTimeToMinutes(b))
-            .map(([time, qty]) => ({
-              time,
-              quantity: qty,
-            }))
+            .map(([time, quantity]) => ({ time, quantity }))
         : null;
 
     return {
       ...row,
-      earliestReady: sorted[0],
-      earlyProduction: early && early.length > 0 ? early : null,
+      earliestReady: sortedTimes[0],
+      earlyProduction: early && early.length ? early : null,
       orderCount: row.orderIds.size,
     };
   });
 
-  /* ─── Sortér efter tid ─── */
-  withTimes.sort(
-    (a, b) =>
-      parseTimeToMinutes(a.earliestReady) - parseTimeToMinutes(b.earliestReady)
-  );
+  //sort only by earliest ready time
+  withTimes.sort((a, b) => {
+    const aTime =
+      a.earliestReady === null
+        ? Number.POSITIVE_INFINITY
+        : parseTimeToMinutes(a.earliestReady);
 
-  return withTimes;
+    const bTime =
+      b.earliestReady === null
+        ? Number.POSITIVE_INFINITY
+        : parseTimeToMinutes(b.earliestReady);
+
+    return aTime - bTime;
+  });
+
+  //keep the grouped rows together in the final list
+  final.push(...withTimes);
 }
+
+return final;
+} 

@@ -78,7 +78,7 @@ export default function ProductionSidebar({ onItemClick }) {
         Filtrer produktion
       </div>
 
-      {/* ENKELT DATO */}
+      {/* Single date */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">
           Vælg dato
@@ -93,7 +93,7 @@ export default function ProductionSidebar({ onItemClick }) {
         />
       </div>
 
-      {/* PERIODE */}
+      {/* Period */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">
           Periode
@@ -116,7 +116,7 @@ export default function ProductionSidebar({ onItemClick }) {
         />
       </div>
 
-      {/* PRODUKTIONSKATEGORI */}
+      {/* Production category */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">
           Produktionskategori
@@ -135,7 +135,7 @@ export default function ProductionSidebar({ onItemClick }) {
         </select>
       </div>
 
-      {/* I DAG-KNAP */}
+      {/* Today button */}
       <div className="mt-auto">
         <button
           type="button"

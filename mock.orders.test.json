@@ -3,28 +3,28 @@
     "id": 1,
     "customer_name": "Hans Jensen",
     "customer_phone": "22223333",
-    "date_needed": "2025-12-15",
-    "date_created": "2025-12-15",
+    "date_needed": "2025-12-18",
+    "date_created": "2025-12-18",
     "taken_by": "Louise",
     "paid": false,
     "delivery_type": "pickup",
-    "pickup_time": "08:00-09:00",
+    "pickup_time": "8:00-9:00",
     "delivery_time": null,
     "delivery_address": null,
     "delivery_zip": null,
     "note": "Skær i halve",
-    "total_price": 110,
+    "total_price": 126,
     "order_items": [
       {
-        "id": 10,
+        "id": 1,
         "order_id": 1,
         "product_id": 2,
         "quantity": 3,
         "item_note": "",
         "products": {
           "id": 2,
-          "name": "Franskbrød",
-          "price": 20
+          "name": "Surdejsbrød",
+          "price": 32.5
         },
         "customizations": {
           "Topping": [
@@ -40,16 +40,17 @@
         }
       },
       {
-        "id": 11,
+        "id": 2,
         "order_id": 1,
-        "product_id": 5,
+        "product_id": 1,
         "quantity": 1,
         "item_note": "mere brød",
         "products": {
-          "id": 5,
-          "name": "Rundstykker",
-          "price": 10
-        }
+          "id": 1,
+          "name": "Hvedebrød",
+          "price": 28.5
+        },
+        "customizations": {}
       }
     ]
   },
@@ -58,7 +59,7 @@
     "customer_name": "Maria Madsen",
     "customer_phone": "44556677",
     "date_needed": "2026-02-10",
-    "date_created": "2025-12-06",
+    "date_created": "2025-12-18",
     "taken_by": "Thomas",
     "paid": true,
     "delivery_type": "delivery",
@@ -66,20 +67,21 @@
     "delivery_time": "11:00",
     "delivery_address": "Bagervej 14",
     "delivery_zip": "9800",
-    "note": "",
-    "total_price": 84,
+    "note": null,
+    "total_price": 192,
     "order_items": [
       {
-        "id": 12,
+        "id": 3,
         "order_id": 2,
         "product_id": 4,
-        "quantity": 2,
+        "quantity": 4,
         "item_note": "",
         "products": {
           "id": 4,
-          "name": "Kanelstang",
-          "price": 42
-        }
+          "name": "Chokoladekage",
+          "price": 48
+        },
+        "customizations": {}
       }
     ]
   },
@@ -88,235 +90,23 @@
     "customer_name": "Peter Larsen",
     "customer_phone": "87654321",
     "date_needed": "2026-02-11",
-    "date_created": "2025-12-08",
+    "date_created": "2025-12-18",
     "taken_by": "Anna",
     "paid": false,
     "delivery_type": "pickup",
-    "pickup_time": "09:00",
+    "pickup_time": "06:00",
     "delivery_time": null,
     "delivery_address": null,
     "delivery_zip": null,
     "note": "Ikke skåret",
-    "total_price": 60,
+    "total_price": 110,
     "order_items": [
       {
-        "id": 13,
+        "id": 4,
         "order_id": 3,
-        "product_id": 6,
+        "product_id": 5,
         "quantity": 5,
         "item_note": "Ekstra sprøde",
-        "products": {
-          "id": 6,
-          "name": "Chokoladebolle",
-          "price": 12
-        }
-      }
-    ]
-  },
-  {
-    "id": 4,
-    "customer_name": "Frederikke Holm",
-    "customer_phone": "99887766",
-    "date_needed": "2026-02-11",
-    "date_created": "2025-12-09",
-    "taken_by": "Louise",
-    "paid": true,
-    "delivery_type": "delivery",
-    "pickup_time": null,
-    "delivery_time": "14:00-16:00",
-    "delivery_address": "Park Allé 5",
-    "delivery_zip": "9830",
-    "note": "",
-    "total_price": 150,
-    "order_items": [
-      {
-        "id": 14,
-        "order_id": 4,
-        "product_id": 7,
-        "quantity": 3,
-        "item_note": "",
-        "products": {
-          "id": 7,
-          "name": "Sandwich",
-          "price": 50
-        }
-      }
-    ]
-  },
-  {
-    "id": 5,
-    "customer_name": "Kasper Nielsen",
-    "customer_phone": "11112222",
-    "date_needed": "2026-02-12",
-    "date_created": "2025-12-10",
-    "taken_by": "Anna",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "07:30",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "",
-    "total_price": 90,
-    "order_items": [
-      {
-        "id": 15,
-        "order_id": 5,
-        "product_id": 3,
-        "quantity": 2,
-        "item_note": "",
-        "products": {
-          "id": 3,
-          "name": "Rugbrød",
-          "price": 45
-        }
-      }
-    ]
-  },
-  {
-    "id": 6,
-    "customer_name": "Sofie Sørensen",
-    "customer_phone": "23456789",
-    "date_needed": "2026-02-13",
-    "date_created": "2025-12-11",
-    "taken_by": "Thomas",
-    "paid": true,
-    "delivery_type": "delivery",
-    "pickup_time": null,
-    "delivery_time": "10:00",
-    "delivery_address": "Havnevej 3",
-    "delivery_zip": "9870",
-    "note": "Stil ved døren",
-    "total_price": 168,
-    "order_items": [
-      {
-        "id": 16,
-        "order_id": 6,
-        "product_id": 8,
-        "quantity": 4,
-        "item_note": "",
-        "products": {
-          "id": 8,
-          "name": "Napoleonshat",
-          "price": 42
-        }
-      }
-    ]
-  },
-  {
-    "id": 7,
-    "customer_name": "Nina Kristensen",
-    "customer_phone": "33445566",
-    "date_needed": "2026-02-13",
-    "date_created": "2025-12-11",
-    "taken_by": "Anna",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "12:00",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "Ingen rosiner",
-    "total_price": 75,
-    "order_items": [
-      {
-        "id": 17,
-        "order_id": 7,
-        "product_id": 9,
-        "quantity": 3,
-        "item_note": "",
-        "products": {
-          "id": 9,
-          "name": "Hvedestang",
-          "price": 25
-        }
-      }
-    ]
-  },
-  {
-    "id": 8,
-    "customer_name": "gggg",
-    "customer_phone": null,
-    "date_needed": "2025-12-17",
-    "date_created": "2025-12-17",
-    "taken_by": "gggg",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "10",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "",
-    "total_price": 28.5,
-    "order_items": [
-      {
-        "id": 18,
-        "order_id": 8,
-        "product_id": 1,
-        "quantity": 1,
-        "item_note": "",
-        "products": {
-          "id": 1,
-          "name": "Hvedebrød",
-          "price": 28.5
-        },
-        "customizations": {}
-      }
-    ]
-  },
-  {
-    "id": 9,
-    "customer_name": "Heidi",
-    "customer_phone": null,
-    "date_needed": "2025-12-17",
-    "date_created": "2025-12-17",
-    "taken_by": "Louise",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "5",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "",
-    "total_price": 28.5,
-    "order_items": [
-      {
-        "id": 19,
-        "order_id": 9,
-        "product_id": 1,
-        "quantity": 1,
-        "item_note": "",
-        "products": {
-          "id": 1,
-          "name": "Hvedebrød",
-          "price": 28.5
-        },
-        "customizations": {}
-      }
-    ]
-  },
-  {
-    "id": 10,
-    "customer_name": "Heidi",
-    "customer_phone": null,
-    "date_needed": "2025-12-17",
-    "date_created": "2025-12-17",
-    "taken_by": "hgfhf",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "6",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "",
-    "total_price": 22,
-    "order_items": [
-      {
-        "id": 20,
-        "order_id": 10,
-        "product_id": 5,
-        "quantity": 1,
-        "item_note": "",
         "products": {
           "id": 5,
           "name": "Spandauer",
@@ -327,26 +117,26 @@
     ]
   },
   {
-    "id": 11,
-    "customer_name": "ghfgh",
-    "customer_phone": null,
-    "date_needed": "2025-12-17",
-    "date_created": "2025-12-17",
-    "taken_by": "46",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "5",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
+    "id": 4,
+    "customer_name": "Frederikke Holm",
+    "customer_phone": "99887766",
+    "date_needed": "2026-02-11",
+    "date_created": "2025-12-18",
+    "taken_by": "Louise",
+    "paid": true,
+    "delivery_type": "delivery",
+    "pickup_time": null,
+    "delivery_time": "14:00-16:00",
+    "delivery_address": "Park Allé 5",
+    "delivery_zip": "9830",
     "note": "",
-    "total_price": 45,
+    "total_price": 135,
     "order_items": [
       {
-        "id": 21,
-        "order_id": 11,
+        "id": 5,
+        "order_id": 4,
         "product_id": 3,
-        "quantity": 1,
+        "quantity": 3,
         "item_note": "",
         "products": {
           "id": 3,
@@ -358,70 +148,26 @@
     ]
   },
   {
-    "id": 12,
-    "customer_name": "Hans Jensen",
-    "customer_phone": null,
-    "date_needed": "2025-12-17",
-    "date_created": "2025-12-17",
-    "taken_by": "Louise",
+    "id": 5,
+    "customer_name": "Kasper Nielsen",
+    "customer_phone": "11112222",
+    "date_needed": "2026-02-12",
+    "date_created": "2025-12-18",
+    "taken_by": "Anna",
     "paid": false,
     "delivery_type": "pickup",
-    "pickup_time": "9",
+    "pickup_time": "07:30",
     "delivery_time": null,
     "delivery_address": null,
     "delivery_zip": null,
     "note": "",
-    "total_price": 32.5,
+    "total_price": 65,
     "order_items": [
       {
-        "id": 22,
-        "order_id": 12,
+        "id": 6,
+        "order_id": 5,
         "product_id": 2,
-        "quantity": 1,
-        "item_note": "note",
-        "products": {
-          "id": 2,
-          "name": "Surdejsbrød",
-          "price": 32.5
-        },
-        "customizations": {
-          "Topping": [
-            {
-              "id": 101,
-              "name": "Friske hindbær"
-            }
-          ],
-          "Størrelse": [
-            {
-              "id": 203,
-              "name": "Andet, se note"
-            }
-          ]
-        }
-      }
-    ]
-  },
-  {
-    "id": 13,
-    "customer_name": "vb",
-    "customer_phone": null,
-    "date_needed": "2025-12-17",
-    "date_created": "2025-12-17",
-    "taken_by": "hbnj",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "8",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "",
-    "total_price": 32.5,
-    "order_items": [
-      {
-        "id": 23,
-        "order_id": 13,
-        "product_id": 2,
-        "quantity": 1,
+        "quantity": 2,
         "item_note": "",
         "products": {
           "id": 2,
@@ -433,40 +179,95 @@
     ]
   },
   {
-    "id": 14,
-    "customer_name": "jn",
-    "customer_phone": null,
-    "date_needed": "2025-12-17",
-    "date_created": "2025-12-17",
-    "taken_by": "m",
+    "id": 6,
+    "customer_name": "Sofie Sørensen",
+    "customer_phone": "23456789",
+    "date_needed": "2026-02-13",
+    "date_created": "2025-12-18",
+    "taken_by": "Thomas",
+    "paid": true,
+    "delivery_type": "delivery",
+    "pickup_time": null,
+    "delivery_time": "10:00",
+    "delivery_address": "Havnevej 3",
+    "delivery_zip": "9870",
+    "note": "Stil ved døren",
+    "total_price": 180,
+    "order_items": [
+      {
+        "id": 7,
+        "order_id": 6,
+        "product_id": 3,
+        "quantity": 4,
+        "item_note": "",
+        "products": {
+          "id": 3,
+          "name": "Hindbærtærte",
+          "price": 45
+        },
+        "customizations": {}
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "customer_name": "Nina Kristensen",
+    "customer_phone": "33445566",
+    "date_needed": "2026-02-13",
+    "date_created": "2025-12-18",
+    "taken_by": "Anna",
     "paid": false,
     "delivery_type": "pickup",
-    "pickup_time": "4",
+    "pickup_time": "12:00",
+    "delivery_time": null,
+    "delivery_address": null,
+    "delivery_zip": null,
+    "note": "Ingen rosiner",
+    "total_price": 85.5,
+    "order_items": [
+      {
+        "id": 8,
+        "order_id": 7,
+        "product_id": 1,
+        "quantity": 3,
+        "item_note": "",
+        "products": {
+          "id": 1,
+          "name": "Hvedebrød",
+          "price": 28.5
+        },
+        "customizations": {}
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "customer_name": "dffff",
+    "customer_phone": null,
+    "date_needed": "2025-12-18",
+    "date_created": "2025-12-18",
+    "taken_by": "fff",
+    "paid": false,
+    "delivery_type": "pickup",
+    "pickup_time": "3",
     "delivery_time": null,
     "delivery_address": null,
     "delivery_zip": null,
     "note": "",
-    "total_price": 32.5,
+    "total_price": 28.5,
     "order_items": [
       {
-        "id": 24,
-        "order_id": 14,
-        "product_id": 2,
+        "id": 9,
+        "order_id": 8,
+        "product_id": 1,
         "quantity": 1,
         "item_note": "",
         "products": {
-          "id": 2,
-          "name": "Surdejsbrød",
-          "price": 32.5
+          "id": 1,
+          "name": "Hvedebrød",
+          "price": 28.5
         },
-        "customizations": {
-          "Topping": [
-            {
-              "id": 101,
-              "name": "Friske hindbær"
-            }
-          ]
-        }
+        "customizations": {}
       }
     ]
   }

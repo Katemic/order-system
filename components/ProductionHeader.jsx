@@ -27,12 +27,12 @@ export default function ProductionHeader() {
 
 return (
   <div className="mb-5">
-    {/* Titel */}
+    {/* Title */}
     <h1 className="text-2xl font-bold mb-4">
       Produktionsliste
     </h1>
 
-    {/* Dato + kategori */}
+    {/* date + category */}
     <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
       <span className="text-base font-semibold text-neutral-800">
         {dateLabel}

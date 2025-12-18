@@ -54,10 +54,11 @@ test('create-order page shows product cards with name and price', async ({ page 
 });
 
 test("create-order: mobile shows 1 card per row", async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 800 });
 
   await page.goto("http://localhost:3000/");
   await page.getByRole("link", { name: "Opret bestilling" }).click();
+
+  await page.setViewportSize({ width: 375, height: 800 });
 
   const grid = page.locator("section.grid");
 

@@ -125,8 +125,8 @@ test("modal opens with the correct order details and show customizations", async
   ).toBeVisible();
 
   // Products from mock data
-  await expect(modal.getByText("Franskbrød")).toBeVisible();
-  await expect(modal.getByText("Rundstykker")).toBeVisible();
+  await expect(modal.getByText("Surdejsbrød")).toBeVisible();
+  await expect(modal.getByText("Hvedebrød")).toBeVisible();
 
   // Unit price + quantity (there are two lines in the mock with stk as unit)
   await expect(modal.getByText(/stk —/)).toHaveCount(2);

@@ -57,15 +57,15 @@ test("Edit products page loads existing order items", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/orders\/1\/editProducts/);
 
-  await expect(page.getByText(/3x Franskbrød/i).first()).toBeVisible();
-  await expect(page.getByText(/1x Rundstykker/i).first()).toBeVisible();
+  await expect(page.getByText(/3x Surdejsbrød/i).first()).toBeVisible();
+  await expect(page.getByText(/1x Hvedebrød/i).first()).toBeVisible();
   await expect(page.getByText(/mere brød/i).first()).toBeVisible();
 });
 
 test("Clicking an item opens edit modal with current quantity and note", async ({ page }) => {
   await page.goto("/orders/1/editProducts");
 
-  const item = page.getByText(/1x Rundstykker/i).first();
+  const item = page.getByText(/1x Hvedebrød/i).first();
   await item.click();
 
   const modal = page.getByRole("dialog");
@@ -90,8 +90,8 @@ test("Item can be removed from list", async ({ page }) => {
 test("Edit products: can add customizations in modal and they show in OrderSummary", async ({ page }) => {
   await page.goto("/orders/1/editProducts");
 
-  // Click Franskbrød
-  const franskItem = page.getByText(/3x Franskbrød/i).first();
+  // Click surdejsbrød
+  const franskItem = page.getByText(/3x Surdejsbrød/i).first();
   await franskItem.click();
 
   const modal = page.getByRole("dialog");
@@ -114,11 +114,11 @@ test("Edit products: can add customizations in modal and they show in OrderSumma
   // Save changes
   await modal.getByRole("button", { name: "Gem ændringer" }).click();
 
-  // Now OrderSummary should show customizations under the Franskbrød line
+  // Now OrderSummary should show customizations under the Surdejsbrød line
   const summary = page.locator("aside", { hasText: "Bestilling" });
   await expect(summary).toBeVisible();
 
-  const franskLine = summary.locator("div.border-b", { hasText: "3x Franskbrød" }).first();
+  const franskLine = summary.locator("div.border-b", { hasText: "3x Surdejsbrød" }).first();
   await expect(franskLine).toBeVisible();
 
   await expect(franskLine.getByText(/Topping:/)).toBeVisible();
@@ -129,8 +129,8 @@ test("Edit products: can add customizations in modal and they show in OrderSumma
 test("Edit products: saving persists customizations and shows them in order detail modal", async ({ page }) => {
   await page.goto("/orders/1/editProducts");
 
-  // Open modal via Franskbrød
-  await page.getByText(/3x Franskbrød/i).first().click();
+  // Open modal via Surdejsbrød
+  await page.getByText(/3x Surdejsbrød/i).first().click();
 
   const modal = page.getByRole("dialog");
   await expect(modal).toBeVisible();
@@ -168,7 +168,7 @@ test("Edit products: saving persists customizations and shows them in order deta
 test("Saving edited order redirects and shows notification", async ({ page }) => {
   await page.goto("/orders/1/editProducts");
 
-  const firstItem = page.getByText(/1x Rundstykker/).first();
+  const firstItem = page.getByText(/1x Hvedebrød/).first();
   await firstItem.click();
 
   const modal = page.getByRole("dialog");
@@ -184,7 +184,7 @@ test("Saving edited order redirects and shows notification", async ({ page }) =>
   const detailModal = page.locator("div.fixed.inset-0");
   await expect(detailModal).toBeVisible();
 
-  await expect(detailModal.getByText("Rundstykker10 stk — 100 kr.")).toBeVisible();
+  await expect(detailModal.getByText("Hvedebrød10 stk — 285 kr.")).toBeVisible();
 });
 
 test("Back button returns to orders page", async ({ page }) => {

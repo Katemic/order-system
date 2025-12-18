@@ -8,7 +8,7 @@ export default function ProductionTable({ rows }) {
     return <p className="text-neutral-500">Ingen produktion i perioden.</p>;
   }
 
-  // Gruppér rækker efter produktkategori
+  // group rows by product category
   const groupedByCategory = rows.reduce((acc, row) => {
     const category =
       row.productCategory ||
@@ -34,7 +34,7 @@ export default function ProductionTable({ rows }) {
 
         return (
           <section key={category}>
-            {/* KATEGORI OVERSKRIFT */}
+            {/* category titel */}
             <h2 className="text-lg font-semibold mb-3 text-gray-800">
               {category}
             </h2>
