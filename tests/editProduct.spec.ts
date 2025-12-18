@@ -163,7 +163,6 @@ test('Editing a product updates its data correctly', async ({ page }) => {
     await page.locator('input[name="Salt"]').fill('9');
     await page.locator('input[name="Water_content"]').fill('10');
     await page.getByRole('button', { name: 'Gem ændringer' }).click();
-    await page.getByRole('button', { name: 'Luk' }).click();
     await page.getByRole('link', { name: 'Morgenbrød' }).click();
     await sleep(4000); // give some time to visually see the filled form before submission
     await page.getByRole('button', { name: 'Hvedebrød2 Hvedebrød2' }).click();

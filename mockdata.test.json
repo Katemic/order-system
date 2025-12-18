@@ -18,7 +18,8 @@
     },
     "image": "/assets/defaultBillede.jpg",
     "category": "Brød",
-    "active": true
+    "active": true,
+    "production_category": "Bager"
   },
   {
     "id": 2,
@@ -39,7 +40,8 @@
     },
     "image": "/assets/defaultBillede.jpg",
     "category": "Brød",
-    "active": true
+    "active": true,
+    "production_category": "Bager"
   },
   {
     "id": 3,
@@ -60,7 +62,8 @@
     },
     "image": "/assets/defaultBillede.jpg",
     "category": "Konditor",
-    "active": true
+    "active": true,
+    "production_category": "Konditor"
   },
   {
     "id": 4,
@@ -81,7 +84,8 @@
     },
     "image": "/assets/defaultBillede.jpg",
     "category": "Konditor",
-    "active": true
+    "active": true,
+    "production_category": "Konditor"
   },
   {
     "id": 5,
@@ -102,6 +106,7 @@
     },
     "image": "/assets/defaultBillede.jpg",
     "category": "Wienerbrød",
-    "active": true
+    "active": true,
+    "production_category": "Bager"
   }
 ]
