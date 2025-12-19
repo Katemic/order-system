@@ -11,7 +11,7 @@ export default async function CustomizationsPage() {
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 pt-20">
       <header className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
+        <h1 className="page-title">
           Tilpasninger
         </h1>
         <Link
