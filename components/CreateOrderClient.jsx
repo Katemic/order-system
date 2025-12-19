@@ -103,7 +103,7 @@ export default function CreateOrderClient({ products }) {
         />
       </div>
 
-      <div className="w-[190px] sm:w-[230px] md:w-[240px] lg:w-[320px] shrink-0">
+      <div className="shrink-0 w-[clamp(240px,24vw,360px)]">
         <OrderSummary
           items={orderItems}
           onReset={handleReset}

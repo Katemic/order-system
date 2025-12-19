@@ -29,14 +29,10 @@ export default function OrderSummary({
 
   return (
     <aside
-      className="
-    shrink-0
-    w-[260px]
-    sm:w-[320px]
-    lg:w-[360px]
-    bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm
-    sticky top-24 max-h-[calc(100vh-8rem)] flex flex-col
-  "
+      className="w-full
+   bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm
+   sticky top-24 max-h-[calc(100vh-8rem)] flex flex-col
+ "
     >
       <h2 className="text-lg font-semibold mb-3">Bestilling</h2>
 
