@@ -27,10 +27,10 @@ export default function ProductionHeader({ showPrint = true }) {
   const productionLabel = production || "Alle produktioner";
 
   return (
-    <div className="mb-5">
+    <div className="mb-5 pl-3 pr-3">
       {/* TITLE + PRINT */}
       <div className="flex items-start justify-between gap-4">
-        <h1 className="text-2xl font-bold">
+        <h1 className="page-title">
           Produktionsliste
         </h1>
 
@@ -50,7 +50,7 @@ export default function ProductionHeader({ showPrint = true }) {
         </span>
       </div>
 
-      <div className="mt-3 border-b border-neutral-200" />
+      <div className="mt-3 border-b border-neutral-300" />
     </div>
   );
 }

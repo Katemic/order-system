@@ -21,8 +21,8 @@ export default function OrdersPageClient({ orders }) {
 
   return (
     <div className="p-6 pt-20">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Bestillinger</h1>
+      <div className="mb-4 flex items-center justify-between pr-3">
+        <h1 className="page-title pl-3">Bestillinger</h1>
         <PrintOrdersButton />
       </div>
 
