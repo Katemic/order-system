@@ -12,14 +12,11 @@ test.afterAll(() => {
 
 test.describe.configure({ mode: "serial" });
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 test('checks all fields and buttons are present on create product page and the back buttons work', async ({ page }) => {
     await gotoProducts(page);
     await page.getByRole('link', { name: '+ Opret produkt' }).click();
     await expect(page).toHaveURL('http://localhost:3000/createProduct');
 
-    // locator the UI fragment you provided
     const container = page.getByText(
         'Opret produktTilbage til produkterProduktnavn *Pris *krKategori *Vælg'
     );
@@ -77,7 +74,6 @@ test('checks all fields and buttons are present on create product page and the b
     await page.getByRole('button', { name: 'Annuller' }).click();
     await expect(page).toHaveURL('http://localhost:3000/products');
 });
-
 
 test('Shows error messages when not all requred fields have been filled out', async ({ page }) => {
     await gotoProducts(page);
@@ -225,7 +221,6 @@ test('Default values are shown when nonrequired fields arent shown', async ({ pa
     await page.getByRole('button', { name: 'Opret' }).click();
 
     await page.getByRole('button', { name: /defaultTest/i }).click();
-    //tilføj expect på ingredienser når den nye ændring er merget - er sammen med database koden
     await expect(page.getByText('Energi (kcal)0')).toBeVisible();
     await expect(page.getByText('Energi (kJ)0')).toBeVisible();
     await expect(page.getByText('Fedt (g)0')).toBeVisible();
@@ -261,7 +256,6 @@ test.skip('You can add your own photo and see a preview', async ({ page }) => {
     await page.getByRole('button', { name: 'Luk' }).click();
     await page.getByRole('button', { name: 'test test' }).click();
     await expect(page.getByRole('img', { name: 'test' }).nth(1)).toBeVisible();
-
 });
 
 

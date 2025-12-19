@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { resetMockData } from "./helpers/cleanup";
 import { gotoProducts } from './helpers/navigationHelpers';
 
@@ -11,8 +11,6 @@ test.afterAll(() => {
     });
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-
 
 test('check edit button is present on product modal and navigate back buttons are present and working', async ({ page }) => {
     await gotoProducts(page);
@@ -80,7 +78,6 @@ test('Category picker is available with all options and the products category is
     ]);
 
     await expect(combobox2).toHaveValue('Bager');
-
 });
 
 test('All fields are present on edit product page', async ({ page }) => {
@@ -138,7 +135,6 @@ test('All fields are present on edit product page', async ({ page }) => {
     await expect(page.getByRole('combobox')).toHaveCount(2);
 
 });
-
 
 test('Editing a product updates its data correctly', async ({ page }) => {
     await gotoProducts(page);
@@ -201,9 +197,6 @@ test('Editing a product updates its data correctly', async ({ page }) => {
         await expect(row).toBeVisible();
         await expect(row.locator("dd")).toHaveText(value);
     }
-
-
-
 })
 
 test('The edit page shows the products current infomation', async ({ page }) => {
@@ -233,7 +226,6 @@ test('The edit page shows the products current infomation', async ({ page }) => 
     };
 
     for (const [label, value] of Object.entries(fields)) {
-        // match kun den individuelle div, ikke grid-containeren
         const fieldContainer = nutritionSection.locator('div:not(.grid)', {
             hasText: label,
         });
@@ -262,5 +254,4 @@ test.skip('Can change photo and see preview', async ({ page }) => {
     await page.getByRole('button', { name: 'Luk' }).click();
     await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
     await expect(page.getByRole('img', { name: 'Hvedebrød' }).nth(1)).toBeVisible();
-
 });

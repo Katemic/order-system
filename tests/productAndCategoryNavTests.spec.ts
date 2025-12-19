@@ -86,7 +86,6 @@ test('product-card shows name "Hvedebrød" and image', async ({ page }) => {
   await expect(image).toBeVisible();
 });
 
-
 test('product-modal shows all data and buttons for Hvedebrød', async ({ page }) => {
   await page.goto('http://localhost:3000/products');
 
@@ -96,8 +95,6 @@ test('product-modal shows all data and buttons for Hvedebrød', async ({ page })
   // 1) Modal overlay
   const overlay = page.locator('div.fixed.inset-0');
   await expect(overlay).toBeVisible();
-
-  // ========== BASIC DATA ==========
 
   // 2) Title
   const title = page.locator('.modal-title');
@@ -125,8 +122,6 @@ test('product-modal shows all data and buttons for Hvedebrød', async ({ page })
   const image = overlay.locator('.modal-image-wrapper img[alt="Hvedebrød"]');
   await expect(image).toBeVisible();
 
-
-  // ========== NUTRITION DATA ==========
   const nutritionSectionTitle = page.locator('.modal-section-title');
   await expect(nutritionSectionTitle).toHaveText('Næringsindhold pr. 100 g');
 
@@ -148,8 +143,6 @@ test('product-modal shows all data and buttons for Hvedebrød', async ({ page })
   await expect(nutritionValue('Protein (g)')).toHaveText('9');
   await expect(nutritionValue('Salt (g)')).toHaveText('1.2');
   await expect(nutritionValue('Vandindhold (g)')).toHaveText('36');
-
-  // ========== BUTTONS ==========
 
   // "Rediger produkt" link
   const editButton = page.getByRole('link', { name: 'Rediger produkt' });

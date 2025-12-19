@@ -9,7 +9,6 @@ test.afterAll(() => {
     resetMockData();
 });
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 test('Can delete product and it gets removed from the product list and notification is shown', async ({ page }) => {
   await page.goto('http://localhost:3000/');
@@ -57,15 +56,15 @@ test('Delete button is shown and it activates a "are you sure" modal', async ({ 
 
   await page.getByRole('button', { name: 'Slet produkt' }).click();
 
-  // Øverste heading
+  // Top heading
   await expect(page.getByRole('heading', { name: 'Er du sikker på, at du vil' })).toBeVisible();
 
-  // Paragraffen med produktnavnet
+  // Paragraph with product name
   await expect(
     page.getByText(/Produkt(?:et)?\s+["“”]?Hvedebrød["“”]?\s+bliver\s+permanent\s+slettet/i)
   ).toBeVisible();
 
-  // Begge knapper
+  // Both buttons
   await expect(page.getByRole('button', { name: 'Annuller' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Slet', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Slet', exact: true })).toHaveClass(/bg-red-600/);

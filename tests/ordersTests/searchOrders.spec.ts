@@ -30,7 +30,7 @@ test('You can search for products in an order', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Søg bestillinger…' }).fill('brød');
   await page.getByRole('button', { name: 'Søg' }).click();
 
-  await page.waitForURL(/search=br%C3%B8d/i); // encoded "brød" → br%C3%B8d
+  await page.waitForURL(/search=br%C3%B8d/i); // encoded "brød": br%C3%B8d
 
   const rows = page.locator('tbody tr');
   await expect(rows).toHaveCount(3);
@@ -42,10 +42,10 @@ test('Search resets when chosing all orders', async ({ page }) => {
 
   const rows = page.locator('tbody tr');
 
-  // Sørg for at vi er i "Alle bestillinger"-tilstand,
+  // Make sure we are in "Alle bestillinger" state
   await page.getByRole('button', { name: 'Alle bestillinger' }).click();
 
-  // Vent til eventuel search er væk
+  // Wait until any search is gone
   await page.waitForURL((url) => !url.searchParams.has("search"));
 
   await expect(rows).toHaveCount(7);
@@ -60,7 +60,7 @@ test('Search resets when chosing all orders', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Alle bestillinger' }).click();
 
-  // Vent til URL IKKE længere indeholder search
+  // Wait until URL no longer contains search
   await page.waitForURL((url) => !url.searchParams.has("search"));
 
   await expect(rows).toHaveCount(7);

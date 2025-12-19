@@ -554,7 +554,7 @@ test('CustomerInfo shows validation errors when required fields are missing (pic
     await expect(
   page.getByRole('heading', { name: 'Kundeoplysninger', level: 2 })).toBeVisible();;
 
-  // Default is Afhentning (pickup), so we click Gennemfør bestilling without filling forms
+  // Default is Afhentning, so we click Gennemfør bestilling without filling forms
   const submitButton = page.getByRole('button', { name: 'Gennemfør bestilling' });
   await submitButton.click();
 
@@ -563,7 +563,7 @@ test('CustomerInfo shows validation errors when required fields are missing (pic
     page.getByText('Der er fejl i formularen. Ret venligst de markerede felter.')
   ).toBeVisible();
 
-  // Field errors – these strings come from submitOrderAction
+  // Field errors
   await expect(
     page.getByText('Dato for bestilling er påkrævet.')
   ).toBeVisible();
@@ -593,7 +593,6 @@ test('pickup/delivery toggle shows the right fields and updates fulfillmentType'
   // Hidden field for fulfillmentType
   const fulfillmentHidden = page.locator('input[type="hidden"][name="fulfillmentType"]');
 
-  // --- START: expect pickup as default ---
   await expect(pickupButton).toBeVisible();
   await expect(deliveryButton).toBeVisible();
 
@@ -608,7 +607,6 @@ test('pickup/delivery toggle shows the right fields and updates fulfillmentType'
   await expect(page.getByLabel('Postnr')).toHaveCount(0);
   await expect(page.getByLabel('Leveringstidspunkt')).toHaveCount(0);
 
-  // --- CHANGE TO DELIVERY ---
   await deliveryButton.click();
 
   // hidden field should now be "delivery"
@@ -716,43 +714,43 @@ test('pickup: valid afhentningstidspunkt is accepted (no time errors)', async ({
 test('success-flow: gennemfører bestilling, rydder orderItems og viser tom kurv efterfølgende', async ({ page }) => {
   await page.goto('http://localhost:3000/');
 
-  // Gå til Opret bestilling
+  // Go to Opret bestilling
   await page.getByRole('link', { name: 'Opret bestilling' }).click();
 
-  // Tilføj et produkt (Hvedebrød)
+  // Add a product (Hvedebrød)
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
   const modal = page.locator('div.fixed.inset-0');
   await expect(modal).toBeVisible();
   await modal.getByRole('button', { name: 'Tilføj til ordre' }).click();
 
-  // Tjek at summary har produktet
+  // Check that summary has the product
   const summary = page.locator('aside', { hasText: 'Bestilling' });
   await expect(summary.getByText('1x Hvedebrød')).toBeVisible();
 
-  // Videre til kundeinfo
+  // Continue to customer info
   await summary.getByRole('button', { name: 'Videre' }).click();
 
-  // Udfyld minimum for en gyldig pickup-bestilling
+  // Fill minimum for a valid pickup order
   await page.getByLabel('Dato*').fill('2025-12-24');
   await page.getByLabel('Navn på kunde*').fill('Kunde Test');
   await page.getByLabel('Betjent af*').fill('Ekspedient Test');
   await page.getByLabel('Afhentningstidspunkt*').fill('14');
 
-  // Gennemfør bestilling
+  // Complete order
   await page.getByRole('button', { name: 'Gennemfør bestilling' }).click();
 
-  // Redirect til /orders
+  // Redirect to /orders
   await page.waitForURL(/\/orders/);
 
-  // Notifikation om oprettet ordre
+  // Notification about created order
   await expect(
     page.getByText('Bestilling er oprettet')
   ).toBeVisible();
 
-  // Gå tilbage til "Opret bestilling"
+  // Go back to "Create order"
   await page.getByRole('link', { name: 'Opret bestilling' }).click();
 
-  // Summary skal nu være tom, fordi localStorage er ryddet i success-flowet
+  // Summary should now be empty because localStorage is cleared in the success flow
   const newSummary = page.locator('aside', { hasText: 'Bestilling' });
   await expect(
     newSummary.getByText('Ingen produkter i bestillingen endnu.')
@@ -763,23 +761,23 @@ test('success-flow: gennemfører bestilling, rydder orderItems og viser tom kurv
 test("Create order supports add, edit and remove items", async ({ page }) => {
   await page.goto("/createOrder");
 
-  // Tilføj et produkt
+  // Add a product
   await page.getByText("Hvedebrød").click();
   const modal = page.getByRole("dialog");
   await modal.getByLabel("Antal").fill("3");
   await modal.getByRole("button", { name: "Tilføj til ordre" }).click();
 
-  // Bekræft i dynamisk liste
+  // Confirm in dynamic list
   await expect(page.getByText("3x Hvedebrød")).toBeVisible();
 
-  // Rediger fra liste
-  await page.getByText("3x Hvedebrød").click(); // åbner modal
+  // Edit from list
+  await page.getByText("3x Hvedebrød").click();
   await modal.getByLabel("Antal").fill("5");
   await modal.getByRole("button", { name: "Gem ændringer" }).click();
 
   await expect(page.getByText("5x Hvedebrød")).toBeVisible();
 
-  // Fjern
+  // Remove
   await page.locator("button:text('✕')").click();
   await expect(page.getByText("5x Hvedebrød")).not.toBeVisible();
 });

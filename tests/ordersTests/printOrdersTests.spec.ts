@@ -29,7 +29,7 @@ test("Print-button is visible, opens new tab, and print page shows the same orde
     if (text) customerNames.push(text);
   }
 
-  // 3) Click print -> popup
+  // 3) Click print button and wait for new tab
   const [popup] = await Promise.all([
     page.waitForEvent("popup"),
     printBtn.click(),

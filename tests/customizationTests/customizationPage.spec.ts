@@ -19,8 +19,7 @@ test("shows heading and either table or 'no customizations' text", async ({
         ).toBeVisible();
         return;
     }
-
-    // Otherwise, work with the table
+    // Else, expect the table to be visible
     await expect(table).toBeVisible();
 
     // Find thead, but only test the header if thead actually exists
