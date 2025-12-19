@@ -1,6 +1,7 @@
 import CustomizationForm from "@/components/CustomizationForm";
 import { updateCustomizationAction } from "@/actions/updateCustomizationAction";
 import { getCustomizationById } from "@/lib/customizations";
+import { notFound } from "next/navigation";
 
 export default async function EditCustomizationPage(props) {
   const { id } = await props.params;
@@ -9,11 +10,7 @@ export default async function EditCustomizationPage(props) {
   const customization = await getCustomizationById(customizationId);
 
   if (!customization) {
-    return (
-      <main className="max-w-3xl mx-auto px-4 py-8 pt-20">
-        Tilpasning ikke fundet
-      </main>
-    );
+    return notFound();
   }
 
   return (

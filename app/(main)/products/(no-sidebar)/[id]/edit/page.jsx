@@ -6,6 +6,7 @@ import {
   getCustomizationTypesWithOptions,
   getProductCustomizationOptionIds,
 } from "@/lib/customizations";
+import { notFound } from "next/navigation";
 
 export default async function EditProductPage(props) {
   const { id } = await props.params;
@@ -19,11 +20,7 @@ export default async function EditProductPage(props) {
     ]);
 
   if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-xl">
-        Produkt ikke fundet
-      </div>
-    );
+    return notFound();
   }
 
   return (
