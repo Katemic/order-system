@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { resetMockData, resetMockCustomizationData } from "../helpers/cleanup";
 
-
 test.beforeEach(() => {
     resetMockData();
     resetMockCustomizationData();
@@ -11,7 +10,6 @@ test.afterAll(() => {
     resetMockData();
     resetMockCustomizationData();
 });
-
 
 test("Displays a 'Create customization' button on the customization list", async ({ page }) => {
     await page.goto("/customizations");
@@ -42,10 +40,8 @@ test("User can add options and they appear in the list", async ({ page }) => {
     const input = page.getByPlaceholder("Skriv en mulighed…");
     const addBtn = page.getByRole("button", { name: "Tilføj" });
 
-
     await input.fill("Chokolade");
     await addBtn.click();
-
 
     await input.fill("Vanilje");
     await addBtn.click();
@@ -57,7 +53,6 @@ test("User can add options and they appear in the list", async ({ page }) => {
     // Assert input field resets after adding
     await expect(input).toHaveValue("");
 });
-
 
 test("Options list shows delete buttons and removing works", async ({ page }) => {
     await page.goto("/createCustomization");
@@ -90,26 +85,20 @@ test("Back buttons navigates back to /customizations", async ({ page }) => {
 test("Submitting the form returns to /customizations and shows success notification", async ({ page }) => {
     await page.goto("/createCustomization");
 
-
     await page.locator('input[name="title"]').fill('Ny kategori');
-
 
     await page.getByPlaceholder("Skriv en mulighed…").fill("TestValg");
     await page.getByRole("button", { name: "Tilføj" }).click();
 
-
     await page.getByRole("button", { name: "Opret" }).click();
 
-
     await expect(page).toHaveURL(/\/customizations/);
-
 
     await expect(
         page.getByText(/Tilpasning er oprettet/i)
     ).toBeVisible();
 
     await expect(page.getByText("Ny kategori")).toBeVisible();
-
 
     const summary = page.getByRole("button", { name: /Ny kategori/i }).or(
         page.getByText("Ny kategori")

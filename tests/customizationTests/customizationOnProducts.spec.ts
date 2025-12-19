@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { resetMockData } from "../helpers/cleanup";
 
-
 test.beforeEach(() => {
     resetMockData();
 });
@@ -10,7 +9,7 @@ test.afterAll(() => {
     resetMockData();
 });
 
-test("Viser customization sektion for Surdejsbrød", async ({ page }) => {
+test("Shows customization section for Surdejsbrød", async ({ page }) => {
   await page.goto("/products");
 
   await page.getByText("Surdejsbrød").click();
@@ -18,7 +17,7 @@ test("Viser customization sektion for Surdejsbrød", async ({ page }) => {
   await expect(page.getByText("Mulige tilpasninger")).toBeVisible();
 });
 
-test("Viser customization titler for Surdejsbrød", async ({ page }) => {
+test("Shows customization titles for Surdejsbrød", async ({ page }) => {
   await page.goto("/products");
   await page.getByText("Surdejsbrød").click();
 
@@ -29,7 +28,7 @@ test("Viser customization titler for Surdejsbrød", async ({ page }) => {
 });
 
 
-test("Åbner Topping og viser alle muligheder", async ({ page }) => {
+test("Opens Topping and shows all options", async ({ page }) => {
   await page.goto("/products");
   await page.getByText("Surdejsbrød").click();
 
@@ -39,7 +38,7 @@ test("Åbner Topping og viser alle muligheder", async ({ page }) => {
   await expect(page.getByText("Hvid chokolade")).toBeVisible();
 });
 
-test("Topping og Størrelse kan være åbne samtidig", async ({ page }) => {
+test("Topping and Størrelse can be open simultaneously", async ({ page }) => {
   await page.goto("/products");
   await page.getByText("Surdejsbrød").click();
 

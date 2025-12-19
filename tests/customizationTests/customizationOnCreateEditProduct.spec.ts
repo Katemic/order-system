@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { resetMockData, resetMockCustomizationData } from "../helpers/cleanup";
 
-
 test.beforeEach(() => {
     resetMockData();
     resetMockCustomizationData();
@@ -11,8 +10,6 @@ test.afterAll(() => {
     resetMockData();
     resetMockCustomizationData();
 });
-
-
 
 test('Customization section can be expanded', async ({ page }) => {
     await page.goto('/createProduct');
@@ -39,14 +36,13 @@ test('All customization types and options can be checked', async ({ page }) => {
         await page.getByText(opt).locator('..').locator('input[type=checkbox]').check();
     }
 
-    // assertions: hidden inputs skal eksistere, ikke være synlige
+    // assertions: hidden inputs should exist, not be visible
     for (const opt of ["101", "102"]) {
         const hidden = page.locator(`input[name="customizationOptionIds"][value="${opt}"]`);
 
         await expect(hidden).toHaveCount(1);
     }
 });
-
 
 test('All customization types are displayed with a checkbox', async ({ page }) => {
     await page.goto('/createProduct');
@@ -90,7 +86,6 @@ test('Preselected customization options are checked on edit', async ({ page }) =
     }
 });
 
-
 test('Product saves customizations correctly', async ({ page }) => {
     await page.goto('/createProduct');
     await page.getByRole('button', { name: /Tilpasninger/i }).click();
@@ -99,7 +94,6 @@ test('Product saves customizations correctly', async ({ page }) => {
     await page.getByText("Topping").locator('..').locator('input[type=checkbox]').check();
     await page.getByText("Friske hindbær").locator('..').locator('input[type=checkbox]').check();
     await page.getByText("Hvid chokolade").locator('..').locator('input[type=checkbox]').check();
-
 
     await page.locator('input[name="name"]').fill('Testkage');
 

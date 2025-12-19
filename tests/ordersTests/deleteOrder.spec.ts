@@ -9,7 +9,6 @@ test.afterAll(() => {
     resetMockDataOrders();
 });
 
-
 test("Can delete order and it gets removed from the table and notification is shown", async ({ page }) => {
   await page.goto("/orders");
 
@@ -17,12 +16,12 @@ test("Can delete order and it gets removed from the table and notification is sh
   await page.getByRole('button', { name: 'Slet bestilling' }).click();
   await page.getByRole('button', { name: 'Slet', exact: true }).click();
 
-  // Notifikation skal komme frem
+  // Notification should appear
   await expect(
     page.getByText(/Bestilling #1 er slettet\./)
   ).toBeVisible();
 
-  // Rækken med bestilling 1 må IKKE længere findes
+  // The row with order 1 must no longer exist
   await expect(
     page.getByRole("row", { name: /Hans Jensen/i })
   ).toHaveCount(0);
@@ -42,19 +41,17 @@ test('Delete button is shown and it activates a "are you sure" modal', async ({ 
 
   await page.getByRole('button', { name: 'Slet bestilling' }).click();
 
-  // Øverste heading
+  // Top heading
   await expect(page.getByRole('heading', { name: 'Er du sikker på, at du vil' })).toBeVisible();
 
-  // Paragraffen med produktnavnet
+  // Paragraph with product name
   await expect(
     page.getByText(/Bestilling #1 bliver permanent slettet\./)
   ).toBeVisible();
 
-  // Begge knapper
+  // Both buttons
   await expect(page.getByRole('button', { name: 'Annuller' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Slet', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Slet', exact: true })).toHaveClass(/bg-red-600/);
-
-
 });
 

@@ -11,14 +11,14 @@ test.afterAll(() => {
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-test('Mobilview viser burger-menu på orders', async ({ page }) => {
+test('Mobile view shows burger-menu on orders', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });
     await page.goto('/orders');
 
     await expect(page.getByRole('button', { name: 'Menu' })).toBeVisible();
 });
 
-test('Desktop viser fast sidebar', async ({ page }) => {
+test('Desktop view shows fixed sidebar', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/orders');
 
@@ -53,7 +53,7 @@ test("filtering on a single date works", async ({ page }) => {
 
   // Get all visible rows after filtering
   const rows = page.locator("table tbody tr");
-  await expect(rows).toHaveCount(1); // expect 1 order for example
+  await expect(rows).toHaveCount(1);
 
   // Check the date
   const dateCell = rows.first().locator("td").nth(1); 
@@ -86,7 +86,7 @@ test("filtering on a date range works", async ({ page }) => {
     }
 });
 
-test('"I dag" filtrerer til kun dagens bestillinger', async ({ page }) => {
+test('"I dag" filters to only today\'s orders', async ({ page }) => {
   await page.goto("/orders");
   await expect(page.getByRole("button", { name: "I dag" })).toBeVisible();
 
@@ -102,20 +102,20 @@ test('"I dag" filtrerer til kun dagens bestillinger', async ({ page }) => {
   await expect(rows.first().locator("td").nth(1)).toHaveText(formatted);
 });
 
-test('"Alle bestillinger" nulstiller filtrering', async ({ page }) => {
+test('"Alle bestillinger" resets filtering', async ({ page }) => {
     await page.goto("/orders");
     await expect(page.getByRole("button", { name: "Alle bestillinger" })).toBeVisible();
     const rows = page.locator("table tbody tr");
 
-    // Filtrer først
+    // Filter first
     await page.locator('input[type="date"]').first().fill("2026-02-13");
     await expect(rows).toHaveCount(2);
 
 
-    // Nulstil
+    // Reset
     await page.getByRole("button", { name: "Alle bestillinger" }).click();
 
-    // Nu skal ALLE mock-ordrer vises igen
+    // Now all mock orders should be visible again
     await expect(rows).toHaveCount(7);
 });
 
@@ -136,10 +136,10 @@ test("orders: 'Kun leveringer' filter only shows delivery orders and can be togg
   await expect(page.getByText("Maria Madsen")).toBeVisible();   // delivery
   await expect(page.getByText("Sofie Sørensen")).toBeVisible(); // delivery
 
-  // Turn "Kun leveringer" on (click instead of .check())
+  // Turn "Kun leveringer" on
   await deliveryCheckbox.click();
 
-  // After navigation: get a fresh locator and assert checked
+  // After navigation get a fresh locator and assert checked
   await expect(page.getByLabel("Kun leveringer")).toBeChecked();
 
   // Pickup orders should be gone
