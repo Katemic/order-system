@@ -31,7 +31,8 @@ export default async function ProductionPage({ searchParams }) {
   return (
     <div className="flex min-h-screen">
       <main className="flex-1 p-6 pt-20">
-        <ProductionHeader />
+        <ProductionHeader showPrint />
+
         <ProductionTable rows={rows} />
       </main>
     </div>

@@ -2,8 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 import { formatDateWithWeekday } from "@/lib/dateHelpers";
+import PrintProductionButton from "@/components/PrintProductionButton";
 
-export default function ProductionHeader() {
+export default function ProductionHeader({ showPrint = true }) {
   const params = useSearchParams();
 
   const date = params.get("date");
@@ -25,29 +26,33 @@ export default function ProductionHeader() {
 
   const productionLabel = production || "Alle produktioner";
 
-return (
-  <div className="mb-5">
-    {/* Title */}
-    <h1 className="text-2xl font-bold mb-4">
-      Produktionsliste
-    </h1>
+  return (
+    <div className="mb-5">
+      {/* TITLE + PRINT */}
+      <div className="flex items-start justify-between gap-4">
+        <h1 className="text-2xl font-bold">
+          Produktionsliste
+        </h1>
 
-    {/* date + category */}
-    <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-      <span className="text-base font-semibold text-neutral-800">
-        {dateLabel}
-      </span>
+        {showPrint && <PrintProductionButton />}
+      </div>
 
-      <span className="text-neutral-400">•</span>
+      {/* date + category */}
+      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span className="text-base font-semibold text-neutral-800">
+          {dateLabel}
+        </span>
 
-      <span className="text-base font-medium text-neutral-700">
-        {productionLabel}
-      </span>
+        <span className="text-neutral-400">•</span>
+
+        <span className="text-base font-medium text-neutral-700">
+          {productionLabel}
+        </span>
+      </div>
+
+      <div className="mt-3 border-b border-neutral-200" />
     </div>
-
-    <div className="mt-3 border-b border-neutral-200" />
-  </div>
-);
-
+  );
 }
+
 

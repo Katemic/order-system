@@ -3,8 +3,8 @@
     "id": 1,
     "customer_name": "Hans Jensen",
     "customer_phone": "22223333",
-    "date_needed": "2025-12-18",
-    "date_created": "2025-12-18",
+    "date_needed": "2025-12-19",
+    "date_created": "2025-12-19",
     "taken_by": "Louise",
     "paid": false,
     "delivery_type": "pickup",
@@ -235,68 +235,6 @@
           "id": 1,
           "name": "Hvedebrød",
           "price": 28.5
-        },
-        "customizations": {}
-      }
-    ]
-  },
-  {
-    "id": 8,
-    "customer_name": "dffff",
-    "customer_phone": null,
-    "date_needed": "2025-12-18",
-    "date_created": "2025-12-18",
-    "taken_by": "fff",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "3",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "",
-    "total_price": 28.5,
-    "order_items": [
-      {
-        "id": 9,
-        "order_id": 8,
-        "product_id": 1,
-        "quantity": 1,
-        "item_note": "",
-        "products": {
-          "id": 1,
-          "name": "Hvedebrød",
-          "price": 28.5
-        },
-        "customizations": {}
-      }
-    ]
-  },
-  {
-    "id": 8,
-    "customer_name": "ytr",
-    "customer_phone": null,
-    "date_needed": "2025-12-18",
-    "date_created": "2025-12-18",
-    "taken_by": "gtf",
-    "paid": false,
-    "delivery_type": "pickup",
-    "pickup_time": "12",
-    "delivery_time": null,
-    "delivery_address": null,
-    "delivery_zip": null,
-    "note": "",
-    "total_price": 32.5,
-    "order_items": [
-      {
-        "id": 18,
-        "order_id": 8,
-        "product_id": 2,
-        "quantity": 1,
-        "item_note": "",
-        "products": {
-          "id": 2,
-          "name": "Surdejsbrød",
-          "price": 32.5
         },
         "customizations": {}
       }
