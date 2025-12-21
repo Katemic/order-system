@@ -54,11 +54,15 @@ export async function getCustomizationTypesWithOptions() {
     return [];
   }
 
-  return data.map((t) => ({
+return data
+  .filter((t) => Number(t.id) !== 0)
+  .map((t) => ({
     id: t.id,
     name: t.name,
     options: (t.customization_options || []).filter(
-      (opt) => opt.name.toLowerCase() !== "andet, se note"
+      (opt) =>
+        opt.name.toLowerCase() !== "andet, se note" &&
+        Number(opt.id) !== 0
     ),
   }));
 }
@@ -82,7 +86,7 @@ export async function getProductCustomizationOptionIds(productId) {
     return [];
   }
 
-  return data.map((r) => r.option_id);
+  return data.map((r) => r.option_id).filter((id) => Number(id) !== 0);
 }
 
 /* -----------------------------------------------------
