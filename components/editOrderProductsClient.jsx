@@ -92,8 +92,8 @@ export default function EditProductsClient({
         ← Tilbage til bestillinger
       </button>
 
-      <div className="flex gap-8 items-start">
-        <div className="flex-1">
+    <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-6">
+      <div className="w-full min-w-0 flex-auto">
           <ProductsGrid
             products={products}
             variant="order"
@@ -101,14 +101,16 @@ export default function EditProductsClient({
           />
         </div>
 
-        <OrderSummary
-          items={orderItems}
-          onEditItem={handleEditItemFromList}
-          onRemoveItem={handleRemoveItemFromList}
-          onProceed={handleProceed}
-          proceedLabel="Gem ændringer"
-          showReset={false}
-        />
+      <div className="w-full sm:flex-none sm:basis-[clamp(240px,24vw,360px)]">
+          <OrderSummary
+            items={orderItems}
+            onEditItem={handleEditItemFromList}
+            onRemoveItem={handleRemoveItemFromList}
+            onProceed={handleProceed}
+            proceedLabel="Gem ændringer"
+            showReset={false}
+          />
+        </div>
 
         {editingItemState && (
           <OrderProductModal
@@ -122,9 +124,7 @@ export default function EditProductsClient({
             }}
             initialQuantity={editingItemState.item.quantity}
             initialNote={editingItemState.item.note}
-            initialCustomizations={
-              editingItemState.item.customizations || {}
-            }
+            initialCustomizations={editingItemState.item.customizations || {}}
             mode="edit"
             onConfirm={handleSaveEditedItem}
             onClose={() => setEditingItemState(null)}
@@ -134,3 +134,4 @@ export default function EditProductsClient({
     </div>
   );
 }
+
