@@ -68,8 +68,8 @@ export async function getAllOrders() {
 
         return {
           ...item,
-          products: fullProduct, // ✅ nu har den category/production_category osv.
-          customizations: item.customizations || {}, // hvis du har dem i mock
+          products: fullProduct, 
+          customizations: item.customizations || {}, 
         };
       }),
     }));

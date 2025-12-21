@@ -167,7 +167,8 @@ export async function getAllProducts() {
     throw error;
   }
 
-  return data.map(mapDbRowToProductWithCustomization);
+  const mapped = data.map(mapDbRowToProductWithCustomization);
+  return mapped.filter((p) => Number(p.id) !== 0);
 }
 
 export async function getProductById(id) {
