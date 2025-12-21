@@ -94,8 +94,8 @@ export default function CreateOrderClient({ products }) {
   };
 
   return (
-    <div className="flex items-start gap-3 sm:gap-6">
-      <div className="min-w-0 flex-1">
+    <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-6">
+      <div className="w-full min-w-0 flex-auto">
         <ProductsGrid
           products={products}
           variant="order"
@@ -103,7 +103,7 @@ export default function CreateOrderClient({ products }) {
         />
       </div>
 
-      <div className="shrink-0 w-[clamp(240px,24vw,360px)]">
+      <div className="w-full sm:flex-none sm:basis-[clamp(240px,24vw,360px)]">
         <OrderSummary
           items={orderItems}
           onReset={handleReset}

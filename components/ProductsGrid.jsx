@@ -26,7 +26,6 @@ export default function ProductsGrid({
     lg:grid-cols-3
     gap-4 sm:gap-5 lg:gap-6
     justify-items-center
-    [@media_(min-width:768px)_and_(max-width:1024px)]:grid-cols-1
   "
       >
         {!hasProducts ? (
