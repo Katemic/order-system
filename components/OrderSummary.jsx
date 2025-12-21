@@ -28,7 +28,12 @@ export default function OrderSummary({
   const buttonLabel = proceedLabel || (onProceed ? "Gem ændringer" : "Videre");
 
   return (
-    <aside className="w-full max-w-sm bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm sticky top-24 max-h-[calc(100vh-8rem)] flex flex-col">
+    <aside
+      className="w-full
+   bg-white border border-neutral-200 rounded-2xl p-4 shadow-sm
+   sticky top-24 max-h-[calc(100vh-8rem)] flex flex-col
+ "
+    >
       <h2 className="text-lg font-semibold mb-3">Bestilling</h2>
 
       <div className="flex-1 overflow-y-auto space-y-3">

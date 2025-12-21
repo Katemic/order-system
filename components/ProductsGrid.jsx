@@ -18,7 +18,17 @@ export default function ProductsGrid({
 
   return (
     <>
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 justify-items-center">
+      <section
+        className="
+    grid
+    grid-cols-1
+    md:grid-cols-2
+    lg:grid-cols-3
+    gap-4 sm:gap-5 lg:gap-6
+    justify-items-center
+    [@media_(min-width:768px)_and_(max-width:1024px)]:grid-cols-1
+  "
+      >
         {!hasProducts ? (
           <p className="text-neutral-600 col-span-full text-center">
             Ingen produkter fundet.

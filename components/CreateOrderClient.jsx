@@ -79,7 +79,9 @@ export default function CreateOrderClient({ products }) {
 
   const getProductForEdit = (item) => {
     const productId = item.productId;
-    const fullProduct = products.find((p) => String(p.id) === String(productId));
+    const fullProduct = products.find(
+      (p) => String(p.id) === String(productId)
+    );
 
     if (fullProduct) return fullProduct;
 
@@ -92,8 +94,8 @@ export default function CreateOrderClient({ products }) {
   };
 
   return (
-    <div className="flex gap-8 items-start">
-      <div className="flex-1">
+    <div className="flex items-start gap-3 sm:gap-6">
+      <div className="min-w-0 flex-1">
         <ProductsGrid
           products={products}
           variant="order"
@@ -101,12 +103,14 @@ export default function CreateOrderClient({ products }) {
         />
       </div>
 
-      <OrderSummary
-        items={orderItems}
-        onReset={handleReset}
-        onEditItem={handleEditItem}
-        onRemoveItem={handleRemoveItem}
-      />
+      <div className="shrink-0 w-[clamp(240px,24vw,360px)]">
+        <OrderSummary
+          items={orderItems}
+          onReset={handleReset}
+          onEditItem={handleEditItem}
+          onRemoveItem={handleRemoveItem}
+        />
+      </div>
 
       {editingItemState && (
         <OrderProductModal

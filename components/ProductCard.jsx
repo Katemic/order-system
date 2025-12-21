@@ -1,6 +1,10 @@
 import Image from "next/image";
 
-export default function ProductCard({ product, onClick, variant = "products" }) {
+export default function ProductCard({
+  product,
+  onClick,
+  variant = "products",
+}) {
   const { name, price, image } = product;
 
   return (
@@ -34,10 +38,21 @@ export default function ProductCard({ product, onClick, variant = "products" }) 
       )}
 
       {variant === "order" && (
-        <div className="flex flex-col items-center justify-center py-6">
-          <h3 className="text-base font-semibold text-neutral-800">{name}</h3>
+        <div className="flex flex-col items-center justify-center py-6 w-full">
+          <h3
+            className="
+              text-base font-semibold text-neutral-800 text-center
+              whitespace-normal break-words
+              line-clamp-2
+            "
+          >
+            {name}
+          </h3>
+
           {price != null && (
-            <p className="text-sm text-neutral-600 mt-1">{price} kr.</p>
+            <p className="text-sm text-neutral-600 mt-1 text-center">
+              {price} kr.
+            </p>
           )}
         </div>
       )}
