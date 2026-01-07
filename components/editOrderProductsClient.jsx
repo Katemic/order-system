@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ProductsGrid from "./ProductsGrid";
 import OrderSummary from "./OrderSummary";
 import OrderProductModal from "./OrderProductModal";
-import { updateOrderItemsAction } from "@/actions/updateOrderItemsAction";
+import { updateOrderItemsAction } from "@/actions/order/updateOrderItemsAction";
 
 export default function EditProductsClient({
   orderId,

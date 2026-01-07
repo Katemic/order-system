@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useActionState } from "react";
 import CustomerForm from "./CustomerForm";
-import { updateOrderCustomerInfoAction } from "../actions/updateOrderCustomerInfoAction";
+import { updateOrderCustomerInfoAction } from "../actions/order/updateOrderCustomerInfoAction";
 
 const initialState = {
     success: false,

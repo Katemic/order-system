@@ -1,6 +1,6 @@
 "use server";
 
-import { deleteOrder } from "../lib/orders";
+import { deleteOrder } from "../../lib/orders";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 

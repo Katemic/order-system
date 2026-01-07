@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useActionState } from "react";
-import { submitOrderAction } from "../actions/submitOrderAction";
+import { submitOrderAction } from "../actions/order/submitOrderAction";
 import OrderSummaryPanel from "./OrderSummaryPanel";
 import CustomerForm from "./CustomerForm";
 

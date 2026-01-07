@@ -1,9 +1,9 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { deleteProductAction } from "@/actions/deleteProductAction";
-import { deleteOrderAction } from "@/actions/deleteOrderAction";
-import { deleteCustomizationAction } from "@/actions/deleteCustomizationAction";
+import { deleteProductAction } from "@/actions/product/deleteProductAction";
+import { deleteOrderAction } from "@/actions/order/deleteOrderAction";
+import { deleteCustomizationAction } from "@/actions/customization/deleteCustomizationAction";
 
 const DELETE_CONFIG = {
   product: {

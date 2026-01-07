@@ -1,6 +1,6 @@
 
 import ProductForm from "@/components/ProductForm";
-import { updateProductAction } from "@/actions/updateProductAction";
+import { updateProductAction } from "@/actions/product/updateProductAction";
 import { getProductById } from "@/lib/products";
 import {
   getCustomizationTypesWithOptions,
