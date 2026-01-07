@@ -1,6 +1,6 @@
 import { getCustomizationTypesWithOptions } from "@/lib/customizations";
 import Link from "next/link";
-import NotificationBanner from "@/components/NotificationBanner";
+import NotificationBanner from "@/components/system/NotificationBanner";
 import CustomizationsTableWrapper from "@/components/CustomizationsTableWrapper";
 
 export const dynamic = "force-dynamic";

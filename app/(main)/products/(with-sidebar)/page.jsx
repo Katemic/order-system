@@ -1,6 +1,6 @@
 import { getAllProducts } from "@/lib/products";
 import ProductsGrid from "@/components/ProductsGrid";
-import NotificationBanner from "@/components/NotificationBanner";
+import NotificationBanner from "@/components/system/NotificationBanner";
 
 export const dynamic = "force-dynamic";
 

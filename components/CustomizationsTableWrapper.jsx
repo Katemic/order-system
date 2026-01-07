@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import DeleteConfirmModal from "@/components/system/DeleteConfirmModal";
 import CustomizationsTable from "./CustomizationsTable";
 
 export default function CustomizationsTableWrapper({ customizations }) {

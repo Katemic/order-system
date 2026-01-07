@@ -2,7 +2,7 @@ import { getAllOrders } from "@/lib/orders";
 import { sortOrders, formatDate } from "@/lib/helpers/orderHelpers";
 import { applyOrdersFilters } from "@/lib/helpers/orderFilters";
 import OrdersPrintView from "@/components/OrdersPrintView";
-import PrintAuto from "@/components/PrintAuto";
+import PrintAuto from "@/components/system/PrintAuto";
 
 export const dynamic = "force-dynamic";
 

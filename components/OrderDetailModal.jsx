@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 
-import DeleteConfirmModal from "./DeleteConfirmModal";
+import DeleteConfirmModal from "./system/DeleteConfirmModal";
 import { useState } from "react";
 
 export default function OrderDetailModal({ order, onClose }) {
