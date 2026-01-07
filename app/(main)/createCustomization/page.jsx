@@ -1,4 +1,4 @@
-import CustomizationForm from "@/components/CustomizationForm";
+import CustomizationForm from "@/components/customization/CustomizationForm";
 import { createCustomizationAction } from "@/actions/customization/createCustomizationAction";
 
 export default function CreateCustomizationPage() {

@@ -1,4 +1,4 @@
-import CustomizationForm from "@/components/CustomizationForm";
+import CustomizationForm from "@/components/customization/CustomizationForm";
 import { updateCustomizationAction } from "@/actions/customization/updateCustomizationAction";
 import { getCustomizationById } from "@/lib/customizations";
 import { notFound } from "next/navigation";
