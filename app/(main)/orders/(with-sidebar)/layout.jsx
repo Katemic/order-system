@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import OrderFilterSidebar from "@/components/OrderFilterSidebar";
+import OrderFilterSidebar from "@/components/order/OrderFilterSidebar";
 
 export default function OrdersLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

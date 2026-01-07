@@ -1,6 +1,6 @@
 import { getAllOrders } from "@/lib/orders";
 import { sortOrders, formatDate } from "@/lib/helpers/orderHelpers";
-import OrdersPageClient from "@/components/OrdersPageClient";
+import OrdersPageClient from "@/components/order/OrdersPageClient";
 import NotificationBanner from "@/components/system/NotificationBanner";
 
 export default async function OrdersPage() {

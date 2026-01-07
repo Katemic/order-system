@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ProductsGrid from "./shared/ProductsGrid";
+import ProductsGrid from "../shared/ProductsGrid";
 import OrderSummary from "./OrderSummary";
 import OrderProductModal from "./OrderProductModal";
 

@@ -1,5 +1,5 @@
 import { getAllProducts } from "@/lib/products";
-import CreateOrderClient from "@/components/CreateOrderClient";
+import CreateOrderClient from "@/components/order/CreateOrderClient";
 
 export const dynamic = "force-dynamic";
 

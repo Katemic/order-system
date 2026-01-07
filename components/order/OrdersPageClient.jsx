@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import OrdersTable from "@/components/OrdersTable";
-import PrintOrdersButton from "@/components/PrintOrdersButton";
+import OrdersTable from "@/components/order/OrdersTable";
+import PrintOrdersButton from "@/components/order/PrintOrdersButton";
 import { applyOrdersFilters } from "@/lib/helpers/orderFilters";
 
 export default function OrdersPageClient({ orders }) {

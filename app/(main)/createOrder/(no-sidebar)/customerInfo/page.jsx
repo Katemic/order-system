@@ -1,4 +1,4 @@
-import CustomerInfoClient from "@/components/CustomerInfoClient";
+import CustomerInfoClient from "@/components/order/CustomerInfoClient";
 
 export const dynamic = "force-dynamic";
 

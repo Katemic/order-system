@@ -3,7 +3,7 @@
 import { useState } from "react";
 import ProductCard from "../product/ProductCard";
 import ProductModal from "../product/ProductModal";
-import OrderProductModal from "../OrderProductModal";
+import OrderProductModal from "../order/OrderProductModal";
 
 export default function ProductsGrid({
   products,
