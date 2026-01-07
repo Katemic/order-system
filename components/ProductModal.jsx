@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toggleProductActive } from "../actions/product/toggleProductActiveAction";
 import DeleteConfirmModal from "./DeleteConfirmModal";
-import { sortCustomizationOptions } from "@/lib/sortCustomizationOptions";
+import { sortCustomizationOptions } from "@/lib/helpers/sortCustomizationOptions";
 
 export default function ProductModal({ product, onClose }) {
   const [isPending, startTransition] = useTransition();

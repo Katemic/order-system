@@ -1,6 +1,6 @@
 import { getAllOrders } from "@/lib/orders";
-import { sortOrders, formatDate } from "@/lib/orderHelpers";
-import { applyOrdersFilters } from "@/lib/orderFilters";
+import { sortOrders, formatDate } from "@/lib/helpers/orderHelpers";
+import { applyOrdersFilters } from "@/lib/helpers/orderFilters";
 import OrdersPrintView from "@/components/OrdersPrintView";
 import PrintAuto from "@/components/PrintAuto";
 

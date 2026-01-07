@@ -1,5 +1,5 @@
 import { getAllOrders } from "@/lib/orders";
-import { sortOrders, formatDate } from "@/lib/orderHelpers";
+import { sortOrders, formatDate } from "@/lib/helpers/orderHelpers";
 import OrdersPageClient from "@/components/OrdersPageClient";
 import NotificationBanner from "@/components/NotificationBanner";
 

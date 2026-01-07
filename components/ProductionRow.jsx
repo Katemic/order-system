@@ -1,6 +1,6 @@
 "use client";
 
-import { parseTimeToMinutes } from "@/lib/orderHelpers";
+import { parseTimeToMinutes } from "@/lib/helpers/orderHelpers";
 
 export default function ProductionRow({ row }) {
   const EARLY_LIMIT_MINUTES = 7 * 60; // 07:00

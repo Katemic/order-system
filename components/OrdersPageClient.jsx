@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import OrdersTable from "@/components/OrdersTable";
 import PrintOrdersButton from "@/components/PrintOrdersButton";
-import { applyOrdersFilters } from "@/lib/orderFilters";
+import { applyOrdersFilters } from "@/lib/helpers/orderFilters";
 
 export default function OrdersPageClient({ orders }) {
   const params = useSearchParams();

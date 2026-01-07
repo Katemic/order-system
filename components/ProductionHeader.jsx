@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { formatDateWithWeekday } from "@/lib/dateHelpers";
+import { formatDateWithWeekday } from "@/lib/helpers/dateHelpers";
 import PrintProductionButton from "@/components/PrintProductionButton";
 
 export default function ProductionHeader({ showPrint = true }) {
