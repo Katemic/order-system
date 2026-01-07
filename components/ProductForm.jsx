@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { PRODUCT_CATEGORIES, PRODUCTION_CATEGORIES } from "@/lib/categories";
+import { PRODUCT_CATEGORIES, PRODUCTION_CATEGORIES } from "@/lib/helpers/categories";
 
 export default function ProductForm({
   mode,

@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { isValidProductCategory, isValidProductionCategory } from "@/lib/categories";
+import { isValidProductCategory, isValidProductionCategory } from "@/lib/helpers/categories";
 import { updateProduct } from "@/lib/products";
 import { setProductCustomizations } from "@/lib/customizations";
 

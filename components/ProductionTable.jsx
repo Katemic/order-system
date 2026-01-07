@@ -1,7 +1,7 @@
 "use client";
 
 import ProductionRow from "./ProductionRow";
-import { PRODUCT_CATEGORIES } from "@/lib/categories";
+import { PRODUCT_CATEGORIES } from "@/lib/helpers/categories";
 
 export default function ProductionTable({ rows }) {
   if (!rows || rows.length === 0) {
