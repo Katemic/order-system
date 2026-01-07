@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import ProductsGrid from "./ProductsGrid";
+import ProductsGrid from "./shared/ProductsGrid";
 import OrderSummary from "./OrderSummary";
 import OrderProductModal from "./OrderProductModal";
 import { updateOrderItemsAction } from "@/actions/order/updateOrderItemsAction";

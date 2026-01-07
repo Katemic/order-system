@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ProductsLayoutShell from "@/components/ProductsLayoutShell";
+import ProductsLayoutShell from "@/components/shared/ProductsLayoutShell";
 
 export default function EditProductsLayout({ children }) {
   const pathname = usePathname();

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import ProductCard from "./ProductCard";
-import ProductModal from "./ProductModal";
-import OrderProductModal from "./OrderProductModal";
+import ProductCard from "../ProductCard";
+import ProductModal from "../ProductModal";
+import OrderProductModal from "../OrderProductModal";
 
 export default function ProductsGrid({
   products,
