@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { resetMockData } from "./helpers/cleanup";
+import { resetMockData } from "../helpers/cleanup";
 
 test.beforeEach(() => {
     resetMockData();

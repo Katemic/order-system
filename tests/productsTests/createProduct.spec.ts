@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { resetMockData } from "./helpers/cleanup";
-import { gotoProducts } from './helpers/navigationHelpers';
+import { resetMockData } from "../helpers/cleanup";
+import { gotoProducts } from '../helpers/navigationHelpers';
 
 test.beforeEach(() => {
     resetMockData();
