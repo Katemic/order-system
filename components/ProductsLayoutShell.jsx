@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/layout/Sidebar";
 
 export default function ProductsLayoutShell({ children, basePath = "/products" }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
