@@ -1,5 +1,5 @@
 
-import ProductForm from "@/components/ProductForm";
+import ProductForm from "@/components/product/ProductForm";
 import { updateProductAction } from "@/actions/product/updateProductAction";
 import { getProductById } from "@/lib/products";
 import {

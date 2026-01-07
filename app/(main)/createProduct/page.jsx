@@ -1,4 +1,4 @@
-import ProductForm from "@/components/ProductForm";
+import ProductForm from "@/components/product/ProductForm";
 import { createProductAction } from "@/actions/product/createProductAction";
 import { getCustomizationTypesWithOptions } from "@/lib/customizations";
 

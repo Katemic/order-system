@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { toggleProductActive } from "../actions/product/toggleProductActiveAction";
-import DeleteConfirmModal from "./system/DeleteConfirmModal";
+import { toggleProductActive } from "../../actions/product/toggleProductActiveAction";
+import DeleteConfirmModal from "../system/DeleteConfirmModal";
 import { sortCustomizationOptions } from "@/lib/helpers/sortCustomizationOptions";
 
 export default function ProductModal({ product, onClose }) {
