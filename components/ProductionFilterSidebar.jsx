@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import DateInput from "@/components/DateInput";
+import DateInput from "@/components/ui/DateInput";
 
 export default function ProductionSidebar({ onItemClick }) {
   const router = useRouter();
