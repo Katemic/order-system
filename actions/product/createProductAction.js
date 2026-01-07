@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createProduct } from "@/lib/products";
-import { isValidProductCategory, isValidProductionCategory } from "@/lib/helpers/categories";
+import { isValidProductCategory, isValidProductionCategory } from "@/lib/constants/categories";
 import fs from "fs";
 import path from "path";
 import { setProductCustomizations } from "@/lib/customizations";
