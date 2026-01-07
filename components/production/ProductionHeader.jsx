@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { formatDateWithWeekday } from "@/lib/helpers/dateHelpers";
-import PrintProductionButton from "@/components/PrintProductionButton";
+import PrintProductionButton from "@/components/production/PrintProductionButton";
 
 export default function ProductionHeader({ showPrint = true }) {
   const params = useSearchParams();
