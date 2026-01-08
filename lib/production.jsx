@@ -45,6 +45,7 @@ export async function getProductionList({
     return true;
   });
 
+  //flatten order_items
   const items = [];
 
   for (const order of filteredOrders) {
