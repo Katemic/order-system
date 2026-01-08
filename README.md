@@ -59,7 +59,7 @@ Systemet er primært målrettet:
 # Installer afhængigheder
 npm install
 
-# Kør projektet i udvikling
+# Kør projektet i dev mode
 npm run dev
 
 # Kør projektet i test mode
