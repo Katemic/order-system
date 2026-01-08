@@ -64,7 +64,7 @@ npm run dev
 
 # Kør projektet i test mode
 npm run dev:test
-
+```
 
 ## English Summary
 
