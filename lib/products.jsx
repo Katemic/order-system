@@ -220,7 +220,6 @@ export async function createProduct(product) {
 
 export async function updateProduct(id, updates) {
   if (isTestMode()) {
-    //MOCK
     const data = readMockData();
     const index = data.findIndex((p) => p.id === id);
     if (index === -1) return null;
@@ -238,7 +237,6 @@ export async function updateProduct(id, updates) {
     return data[index];
   }
 
-  //DATABASE
   const payload = mapProductToDbPayload(updates);
 
   const { data, error } = await supabase
@@ -268,7 +266,6 @@ export async function deleteProduct(id) {
     return { success: true };
   }
 
-  //DATABASE
   const { error } = await supabase
     .from("products")
     .delete()
@@ -284,7 +281,6 @@ export async function deleteProduct(id) {
 
 export async function updateProductActiveBool(id, active) {
   if (isTestMode()) {
-    //MOCK
     const data = readMockData();
     const index = data.findIndex((p) => p.id === id);
     if (index === -1) return null;
@@ -298,7 +294,6 @@ export async function updateProductActiveBool(id, active) {
     return data[index];
   }
 
-  //DATABASE
   const { data, error } = await supabase
     .from("products")
     .update({ active })
