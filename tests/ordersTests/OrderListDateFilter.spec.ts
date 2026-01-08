@@ -2,27 +2,27 @@ import { test, expect } from '@playwright/test';
 import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test.afterAll(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-test('Mobile view shows burger-menu on orders', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 800 });
-    await page.goto('/orders');
+test("Mobile view shows burger-menu on orders", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto("/orders");
 
-    await expect(page.getByRole('button', { name: 'Menu' })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Menu" })).toBeVisible();
 });
 
-test('Desktop view shows fixed sidebar', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/orders');
+test("Desktop view shows fixed sidebar", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/orders");
 
-    await expect(page.locator('aside')).toBeVisible();
+  await expect(page.locator("aside")).toBeVisible();
 });
 
 test('Mobile sidebar closes when selecting a date', async ({ page }) => {
@@ -61,29 +61,29 @@ test("filtering on a single date works", async ({ page }) => {
 });
 
 test("filtering on a date range works", async ({ page }) => {
-    await page.goto("/orders");
+  await page.goto("/orders");
 
-    const dateInputs = page.locator('input[type="date"]');
-    await expect(dateInputs.nth(1)).toBeVisible(); // fromDate
-    await expect(dateInputs.nth(2)).toBeVisible(); // toDate
+  const dateInputs = page.locator('input[type="date"]');
+  await expect(dateInputs.nth(1)).toBeVisible(); // fromDate
+  await expect(dateInputs.nth(2)).toBeVisible(); // toDate
 
-    const inputs = page.getByRole('textbox');
+  const inputs = page.getByRole("textbox");
 
-    await inputs.nth(2).fill("2026-02-12"); // fromDate
-    await sleep(1000); 
-    await inputs.nth(3).fill("2026-02-13"); // toDate
+  await inputs.nth(2).fill("2026-02-12"); // fromDate
+  await sleep(1000);
+  await inputs.nth(3).fill("2026-02-13"); // toDate
 
-    const rows = page.locator("table tbody tr");
-    await expect(rows).toHaveCount(3); 
+  const rows = page.locator("table tbody tr");
+  await expect(rows).toHaveCount(3);
 
-    // Check that all dates are within the range
-    const dates = await rows.locator("td:nth-child(2)").allTextContents();
+  // Check that all dates are within the range
+  const dates = await rows.locator("td:nth-child(2)").allTextContents();
 
-    for (const d of dates) {
-        const [day, month, year] = d.split(".");
-        const iso = `${year}-${month}-${day}`;
-        expect(iso >= "2026-02-12" && iso <= "2026-02-13").toBeTruthy();
-    }
+  for (const d of dates) {
+    const [day, month, year] = d.split(".");
+    const iso = `${year}-${month}-${day}`;
+    expect(iso >= "2026-02-12" && iso <= "2026-02-13").toBeTruthy();
+  }
 });
 
 test('"I dag" filters to only today\'s orders', async ({ page }) => {
@@ -103,28 +103,26 @@ test('"I dag" filters to only today\'s orders', async ({ page }) => {
 });
 
 test('"Alle bestillinger" resets filtering', async ({ page }) => {
-    await page.goto("/orders");
-    await expect(page.getByRole("button", { name: "Alle bestillinger" })).toBeVisible();
-    const rows = page.locator("table tbody tr");
+  await page.goto("/orders");
+  await expect(
+    page.getByRole("button", { name: "Alle bestillinger" })
+  ).toBeVisible();
+  const rows = page.locator("table tbody tr");
 
-    // Filter first
-    await page.locator('input[type="date"]').first().fill("2026-02-13");
-    await expect(rows).toHaveCount(2);
+  // Filter first
+  await page.locator('input[type="date"]').first().fill("2026-02-13");
+  await expect(rows).toHaveCount(2);
 
+  // Reset
+  await page.getByRole("button", { name: "Alle bestillinger" }).click();
 
-    // Reset
-    await page.getByRole("button", { name: "Alle bestillinger" }).click();
-
-    // Now all mock orders should be visible again
-    await expect(rows).toHaveCount(7);
+  // Now all mock orders should be visible again
+  await expect(rows).toHaveCount(7);
 });
 
-const BASE_URL = "http://localhost:3000";
 
-test("orders: 'Kun leveringer' filter only shows delivery orders and can be toggled", async ({
-  page,
-}) => {
-  await page.goto(`${BASE_URL}/orders?range=all`);
+test("orders: 'Kun leveringer' filter only shows delivery orders and can be toggled", async ({page}) => {
+  await page.goto("/orders?range=all");
 
   const deliveryCheckbox = page.getByLabel("Kun leveringer");
 
@@ -163,7 +161,7 @@ test("orders: 'Kun leveringer' filter only shows delivery orders and can be togg
 });
 
 test("orders: 'Kun leveringer' combined with date filter", async ({ page }) => {
-  await page.goto(`${BASE_URL}/orders`);
+  await page.goto("/orders");
 
   // Select date 2026-02-13 (Sofie = delivery, Nina = pickup)
   const dateInput = page.locator('input[type="date"]').first();

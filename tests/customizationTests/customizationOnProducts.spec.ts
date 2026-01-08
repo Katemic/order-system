@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 import { resetMockData } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockData();
+  resetMockData();
 });
 
 test.afterAll(() => {
-    resetMockData();
+  resetMockData();
 });
 
 test("Shows customization section for Surdejsbrød", async ({ page }) => {

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('search results for "brød" contains only products with "brød"', async ({ page }) => {
-  await page.goto('http://localhost:3000/products');
+  await page.goto('/products');
 
   // Write search text
   await page.getByRole('textbox', { name: 'Søg produkter…' }).fill('brød');
@@ -32,7 +32,7 @@ test('search results for "brød" contains only products with "brød"', async ({ 
 });
 
 test('searching for an invalid word returns no results', async ({ page }) => {
-  await page.goto('http://localhost:3000/products');
+  await page.goto('/products');
 
   // Search for something that doesn't exist
   await page.getByRole('textbox', { name: 'Søg produkter…' }).fill('dfjfdghdfjd');

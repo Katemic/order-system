@@ -2,28 +2,30 @@ import { test, expect } from '@playwright/test';
 import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test.afterAll(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test('Can access "Orders" via the top bar', async ({ page }) => {
-    await page.goto('/');
+  await page.goto("/");
 
-    await page.getByRole('link', { name: 'Bestillinger' }).click();
+  await page.getByRole("link", { name: "Bestillinger" }).click();
 
-    await expect(page).toHaveURL(/\/orders/);
-    await expect(page.getByRole('heading', { name: 'Bestillinger' })).toBeVisible();
+  await expect(page).toHaveURL(/\/orders/);
+  await expect(
+    page.getByRole("heading", { name: "Bestillinger" })
+  ).toBeVisible();
 });
 
-test('Shows today\'s orders on /orders', async ({ page }) => {
-    await page.goto('/orders');
+test("Shows today's orders on /orders", async ({ page }) => {
+  await page.goto("/orders");
 
-    const rows = await page.locator('table tbody tr').count();
+  const rows = await page.locator("table tbody tr").count();
 
-    expect(rows).toBe(1); 
+  expect(rows).toBe(1);
 });
 
 
@@ -81,7 +83,7 @@ test('Delivery orders are marked with red text', async ({ page }) => {
   await expect(delivery).toHaveClass(/text-red-600/);
 });
 
-//Order modal tests
+//------ Order modal tests from here -------
 
 test("modal opens with the correct order details and show customizations", async ({ page }) => {
   await page.goto("/orders");

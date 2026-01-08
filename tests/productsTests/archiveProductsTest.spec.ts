@@ -4,15 +4,15 @@ import { resetMockData } from "../helpers/cleanup";
 test.describe.configure({ mode: "serial" });
 
 test.beforeAll(() => {
-    resetMockData();
+  resetMockData();
 });
 
 test.afterAll(() => {
-    resetMockData();
+  resetMockData();
 });
 
 test('can archive Hvedebrød and it disappears from the list, and it appears in the archived list', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto('/');
   
   // Go to /products
   await page.getByRole('link', { name: 'Produkter' }).click();
@@ -20,7 +20,7 @@ test('can archive Hvedebrød and it disappears from the list, and it appears in 
   // Open the product Hvedebrød
   await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
 
-  // Archive (first show “Are you sure?” modal → then confirm)
+  // Archive 
   await page.getByRole('button', { name: 'Arkiver' }).click(); // opens confirm
   await page.getByRole('button', { name: 'Arkiver' }).click(); // confirm
 
@@ -36,8 +36,7 @@ test('can archive Hvedebrød and it disappears from the list, and it appears in 
 });
 
 test("archived product can be unarchived and it reappears in the main product list", async ({ page }) => {
-  // Go to products page
-  await page.goto("http://localhost:3000/products");
+  await page.goto("/products");
 
   // Go to Archived via sidebar
   await page.getByRole("link", { name: "Arkiverede" }).click();
@@ -51,7 +50,7 @@ test("archived product can be unarchived and it reappears in the main product li
   // Open the product
   await archivedBreadButton.click();
 
-  // Unarchive (first "Are you sure?" then confirm)
+  // Unarchive
   await page.getByRole("button", { name: "Genaktiver" }).click(); // opens confirm
   await page.getByRole("button", { name: "Genaktiver" }).click(); // confirm
 
@@ -60,7 +59,7 @@ test("archived product can be unarchived and it reappears in the main product li
     page.getByRole("button", { name: "Hvedebrød Hvedebrød" })
   ).toHaveCount(0);
 
-  // Go to main product list (e.g. Alle)
+  // Go to main product list 
   await page.getByRole("link", { name: "Alle" }).click();
 
   // Check that Hvedebrød now exists again in the list

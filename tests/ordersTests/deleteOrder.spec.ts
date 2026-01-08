@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test.afterAll(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test("Can delete order and it gets removed from the table and notification is shown", async ({ page }) => {
@@ -29,20 +29,24 @@ test("Can delete order and it gets removed from the table and notification is sh
 
 
 
-test('Delete button is shown and it activates a "are you sure" modal', async ({ page }) => {
+test('Delete button is shown and it activates a "are you sure" modal', async ({page}) => {
   await page.goto("/orders");
 
-  await page.getByRole('cell', { name: 'Hans Jensen' }).click();
+  await page.getByRole("cell", { name: "Hans Jensen" }).click();
 
-  await expect(page.getByRole('button', { name: 'Slet bestilling' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Slet bestilling' }))
-    .toHaveClass(/bg-red-600/);
+  await expect(
+    page.getByRole("button", { name: "Slet bestilling" })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Slet bestilling" })
+  ).toHaveClass(/bg-red-600/);
 
-
-  await page.getByRole('button', { name: 'Slet bestilling' }).click();
+  await page.getByRole("button", { name: "Slet bestilling" }).click();
 
   // Top heading
-  await expect(page.getByRole('heading', { name: 'Er du sikker på, at du vil' })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Er du sikker på, at du vil" })
+  ).toBeVisible();
 
   // Paragraph with product name
   await expect(
@@ -50,8 +54,12 @@ test('Delete button is shown and it activates a "are you sure" modal', async ({ 
   ).toBeVisible();
 
   // Both buttons
-  await expect(page.getByRole('button', { name: 'Annuller' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Slet', exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Slet', exact: true })).toHaveClass(/bg-red-600/);
+  await expect(page.getByRole("button", { name: "Annuller" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Slet", exact: true })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Slet", exact: true })
+  ).toHaveClass(/bg-red-600/);
 });
 

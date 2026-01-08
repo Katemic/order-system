@@ -10,7 +10,7 @@ test.afterAll(() => {
 });
 
 test("edit order: prefilled values, update, redirect and updated-banner", async ({ page }) => {
-  await page.goto("http://localhost:3000/orders");
+  await page.goto("/orders");
 
   const hansRow = page.getByRole("row", { name: /Hans Jensen/ });
   await hansRow.click();

@@ -12,7 +12,6 @@ test.afterAll(() => {
 
 test('Can search on customers name', async ({ page }) => {
   await page.goto('/orders');
-  await page.getByRole('textbox', { name: 'Søg bestillinger…' }).click();
   await page.getByRole('textbox', { name: 'Søg bestillinger…' }).fill('Hans');
   await page.getByRole('textbox', { name: 'Søg bestillinger…' }).press('Enter');
   await page.getByRole('button', { name: 'Søg' }).click();
@@ -26,7 +25,6 @@ test('Can search on customers name', async ({ page }) => {
 
 test('You can search for products in an order', async ({ page }) => {
   await page.goto(`/orders?range=all`);
-  await page.getByRole('textbox', { name: 'Søg bestillinger…' }).click();
   await page.getByRole('textbox', { name: 'Søg bestillinger…' }).fill('brød');
   await page.getByRole('button', { name: 'Søg' }).click();
 

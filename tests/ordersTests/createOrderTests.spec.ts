@@ -2,15 +2,15 @@ import { test, expect } from '@playwright/test';
 import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test.afterAll(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test('create-order page shows product cards with name and price', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto('/');
 
   // Go to "Opret bestilling"
   await page.getByRole('link', { name: 'Opret bestilling' }).click();
@@ -55,8 +55,7 @@ test('create-order page shows product cards with name and price', async ({ page 
 
 test("create-order: mobile shows 1 card per row", async ({ page }) => {
 
-  await page.goto("http://localhost:3000/");
-  await page.getByRole("link", { name: "Opret bestilling" }).click();
+  await page.goto('/createOrder');
 
   await page.setViewportSize({ width: 375, height: 800 });
 
@@ -72,8 +71,7 @@ test("create-order: mobile shows 1 card per row", async ({ page }) => {
 test("create-order: desktop shows 3 cards per row", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
 
-  await page.goto("http://localhost:3000/");
-  await page.getByRole("link", { name: "Opret bestilling" }).click();
+  await page.goto('/createOrder');
 
   const grid = page.locator("section.grid");
 
@@ -85,8 +83,7 @@ test("create-order: desktop shows 3 cards per row", async ({ page }) => {
 });
 
 test('Navigating to /createOrder, only bread category is marked', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   const activeClass = /bg-neutral-200/;
 
@@ -126,8 +123,7 @@ const ORDER_CATEGORIES = [
 ];
 
 test('sidebar on create-order shows all categories', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Find sidebar (nav with "Kategorier")
   const sidebar = page.locator('nav', { hasText: 'Kategorier' });
@@ -142,7 +138,7 @@ test('sidebar on create-order shows all categories', async ({ page }) => {
 });
 
 test('filtering on Konditor shows only Konditor products and marks the category as active', async ({ page }) => {
-  await page.goto('http://localhost:3000/createOrder');
+  await page.goto('/createOrder');
 
   const sidebar = page.locator('nav', { hasText: 'Kategorier' });
 
@@ -183,10 +179,7 @@ test('filtering on Konditor shows only Konditor products and marks the category 
 });
 
 test('You can add more products to the order and summary shows the correct info', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Create Order page
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Open modal for Hvedebrød
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -203,7 +196,7 @@ test('You can add more products to the order and summary shows the correct info'
   const qtyInput = modal.getByRole('spinbutton', { name: 'Antal' });
   await expect(qtyInput).toHaveValue('1');
 
-  // SSet quantity to 2
+  // Set quantity to 2
   await qtyInput.fill('2');
 
   // Note
@@ -273,8 +266,7 @@ test('You can add more products to the order and summary shows the correct info'
 });
 
 test("create-order: produktmodal shows customizations, if the producs has customizationOptions", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
-  await page.getByRole("link", { name: "Opret bestilling" }).click();
+  await page.goto('/createOrder');
 
   // Open a product that you know has customizations
   await page.getByRole("button", { name: /Surdejsbrød 32.5 kr\./ }).click();
@@ -295,8 +287,7 @@ test("create-order: produktmodal shows customizations, if the producs has custom
 });
 
 test("create-order: selected customizations are shown in order summary", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
-  await page.getByRole("link", { name: "Opret bestilling" }).click();
+  await page.goto('/createOrder');
 
   // Open a product with customizations
   await page.getByRole("button", { name: /Surdejsbrød 32.5 kr\./ }).click();
@@ -331,8 +322,7 @@ test("create-order: selected customizations are shown in order summary", async (
 });
 
 test("create-order: editing a line preserves selected customizations in modal", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
-  await page.getByRole("link", { name: "Opret bestilling" }).click();
+  await page.goto('/createOrder');
 
   // Open a product with customizations
   await page.getByRole("button", { name: /Surdejsbrød 32.5 kr\./ }).click();
@@ -376,10 +366,7 @@ test("create-order: editing a line preserves selected customizations in modal", 
 });
 
 test('closing product modal by clicking outside the modal', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Create Order page
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Open modal for Hvedebrød
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -396,10 +383,7 @@ test('closing product modal by clicking outside the modal', async ({ page }) => 
 });
 
 test('closing product modal by clicking the "Annuller" button', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Create Order page
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Open modal for Hvedebrød
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -417,10 +401,7 @@ test('closing product modal by clicking the "Annuller" button', async ({ page })
 
 
 test('Videre-button is disabled when there are no products in the order', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Opret bestilling
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   const summary = page.locator('aside', { hasText: 'Bestilling' });
   await expect(summary).toBeVisible();
@@ -436,10 +417,7 @@ test('Videre-button is disabled when there are no products in the order', async 
 });
 
 test('Videre-button navigates to /createOrder/customerInfo and order-summary follows', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Opret bestilling
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Open modal for Hvedebrød
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -481,10 +459,7 @@ test('Videre-button navigates to /createOrder/customerInfo and order-summary fol
 });
 
 test('Tilbage-button on customerInfo goes back to /createOrder and preserves order-summary', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Opret bestilling
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Open modal for Hvedebrød
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -521,7 +496,7 @@ test('Tilbage-button on customerInfo goes back to /createOrder and preserves ord
 
 test('On /createOrder/customerInfo without products the "Gennemfør bestilling" button is disabled', async ({ page }) => {
   // Directly to customerInfo without localStorage content
-  await page.goto('http://localhost:3000/createOrder/customerInfo');
+  await page.goto('/createOrder/customerInfo');
 
   // Summary should show that there are no products
   await expect(
@@ -534,10 +509,7 @@ test('On /createOrder/customerInfo without products the "Gennemfør bestilling" 
 });
 
 test('CustomerInfo shows validation errors when required fields are missing (pickup)', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Opret bestilling
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Add one product to the order
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -584,7 +556,7 @@ test('CustomerInfo shows validation errors when required fields are missing (pic
 
 test('pickup/delivery toggle shows the right fields and updates fulfillmentType', async ({ page }) => {
   // Go directly to customer info page
-  await page.goto('http://localhost:3000/createOrder/customerInfo');
+  await page.goto('/createOrder/customerInfo');
 
   // Find toggle buttons
   const pickupButton = page.getByRole('button', { name: /Afhentning/ });
@@ -631,10 +603,7 @@ test('pickup/delivery toggle shows the right fields and updates fulfillmentType'
 });
 
 test('pickup: invalid afhentningstidspunkt gives validation error', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Opret bestilling
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Add product to order (Hvedebrød)
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -678,10 +647,7 @@ test('pickup: invalid afhentningstidspunkt gives validation error', async ({ pag
 
 
 test('pickup: valid afhentningstidspunkt is accepted (no time errors)', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Opret bestilling
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Add product to order (Hvedebrød)
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();
@@ -712,10 +678,7 @@ test('pickup: valid afhentningstidspunkt is accepted (no time errors)', async ({
 });
 
 test('success-flow: gennemfører bestilling, rydder orderItems og viser tom kurv efterfølgende', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-
-  // Go to Opret bestilling
-  await page.getByRole('link', { name: 'Opret bestilling' }).click();
+  await page.goto('/createOrder');
 
   // Add a product (Hvedebrød)
   await page.getByRole('button', { name: 'Hvedebrød 28.5 kr.' }).click();

@@ -1,90 +1,84 @@
 import { test, expect } from "@playwright/test";
 
-test("shows heading and either table or 'no customizations' text", async ({
-    page,
-}) => {
-    await page.goto("/customizations");
+test("shows heading and either table or 'no customizations' text", async ({page}) => {
+  await page.goto("/customizations");
 
-    // Title
+  // Title
+  await expect(
+    page.getByRole("heading", { name: "Tilpasninger" })
+  ).toBeVisible();
+
+  const table = page.locator("table");
+
+  // If there is NO table, expect empty text
+  if ((await table.count()) === 0) {
     await expect(
-        page.getByRole("heading", { name: "Tilpasninger" })
+      page.getByText("Der er ingen tilpasninger endnu.")
     ).toBeVisible();
+    return;
+  }
+  // Else, expect the table to be visible
+  await expect(table).toBeVisible();
 
-    const table = page.locator("table");
+  // Find thead, but only test the header if thead actually exists
+  const header = table.locator("thead tr th").first();
 
-    // If there is NO table, expect empty text
-    if ((await table.count()) === 0) {
-        await expect(
-            page.getByText("Der er ingen tilpasninger endnu.")
-        ).toBeVisible();
-        return;
-    }
-    // Else, expect the table to be visible
-    await expect(table).toBeVisible();
+  if ((await header.count()) > 0) {
+    const headerText = (await header.innerText()).trim().toLowerCase();
+    expect(headerText).toContain("kategori");
+  }
 
-    // Find thead, but only test the header if thead actually exists
-    const header = table.locator("thead tr th").first();
-
-    if ((await header.count()) > 0) {
-        const headerText = (await header.innerText()).trim().toLowerCase();
-        expect(headerText).toContain("kategori");
-    }
-
-    // Test that the table has at least 1 row, if not, there is nothing to show
-    const rows = table.locator("tbody tr");
-    expect(await rows.count()).toBeGreaterThan(0);
+  // Test that the table has at least 1 row, if not, there is nothing to show
+  const rows = table.locator("tbody tr");
+  expect(await rows.count()).toBeGreaterThan(0);
 });
 
-test("Can open a type and see its options in a bulleted list (if there are types)", async ({
-    page,
-}) => {
-    await page.goto("/customizations");
-    const table = page.locator("table");
-    const rows = table.locator("tbody tr");
-    const firstRow = rows.first();
-    const details = firstRow.locator("details");
-    const summary = details.locator("summary");
+test("Can open a type and see its options in a bulleted list (if there are types)", async ({page}) => {
+  await page.goto("/customizations");
+  const table = page.locator("table");
+  const rows = table.locator("tbody tr");
+  const firstRow = rows.first();
+  const details = firstRow.locator("details");
+  const summary = details.locator("summary");
 
-    await expect(summary).toBeVisible();
-    await summary.click();
+  await expect(summary).toBeVisible();
+  await summary.click();
 
-    // Find ul directly under details
-    const optionsList = details.locator("ul").first();
-    await expect(optionsList).toBeVisible();
+  // Find ul directly under details
+  const optionsList = details.locator("ul").first();
+  await expect(optionsList).toBeVisible();
 
-    const listItems = optionsList.locator("li");
-    expect(await listItems.count()).toBeGreaterThan(0);
+  const listItems = optionsList.locator("li");
+  expect(await listItems.count()).toBeGreaterThan(0);
 
-    // First option has some text
-    const firstOptionText = (await listItems.first().innerText()).trim();
-    expect(firstOptionText.length).toBeGreaterThan(0);
+  // First option has some text
+  const firstOptionText = (await listItems.first().innerText()).trim();
+  expect(firstOptionText.length).toBeGreaterThan(0);
 });
 
-test("options are displayed in a grid (up to 4 columns) on desktop if the type has options", async ({
-    page,
-}) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto("/customizations");
+test("options are displayed in a grid (up to 4 columns) on desktop if the type has options", async ({page}) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/customizations");
 
-    const table = page.locator("table");
+  const table = page.locator("table");
 
-    const firstRow = table.locator("tbody tr").first();
-    const details = firstRow.locator("details");
-    const summary = details.locator("summary");
-    await expect(summary).toBeVisible();
-    await summary.click();
+  const firstRow = table.locator("tbody tr").first();
+  const details = firstRow.locator("details");
+  const summary = details.locator("summary");
+  await expect(summary).toBeVisible();
+  await summary.click();
 
-    const optionsList = details.locator("ul").first();
+  const optionsList = details.locator("ul").first();
 
-    await expect(optionsList).toBeVisible();
+  await expect(optionsList).toBeVisible();
 
-    const columnCount = await optionsList.evaluate((el) => {
-        const style = window.getComputedStyle(el);
-        const template = style.gridTemplateColumns || "";
-        return template.split(" ").filter(Boolean).length;
-    });
+  const columnCount = await optionsList.evaluate((el) => {
+    const style = window.getComputedStyle(el);
+    const template = style.gridTemplateColumns || "";
+    return template.split(" ").filter(Boolean).length;
+  });
 
-    // We expect at least 1 column, max 4, depending on breakpoint
-    expect(columnCount).toBeGreaterThan(0);
-    expect(columnCount).toBeLessThanOrEqual(4);
+  // We expect at least 1 column, max 4, depending on breakpoint
+  expect(columnCount).toBeGreaterThan(0);
+  expect(columnCount).toBeLessThanOrEqual(4);
 });

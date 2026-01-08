@@ -2,16 +2,16 @@ import { test, expect } from '@playwright/test';
 import { resetMockData } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockData();
+  resetMockData();
 });
 
 test.afterAll(() => {
-    resetMockData();
+  resetMockData();
 });
 
 
 test('Can delete product and it gets removed from the product list and notification is shown', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto('/');
   await page.getByRole('link', { name: 'Produkter' }).click();
 
   // Open modal for Hvedebrød (product card in grid)
@@ -25,7 +25,7 @@ test('Can delete product and it gets removed from the product list and notificat
   await page.getByRole('button', { name: 'Slet produkt' }).click();
   await page.getByRole('button', { name: 'Slet', exact: true }).click();
 
-  // Toast message
+  // notification message
   await expect(
     page.getByText('Produkt er slettet')
   ).toBeVisible();
@@ -44,32 +44,36 @@ test('Can delete product and it gets removed from the product list and notificat
   await expect(deletedCard).toHaveCount(0);
 });
 
-test('Delete button is shown and it activates a "are you sure" modal', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page.getByRole('link', { name: 'Produkter' }).click();
-  await page.getByRole('button', { name: 'Hvedebrød Hvedebrød' }).click();
+test('Delete button is shown and it activates a "are you sure" modal', async ({page}) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Produkter" }).click();
+  await page.getByRole("button", { name: "Hvedebrød Hvedebrød" }).click();
 
-  await expect(page.getByRole('button', { name: 'Slet produkt' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Slet produkt' }))
-    .toHaveClass(/bg-red-600/);
+  await expect(
+    page.getByRole("button", { name: "Slet produkt" })
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Slet produkt" })).toHaveClass(
+    /bg-red-600/
+  );
 
-
-  await page.getByRole('button', { name: 'Slet produkt' }).click();
+  await page.getByRole("button", { name: "Slet produkt" }).click();
 
   // Top heading
-  await expect(page.getByRole('heading', { name: 'Er du sikker på, at du vil' })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Er du sikker på, at du vil" })
+  ).toBeVisible();
 
   // Paragraph with product name
   await expect(
-    page.getByText(/Produkt(?:et)?\s+["“”]?Hvedebrød["“”]?\s+bliver\s+permanent\s+slettet/i)
+    page.getByText(
+      /Produkt(?:et)?\s+["“”]?Hvedebrød["“”]?\s+bliver\s+permanent\s+slettet/i
+    )
   ).toBeVisible();
 
   // Both buttons
-  await expect(page.getByRole('button', { name: 'Annuller' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Slet', exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Slet', exact: true })).toHaveClass(/bg-red-600/);
-
-
+  await expect(page.getByRole("button", { name: "Annuller" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Slet", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Slet", exact: true })).toHaveClass(/bg-red-600/);
 });
 
 
