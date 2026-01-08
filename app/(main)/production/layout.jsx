@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ProductionFilterSidebar from "@/components/ProductionFilterSidebar";
+import ProductionFilterSidebar from "@/components/production/ProductionFilterSidebar";
 
 export default function ProductionLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

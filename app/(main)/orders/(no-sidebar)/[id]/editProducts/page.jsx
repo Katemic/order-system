@@ -1,6 +1,6 @@
 import { getOrderById } from "@/lib/orders";
 import { getAllProducts } from "@/lib/products";
-import EditProductsClient from "@/components/editOrderProductsClient";
+import EditProductsClient from "@/components/order/EditOrderProductsClient";
 import { notFound } from "next/navigation";
 
 const DEFAULT_CATEGORY = "Brød";

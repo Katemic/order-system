@@ -694,7 +694,7 @@ test('pickup: valid afhentningstidspunkt is accepted (no time errors)', async ({
   await summary.getByRole('button', { name: 'Videre' }).click();
 
   // Fill all required fields for pickup
-  await page.getByLabel('Dato*').fill('2025-12-24');
+  await page.getByLabel('Dato*').fill('2026-02-24');
   await page.getByLabel('Navn på kunde*').fill('Test Kunde');
   await page.getByLabel('Betjent af*').fill('Test Ekspedient');
   await page.getByLabel('Afhentningstidspunkt*').fill('14-16');
@@ -731,7 +731,7 @@ test('success-flow: gennemfører bestilling, rydder orderItems og viser tom kurv
   await summary.getByRole('button', { name: 'Videre' }).click();
 
   // Fill minimum for a valid pickup order
-  await page.getByLabel('Dato*').fill('2025-12-24');
+  await page.getByLabel('Dato*').fill('2026-02-24');
   await page.getByLabel('Navn på kunde*').fill('Kunde Test');
   await page.getByLabel('Betjent af*').fill('Ekspedient Test');
   await page.getByLabel('Afhentningstidspunkt*').fill('14');

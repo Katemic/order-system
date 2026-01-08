@@ -12,7 +12,11 @@ test.afterAll(() => {
 test("Shows today's production by default", async ({ page }) => {
   await page.goto("/production");
 
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  if (now.getHours() >= 18) {
+    now.setDate(now.getDate() + 1);
+  }
+  const today = now.toISOString().slice(0, 10);
   await expect(page).toHaveURL(new RegExp(`date=${today}`));
 });
 

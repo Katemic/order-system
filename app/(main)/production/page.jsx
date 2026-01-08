@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getProductionList } from "@/lib/production";
-import ProductionTable from "@/components/ProductionTable";
-import ProductionHeader from "@/components/ProductionHeader";
+import ProductionTable from "@/components/production/ProductionTable";
+import ProductionHeader from "@/components/production/ProductionHeader";
 
 export default async function ProductionPage({ searchParams }) {
   const params = await searchParams;

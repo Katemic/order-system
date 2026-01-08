@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getOrderById } from "@/lib/orders";
-import EditCustomerInfoClient from "@/components/EditCustomerInfoClient";
+import EditCustomerInfoClient from "@/components/order/EditCustomerInfoClient";
 import Link from "next/link";
 
 export default async function EditCustomerInfoPage({ params }) {

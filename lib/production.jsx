@@ -1,5 +1,5 @@
 import { getAllOrders } from "@/lib/orders";
-import { parseTimeToMinutes } from "@/lib/orderHelpers";
+import { parseTimeToMinutes } from "@/lib/helpers/orderHelpers";
 
 //helpers
 

@@ -36,7 +36,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     ".next/dev/dev/types/**/*.ts"
-, "actions/updateOrderItemsAction.js"  ],
+, "actions/order/updateOrderItemsAction.js"  ],
   "exclude": [
     "node_modules"
   ]

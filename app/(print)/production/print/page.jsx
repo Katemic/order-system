@@ -1,7 +1,7 @@
 import { getProductionList } from "@/lib/production";
-import ProductionTable from "@/components/ProductionTable";
-import ProductionHeader from "@/components/ProductionHeader";
-import PrintAuto from "@/components/PrintAuto";
+import ProductionTable from "@/components/production/ProductionTable";
+import ProductionHeader from "@/components/production/ProductionHeader";
+import PrintAuto from "@/components/system/PrintAuto";
 
 export const dynamic = "force-dynamic";
 
