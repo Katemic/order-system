@@ -2,15 +2,15 @@ import { test, expect } from '@playwright/test';
 import { resetMockData } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockData();
+  resetMockData();
 });
 
 test.afterAll(() => {
-    resetMockData();
+  resetMockData();
 });
 
 test('Navigating to /products, only bread category is marked', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto('/');
   await page.getByRole('link', { name: 'Produkter' }).click();
 
   const activeClass = /bg-neutral-200/;
@@ -37,7 +37,7 @@ test("mobil: 1 produkt-card per row", async ({ page }) => {
   // Mobil viewport
   await page.setViewportSize({ width: 375, height: 800 });
 
-  await page.goto("http://localhost:3000/products");
+  await page.goto("/products");
 
   const grid = page.locator("section.grid");
 
@@ -53,7 +53,7 @@ test("desktop: 3 produkt-cards per row", async ({ page }) => {
   // Desktop viewport
   await page.setViewportSize({ width: 1280, height: 900 });
 
-  await page.goto("http://localhost:3000/products");
+  await page.goto("/products");
 
   const grid = page.locator("section.grid");
 
@@ -65,7 +65,7 @@ test("desktop: 3 produkt-cards per row", async ({ page }) => {
 });
 
 test('product-card shows name "Hvedebrød" and image', async ({ page }) => {
-  await page.goto('http://localhost:3000/products');
+  await page.goto('/products');
 
   // Find grid-section with product cards
   const grid = page.locator('section.grid');
@@ -87,7 +87,7 @@ test('product-card shows name "Hvedebrød" and image', async ({ page }) => {
 });
 
 test('product-modal shows all data and buttons for Hvedebrød', async ({ page }) => {
-  await page.goto('http://localhost:3000/products');
+  await page.goto('/products');
 
   // Click on the product card for Hvedebrød
   await page.getByRole('button', { name: /Hvedebrød/ }).click();
@@ -176,7 +176,7 @@ const CATEGORIES = [
 
 
 test('sidebar shows all categories', async ({ page }) => {
-  await page.goto('http://localhost:3000/products');
+  await page.goto('/products');
 
   // Find the sidebar (nav containing "Categories")
   const sidebar = page.locator('nav', { hasText: 'Kategorier' });
@@ -191,7 +191,7 @@ test('sidebar shows all categories', async ({ page }) => {
 });
 
 test('default /products shows only products with category Bread', async ({ page }) => {
-  await page.goto('http://localhost:3000/products');
+  await page.goto('/products');
 
   // Grid with the products
   const grid = page.locator('section.grid');
@@ -219,7 +219,7 @@ test('default /products shows only products with category Bread', async ({ page 
 });
 
 test('filtering on Konditor shows only Konditor products and marks the category as active', async ({ page }) => {
-  await page.goto('http://localhost:3000/products');
+  await page.goto('/products');
 
   const sidebar = page.locator('nav', { hasText: 'Kategorier' });
 

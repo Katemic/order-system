@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test.afterAll(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test("Shows today's production by default", async ({ page }) => {

@@ -9,9 +9,7 @@ test.afterAll(() => {
   resetMockCustomizationData();
 });
 
-test("An edit button is displayed when a customization is expanded", async ({
-  page,
-}) => {
+test("An edit button is displayed when a customization is expanded", async ({page}) => {
   await page.goto("/customizations");
 
   await page.locator("summary").first().click();
@@ -31,9 +29,7 @@ test("The edit button navigates to /customizations/ID/edit", async ({ page }) =>
   await expect(page).toHaveURL(/\/customizations\/\d+\/edit/);
 });
 
-test("The edit page displays the same form as create with prefilled data", async ({
-  page,
-}) => {
+test("The edit page displays the same form as create with prefilled data", async ({page}) => {
   await page.goto("/customizations");
   await page.locator("summary").first().click();
   await page.getByRole("link", { name: "Rediger" }).click();
@@ -58,9 +54,7 @@ test("The edit page displays the same form as create with prefilled data", async
   ).toBeVisible();
 });
 
-test("The user can edit the title and options and save the changes", async ({
-  page,
-}) => {
+test("The user can edit the title and options and save the changes", async ({page}) => {
   await page.goto("/customizations");
   await page.locator("summary").first().click();
   await page.getByRole("link", { name: "Rediger" }).click();

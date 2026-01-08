@@ -9,9 +9,9 @@ test.afterAll(() => {
   resetMockDataOrders();
 });
 
-test("Print-button is visible, opens new tab, and print page shows the same orders as /orders", async ({ page }) => {
+test("Print-button is visible, opens new tab, and print page shows the same orders as /orders", async ({page}) => {
   // Use range=all so we don't hit the "today only" filter and get 0
-  await page.goto("http://localhost:3000/orders?range=all");
+  await page.goto("/orders?range=all");
 
   // 1) Print button is visible
   const printBtn = page.getByRole("button", { name: /print viste ordrer/i });
@@ -49,7 +49,7 @@ test("Print-button is visible, opens new tab, and print page shows the same orde
   const toCheck = customerNames.slice(0, 5);
   for (const name of toCheck) {
     await expect(
-  popup.getByRole("heading", { name: new RegExp(name) })
-).toBeVisible();
+      popup.getByRole("heading", { name: new RegExp(name) })
+    ).toBeVisible();
   }
 });

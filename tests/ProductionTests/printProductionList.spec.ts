@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 import { resetMockDataOrders } from "../helpers/cleanup";
 
 test.beforeEach(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 test.afterAll(() => {
-    resetMockDataOrders();
+  resetMockDataOrders();
 });
 
 
@@ -18,7 +18,7 @@ test("Shows print button in production header", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("Opens print view in a new tab with correct URL", async ({ page, context }) => {
+test("Opens print view in a new tab with correct URL", async ({page, context}) => {
   await page.goto("/production?date=2025-12-18");
 
   const [printPage] = await Promise.all([
