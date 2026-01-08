@@ -54,12 +54,10 @@ export async function deleteOrder(id) {
 export async function getAllOrders() {
   if (isTestMode()) {
     const orders = readOrdersMock();
-
-    // Hent produkter fra separat mock (samme som products-lib bruger)
     const products = await getAllProducts();
     const productLookup = Object.fromEntries(products.map((p) => [p.id, p]));
 
-    // "Join" products ind på hver order_item
+    // "Join" products onto each order_item
     return (orders || []).map((order) => ({
       ...order,
       order_items: (order.order_items || []).map((item) => {

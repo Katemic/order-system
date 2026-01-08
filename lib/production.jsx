@@ -1,8 +1,6 @@
 import { getAllOrders } from "@/lib/orders";
 import { parseTimeToMinutes } from "@/lib/helpers/orderHelpers";
 
-//helpers
-
 const ALLOWED_PRODUCTION_CATEGORIES = ["Bager", "Konditor"];
 
 function getReadyTime(order) {
@@ -31,8 +29,6 @@ function groupingKey(customizations, note) {
 
   return `${customPart}||${notePart}`;
 }
-
-// main function
 
 export async function getProductionList({
   date,

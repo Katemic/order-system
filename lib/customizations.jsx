@@ -6,8 +6,6 @@ function isTestMode() {
   return process.env.TEST_ENV === "true";
 }
 
-/* ---------------- MOCK FIL STYRING ---------------- */
-
 function getMockPath() {
   return path.join(
     process.cwd(),
@@ -24,10 +22,6 @@ function writeMock(data) {
   fs.writeFileSync(getMockPath(), JSON.stringify(data, null, 2), "utf8");
 }
 
-/* -----------------------------------------------------
-   HENT TYPER + OPTIONS (uden "andet se note")
------------------------------------------------------- */
-
 export async function getCustomizationTypesWithOptions() {
   if (isTestMode()) {
     const mock = readMock();
@@ -42,11 +36,13 @@ export async function getCustomizationTypesWithOptions() {
 
   const { data, error } = await supabase
     .from("customization_types")
-    .select(`
+    .select(
+      `
       id,
       name,
       customization_options ( id, name )
-    `)
+    `
+    )
     .order("name", { ascending: true });
 
   if (error) {
@@ -54,22 +50,17 @@ export async function getCustomizationTypesWithOptions() {
     return [];
   }
 
-return data
-  .filter((t) => Number(t.id) !== 0)
-  .map((t) => ({
-    id: t.id,
-    name: t.name,
-    options: (t.customization_options || []).filter(
-      (opt) =>
-        opt.name.toLowerCase() !== "andet, se note" &&
-        Number(opt.id) !== 0
-    ),
-  }));
+  return data
+    .filter((t) => Number(t.id) !== 0)
+    .map((t) => ({
+      id: t.id,
+      name: t.name,
+      options: (t.customization_options || []).filter(
+        (opt) =>
+          opt.name.toLowerCase() !== "andet, se note" && Number(opt.id) !== 0
+      ),
+    }));
 }
-
-/* -----------------------------------------------------
-   HENT PRODUKTETS VALGTE OPTIONS
------------------------------------------------------- */
 
 export async function getProductCustomizationOptionIds(productId) {
   if (isTestMode()) {
@@ -82,24 +73,21 @@ export async function getProductCustomizationOptionIds(productId) {
     .eq("product_id", productId);
 
   if (error) {
-    console.error("Fejl ved hentning af produktets customization options:", error);
+    console.error(
+      "Fejl ved hentning af produktets customization options:",
+      error
+    );
     return [];
   }
 
   return data.map((r) => r.option_id).filter((id) => Number(id) !== 0);
 }
 
-/* -----------------------------------------------------
-   GEM: tilføj ALDRIG "andet" i UI,
-   men TILFØJ det altid i DB hvis en type er valgt
------------------------------------------------------- */
-
 export async function setProductCustomizations(productId, optionIds) {
   const selected = Array.from(
     new Set(optionIds.map((n) => Number(n)).filter((x) => Number.isFinite(x)))
   );
 
-  /* ------------ MOCK MODE ------------- */
   if (isTestMode()) {
     const mock = readMock();
 
@@ -107,7 +95,7 @@ export async function setProductCustomizations(productId, optionIds) {
 
     const selectedTypes = new Set();
 
-    // Find hvilke typer der er i brug
+    // Find the types in use
     for (const type of allTypes) {
       for (const opt of type.options) {
         if (selected.includes(opt.id)) {
@@ -116,7 +104,7 @@ export async function setProductCustomizations(productId, optionIds) {
       }
     }
 
-    // Tilføj always-add "andet se note"
+    // Always add "andet se note"
     for (const type of allTypes) {
       if (selectedTypes.has(type.id)) {
         const noteOpt = type.options.find(
@@ -129,10 +117,8 @@ export async function setProductCustomizations(productId, optionIds) {
     mock.productLinks[productId] = Array.from(new Set(selected));
     writeMock(mock);
 
-    return { success: true};
+    return { success: true };
   }
-
-  /* ------------ REAL DATABASE ------------- */
 
   if (selected.length === 0) {
     await supabase
@@ -143,7 +129,7 @@ export async function setProductCustomizations(productId, optionIds) {
     return { success: true };
   }
 
-  // Find type_id for valgte options
+  // Find type_id for selected options
   const { data: options, error: optErr } = await supabase
     .from("customization_options")
     .select("id, type_id, name")
@@ -156,7 +142,7 @@ export async function setProductCustomizations(productId, optionIds) {
 
   const typeIds = Array.from(new Set(options.map((o) => o.type_id)));
 
-  // Find "andet se note" option for hver type
+  // Find "andet se note" option for each type
   const { data: notes } = await supabase
     .from("customization_options")
     .select("id, type_id, name")
@@ -170,13 +156,13 @@ export async function setProductCustomizations(productId, optionIds) {
 
   const finalIds = Array.from(new Set(selected));
 
-  // Slet gamle links
+  // Delete old links
   await supabase
     .from("product_customization_options")
     .delete()
     .eq("product_id", productId);
 
-  // Indsæt nye
+  // Insert new
   const rows = finalIds.map((id) => ({
     product_id: productId,
     option_id: id,
@@ -188,7 +174,6 @@ export async function setProductCustomizations(productId, optionIds) {
 }
 
 export async function createCustomizationType(title, options) {
-  /* ---------- MOCK MODE ---------- */
   if (isTestMode()) {
     const mock = readMock();
 
@@ -198,7 +183,7 @@ export async function createCustomizationType(title, options) {
 
     const formattedOptions = options.map((name, i) => ({
       id: newId * 100 + (i + 1),
-      name
+      name,
     }));
 
     mock.types.push({
@@ -206,17 +191,15 @@ export async function createCustomizationType(title, options) {
       name: title,
       options: [
         ...formattedOptions,
-        { id: newId * 100 + 999, name: "Andet, se note" }
-      ]
+        { id: newId * 100 + 999, name: "Andet, se note" },
+      ],
     });
 
     writeMock(mock);
     return { id: newId };
   }
 
-  /* ---------- DB ---------- */
-
-  // Step 1: Insert type
+  //Insert type
   const { data: typeRow, error: typeErr } = await supabase
     .from("customization_types")
     .insert({ name: title })
@@ -227,72 +210,72 @@ export async function createCustomizationType(title, options) {
 
   const typeId = typeRow.id;
 
-  // Step 2: Insert options
+  //Insert options
   const rows = options.map((name) => ({
     name,
-    type_id: typeId
+    type_id: typeId,
   }));
 
   await supabase.from("customization_options").insert(rows);
 
-  // Step 3: Insert "Andet, se note"
+  // Insert "Andet, se note"
   await supabase.from("customization_options").insert({
     name: "Andet, se note",
-    type_id: typeId
+    type_id: typeId,
   });
 
   return { id: typeId };
 }
 
 export async function deleteCustomization(id) {
-  /* ---------- MOCK ---------- */
   if (isTestMode()) {
     const mock = readMock();
 
-    // Fjern typen
-    mock.types = mock.types.filter(t => t.id !== Number(id));
+    // Remove the type
+    mock.types = mock.types.filter((t) => t.id !== Number(id));
 
-    // Fjern alle links i productLinks
+    // Remove all links in productLinks
     for (const pId of Object.keys(mock.productLinks)) {
-      mock.productLinks[pId] = mock.productLinks[pId].filter(optId =>
-        !mock.types.some(t => t.options.some(o => o.id === optId))
+      mock.productLinks[pId] = mock.productLinks[pId].filter(
+        (optId) =>
+          !mock.types.some((t) => t.options.some((o) => o.id === optId))
       );
     }
 
     writeMock(mock);
-    return { success: true};
+    return { success: true };
   }
 
-  /* ---------- REAL DATABASE ---------- */
   await supabase.from("customization_options").delete().eq("type_id", id);
   await supabase.from("customization_types").delete().eq("id", id);
 
-  return { success: true};
+  return { success: true };
 }
-
 
 export async function getCustomizationById(id) {
   if (isTestMode()) {
     const mock = readMock();
-    const type = mock.types.find(t => t.id === Number(id));
+    const type = mock.types.find((t) => t.id === Number(id));
     if (!type) return null;
 
     return {
       id: type.id,
       name: type.name,
       options: type.options.filter(
-        o => o.name.toLowerCase() !== "andet, se note"
-      )
+        (o) => o.name.toLowerCase() !== "andet, se note"
+      ),
     };
   }
 
   const { data, error } = await supabase
     .from("customization_types")
-    .select(`
+    .select(
+      `
       id,
       name,
       customization_options ( id, name )
-    `)
+    `
+    )
     .eq("id", id)
     .single();
 
@@ -302,89 +285,79 @@ export async function getCustomizationById(id) {
     id: data.id,
     name: data.name,
     options: data.customization_options.filter(
-      o => o.name.toLowerCase() !== "andet, se note"
-    )
+      (o) => o.name.toLowerCase() !== "andet, se note"
+    ),
   };
 }
 
 export async function updateCustomization(id, title, options) {
   if (isTestMode()) {
-  const mock = readMock();
-  const type = mock.types.find(t => t.id === Number(id));
-  if (!type) return;
+    const mock = readMock();
+    const type = mock.types.find((t) => t.id === Number(id));
+    if (!type) return;
 
-  type.name = title;
+    type.name = title;
 
-  const existing = type.options.filter(
-    o => o.name.toLowerCase() !== "andet, se note"
-  );
+    const existing = type.options.filter(
+      (o) => o.name.toLowerCase() !== "andet, se note"
+    );
 
-  const existingNames = existing.map(o => o.name);
+    const existingNames = existing.map((o) => o.name);
 
-  const newOptions = [
-    ...existing.filter(o => options.includes(o.name)),
-    ...options
-      .filter(name => !existingNames.includes(name))
-      .map((name, i) => ({
-        id: Date.now() + i,
-        name
-      }))
-  ];
+    const newOptions = [
+      ...existing.filter((o) => options.includes(o.name)),
+      ...options
+        .filter((name) => !existingNames.includes(name))
+        .map((name, i) => ({
+          id: Date.now() + i,
+          name,
+        })),
+    ];
 
-  type.options = [
-    ...newOptions,
-    type.options.find(o => o.name.toLowerCase() === "andet, se note")
-  ];
+    type.options = [
+      ...newOptions,
+      type.options.find((o) => o.name.toLowerCase() === "andet, se note"),
+    ];
 
-  writeMock(mock);
-  return { success: true };
-}
+    writeMock(mock);
+    return { success: true };
+  }
 
-  
-  // Opdater titel
+  // Update title
   await supabase
     .from("customization_types")
     .update({ name: title })
     .eq("id", id);
 
-  // Hent eksisterende options (uden "andet")
+  // Fetch existing options (excluding "Andet, se note")
   const { data: existingOptions } = await supabase
     .from("customization_options")
     .select("id, name")
     .eq("type_id", id)
     .neq("name", "Andet, se note");
 
-  const existingNames = existingOptions.map(o => o.name);
+  const existingNames = existingOptions.map((o) => o.name);
 
   const toInsert = options
-    .filter(name => !existingNames.includes(name))
-    .map(name => ({
+    .filter((name) => !existingNames.includes(name))
+    .map((name) => ({
       name,
-      type_id: id
+      type_id: id,
     }));
 
-
   const toDelete = existingOptions
-    .filter(o => !options.includes(o.name))
-    .map(o => o.id);
+    .filter((o) => !options.includes(o.name))
+    .map((o) => o.id);
 
-  // Indsæt nye
+  // Insert new
   if (toInsert.length > 0) {
     await supabase.from("customization_options").insert(toInsert);
   }
 
-  // Slet fjernede
+  // Delete removed
   if (toDelete.length > 0) {
-    await supabase
-      .from("customization_options")
-      .delete()
-      .in("id", toDelete);
+    await supabase.from("customization_options").delete().in("id", toDelete);
   }
 
-  // "Andet, se note" bevares uændret
   return { success: true };
 }
-
-
-
-
