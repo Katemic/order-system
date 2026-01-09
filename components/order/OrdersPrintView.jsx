@@ -16,7 +16,9 @@ export default function OrdersPrintView({ orders }) {
 
         return (
           <section key={order.id} className="print-page p-6 break-after-page">
-            <h2 className="text-2xl font-bold mb-1">Bestilling #{order.id} - {order.customer_name}</h2>
+            <h2 className="text-2xl font-bold mb-1">
+              Bestilling #{order.id} - {order.customer_name}
+            </h2>
             <p className="text-neutral-500 text-sm mb-6">
               Betjent af {order.taken_by} den {order.date_created}
             </p>
@@ -99,7 +101,10 @@ export default function OrdersPrintView({ orders }) {
                         <div className="mt-1 text-xs text-neutral-600 space-y-1">
                           {Object.entries(item.customizations).map(
                             ([typeName, options]) => {
-                              if (!Array.isArray(options) || options.length === 0)
+                              if (
+                                !Array.isArray(options) ||
+                                options.length === 0
+                              )
                                 return null;
 
                               const labels = options
@@ -112,7 +117,9 @@ export default function OrdersPrintView({ orders }) {
 
                               return (
                                 <p key={typeName}>
-                                  <span className="font-medium">{typeName}:</span>{" "}
+                                  <span className="font-medium">
+                                    {typeName}:
+                                  </span>{" "}
                                   {labels}
                                 </p>
                               );

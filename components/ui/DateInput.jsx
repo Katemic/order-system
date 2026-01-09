@@ -29,10 +29,10 @@ export default function DateInput({
       onChange={(e) => {
         const v = e.target.value;
 
-        // If user typed, DO NOT commit (prevents 0002 bug)
+        // If user typed, DO NOT commit
         if (typedRef.current) return;
 
-        // If user picked date from datepicker (valid date)
+        // If user picked date from datepicker
         if (v && v.length === 10) {
           onCommit(v);
         }

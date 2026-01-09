@@ -539,7 +539,7 @@ export async function updateOrderItems({ orderId, items }) {
     }
   }
 
-  // 1) Delete existing order_items
+  // Delete existing order_items
   const { error: deleteError } = await supabase
     .from("order_items")
     .delete()
@@ -553,7 +553,7 @@ export async function updateOrderItems({ orderId, items }) {
     };
   }
 
-  // 2) Insert new order_items and get them back with ids
+  // Insert new order_items and get them back with ids
   const rows = items.map((item) => ({
     order_id: orderId,
     product_id: item.productId,
@@ -574,7 +574,7 @@ export async function updateOrderItems({ orderId, items }) {
     };
   }
 
-  // 3) Insert new order_item_customizations
+  // Insert new order_item_customizations
   const customizationsPayload = [];
 
   items.forEach((item, index) => {
@@ -615,7 +615,7 @@ export async function updateOrderItems({ orderId, items }) {
     }
   }
 
-  // 4) Update orders.total_price
+  // Update orders.total_price
   const { error: updateError } = await supabase
     .from("orders")
     .update({ total_price: totalPrice })

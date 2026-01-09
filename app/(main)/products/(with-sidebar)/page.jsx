@@ -16,8 +16,7 @@ export default async function ProductsPage(props) {
     (typeof rawCategory === "string" ? rawCategory : undefined) ||
     DEFAULT_CATEGORY;
 
-  const searchTermRaw =
-    (typeof rawSearch === "string" ? rawSearch : "") || "";
+  const searchTermRaw = (typeof rawSearch === "string" ? rawSearch : "") || "";
 
   const searchTerm = searchTermRaw.toLowerCase().trim();
 
@@ -40,8 +39,7 @@ export default async function ProductsPage(props) {
     } else {
       filteredProducts = activeProducts.filter(
         (p) =>
-          p.category &&
-          p.category.toLowerCase() === categoryParam.toLowerCase()
+          p.category && p.category.toLowerCase() === categoryParam.toLowerCase()
       );
     }
   }
@@ -52,10 +50,7 @@ export default async function ProductsPage(props) {
         <h1 className="page-title">Produkter</h1>
       </header>
 
-      <ProductsGrid
-        products={filteredProducts}
-        variant="products"
-      />
+      <ProductsGrid products={filteredProducts} variant="products" />
 
       <NotificationBanner />
     </main>

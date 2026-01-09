@@ -92,8 +92,8 @@ export default function EditProductsClient({
         ← Tilbage til bestillinger
       </button>
 
-    <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-6">
-      <div className="w-full min-w-0 flex-auto">
+      <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-6">
+        <div className="w-full min-w-0 flex-auto">
           <ProductsGrid
             products={products}
             variant="order"
@@ -101,7 +101,7 @@ export default function EditProductsClient({
           />
         </div>
 
-      <div className="w-full sm:flex-none sm:basis-[clamp(240px,24vw,360px)]">
+        <div className="w-full sm:flex-none sm:basis-[clamp(240px,24vw,360px)]">
           <OrderSummary
             items={orderItems}
             onEditItem={handleEditItemFromList}
@@ -134,4 +134,3 @@ export default function EditProductsClient({
     </div>
   );
 }
-

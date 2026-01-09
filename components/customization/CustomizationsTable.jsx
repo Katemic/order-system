@@ -24,10 +24,7 @@ export default function CustomizationsTable({ customizations, onDeleteClick }) {
 
         <tbody>
           {customizations.map((type) => (
-            <tr
-              key={type.id}
-              className="border-b text-sm"
-            >
+            <tr key={type.id} className="border-b text-sm">
               <td className="p-0">
                 <details className="group">
                   <summary
@@ -53,10 +50,7 @@ export default function CustomizationsTable({ customizations, onDeleteClick }) {
                     {type.options.length > 0 ? (
                       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-1 list-disc list-inside">
                         {type.options.map((opt) => (
-                          <li
-                            key={opt.id}
-                            className="text-neutral-700 text-sm"
-                          >
+                          <li key={opt.id} className="text-neutral-700 text-sm">
                             {opt.name}
                           </li>
                         ))}
@@ -100,5 +94,3 @@ export default function CustomizationsTable({ customizations, onDeleteClick }) {
     </div>
   );
 }
-
-
