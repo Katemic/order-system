@@ -100,54 +100,59 @@ export default function OrderProductModal({
           </div>
 
           {/*Customizations*/}
-          {customizationOptions && Object.keys(customizationOptions).length > 0 && (
-            <details className="group border border-neutral-300 rounded-lg px-4 py-3 bg-neutral-50 shadow-sm">
-              <summary className="cursor-pointer list-none flex justify-between items-center font-medium text-sm text-neutral-800 hover:text-neutral-900">
-                <span>Tilpasninger (valgfrit)</span>
-                <span className="transition-transform group-open:rotate-90 text-neutral-500">
-                  ▶
-                </span>
-              </summary>
+          {customizationOptions &&
+            Object.keys(customizationOptions).length > 0 && (
+              <details className="group border border-neutral-300 rounded-lg px-4 py-3 bg-neutral-50 shadow-sm">
+                <summary className="cursor-pointer list-none flex justify-between items-center font-medium text-sm text-neutral-800 hover:text-neutral-900">
+                  <span>Tilpasninger (valgfrit)</span>
+                  <span className="transition-transform group-open:rotate-90 text-neutral-500">
+                    ▶
+                  </span>
+                </summary>
 
-              <div className="mt-3 flex flex-col gap-4 max-h-64 overflow-y-auto pr-1">
-                {Object.entries(customizationOptions).map(([typeName, options]) => (
-                  <div
-                    key={typeName}
-                    className="border rounded-md p-3 bg-neutral-50"
-                  >
-                    <p className="text-neutral-900 text-base font-semibold mb-2">
-                      {typeName}
-                    </p>
+                <div className="mt-3 flex flex-col gap-4 max-h-64 overflow-y-auto pr-1">
+                  {Object.entries(customizationOptions).map(
+                    ([typeName, options]) => (
+                      <div
+                        key={typeName}
+                        className="border rounded-md p-3 bg-neutral-50"
+                      >
+                        <p className="text-neutral-900 text-base font-semibold mb-2">
+                          {typeName}
+                        </p>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                      {options.map((opt) => {
-                        const isChecked = selectedCustomizations[typeName]?.some(
-                          (o) => o.id === opt.id
-                        );
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                          {options.map((opt) => {
+                            const isChecked = selectedCustomizations[
+                              typeName
+                            ]?.some((o) => o.id === opt.id);
 
-                        return (
-                          <label
-                            key={opt.id}
-                            className="inline-flex items-center gap-2 cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={!!isChecked}
-                              onChange={() => handleToggleCustomization(typeName, opt)}
-                              className="h-4 w-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500"
-                            />
-                            <span className="text-neutral-700 text-sm">
-                              {opt.name}
-                            </span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </details>
-          )}
+                            return (
+                              <label
+                                key={opt.id}
+                                className="inline-flex items-center gap-2 cursor-pointer"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={!!isChecked}
+                                  onChange={() =>
+                                    handleToggleCustomization(typeName, opt)
+                                  }
+                                  className="h-4 w-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500"
+                                />
+                                <span className="text-neutral-700 text-sm">
+                                  {opt.name}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </details>
+            )}
 
           {/*Note*/}
           <div className="flex flex-col gap-1">
@@ -170,11 +175,19 @@ export default function OrderProductModal({
 
           {/*Buttons*/}
           <div className="mt-2 flex justify-end gap-3">
-            <button type="button" onClick={handleCancel} className="btn-secondary">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="btn-secondary"
+            >
               Annuller
             </button>
 
-            <button type="button" onClick={handleSubmit} className="btn-primary">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="btn-primary"
+            >
               {mode === "edit" ? "Gem ændringer" : "Tilføj til ordre"}
             </button>
           </div>

@@ -19,7 +19,6 @@ export default function OrdersLayout({ children }) {
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-50 flex md:hidden">
 
-            {/*Drawer*/}
             <div className="w-64 bg-white border-r border-neutral-200 shadow-xl 
                             h-full overflow-y-auto">
               <OrderFilterSidebar onItemClick={() => setIsMobileMenuOpen(false)} />
