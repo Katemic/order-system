@@ -3,6 +3,9 @@ import { sortOrders, formatDate } from "@/lib/helpers/orderHelpers";
 import OrdersPageClient from "@/components/order/OrdersPageClient";
 import NotificationBanner from "@/components/system/NotificationBanner";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function OrdersPage() {
   let orders = await getAllOrders();
   orders = sortOrders(orders);
