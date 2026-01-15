@@ -2,9 +2,14 @@ import { redirect } from "next/navigation";
 import { getProductionList } from "@/lib/production";
 import ProductionTable from "@/components/production/ProductionTable";
 import ProductionHeader from "@/components/production/ProductionHeader";
+import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
+
 
 export default async function ProductionPage({ searchParams }) {
   const params = await searchParams;
+
 
   const hasDateFilter = params.date || params.from || params.to || params.range;
 
@@ -31,9 +36,11 @@ export default async function ProductionPage({ searchParams }) {
   return (
     <div className="flex min-h-screen">
       <main className="flex-1 p-6 pt-20">
-        <ProductionHeader showPrint />
 
-        <ProductionTable rows={rows} />
+          <ProductionHeader showPrint />
+
+          <ProductionTable rows={rows} />
+
       </main>
     </div>
   );
