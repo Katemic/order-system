@@ -1,5 +1,8 @@
 import ProductsLayoutShell from "@/components/shared/ProductsLayoutShell";
+import { getProfile } from "@/lib/authorization";
 
-export default function ProductsLayout({ children }) {
-  return <ProductsLayoutShell>{children}</ProductsLayoutShell>;
+export default async function ProductsLayout({ children }) {
+
+  const {profile} = await getProfile();
+  return <ProductsLayoutShell isAdmin={profile?.admin}>{children}</ProductsLayoutShell>;
 }

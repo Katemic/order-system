@@ -3,7 +3,7 @@ import { PRODUCT_CATEGORIES } from "@/lib/constants/categories";
 
 const CATEGORIES = [...PRODUCT_CATEGORIES, "Alle", "Arkiverede"];
 
-export default function Sidebar({ selectedCategory, onItemClick, basePath = "/products" }) {
+export default function Sidebar({ selectedCategory, onItemClick, basePath = "/products", isAdmin }) {
   const baseClasses =
     "block rounded-md px-3 py-2 text-sm font-medium text-left w-full transition";
 
@@ -62,7 +62,7 @@ export default function Sidebar({ selectedCategory, onItemClick, basePath = "/pr
         </div>
       </div>
 
-      {basePath === "/products" && (
+      {basePath === "/products" && isAdmin && (
         <div className="mt-6 pt-6 border-t border-neutral-200">
           <Link
             href="/createProduct"

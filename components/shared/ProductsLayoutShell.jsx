@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 
-export default function ProductsLayoutShell({ children, basePath = "/products" }) {
+export default function ProductsLayoutShell({ children, basePath = "/products", isAdmin }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get("category") || "Brød";
@@ -12,7 +12,7 @@ export default function ProductsLayoutShell({ children, basePath = "/products" }
   return (
     <div className="min-h-screen flex ">
       <aside className="hidden md:flex fixed top-16 left-0 w-64 h-[calc(100vh-64px)] border-r border-neutral-200 bg-white z-40">
-        <Sidebar selectedCategory={selectedCategory} basePath={basePath} />
+        <Sidebar selectedCategory={selectedCategory} basePath={basePath} isAdmin={isAdmin} />
       </aside>
 
       {isMobileMenuOpen && (
@@ -22,6 +22,7 @@ export default function ProductsLayoutShell({ children, basePath = "/products" }
               selectedCategory={selectedCategory}
               basePath={basePath}
               onItemClick={() => setIsMobileMenuOpen(false)}
+              isAdmin={isAdmin}
             />
           </div>
 
