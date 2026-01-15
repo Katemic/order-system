@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LogoutButton from "@/components/system/logoutButton";
 
 export default function Topbar() {
   return (
@@ -27,6 +28,8 @@ export default function Topbar() {
           <Link href="/createOrder" className="btn-primary">
             Opret bestilling
           </Link>
+
+          <LogoutButton />
         </nav>
       </div>
     </header>
