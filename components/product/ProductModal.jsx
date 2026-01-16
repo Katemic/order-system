@@ -7,7 +7,7 @@ import { toggleProductActive } from "../../actions/product/toggleProductActiveAc
 import DeleteConfirmModal from "../system/DeleteConfirmModal";
 import { sortCustomizationOptions } from "@/lib/helpers/sortCustomizationOptions";
 
-export default function ProductModal({ product, onClose }) {
+export default function ProductModal({ product, onClose, isAdmin }) {
   const [isPending, startTransition] = useTransition();
   const [confirmMode, setConfirmMode] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
@@ -199,7 +199,10 @@ export default function ProductModal({ product, onClose }) {
 
                             <ul className="mt-2 ml-1 text-sm text-neutral-700 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
                               {sortCustomizationOptions(options).map((opt) => (
-                                <li key={opt.id} className="flex items-center gap-2">
+                                <li
+                                  key={opt.id}
+                                  className="flex items-center gap-2"
+                                >
                                   • {opt.name}
                                 </li>
                               ))}
@@ -224,41 +227,43 @@ export default function ProductModal({ product, onClose }) {
                   />
                 </div>
 
-                <div className="w-full flex flex-col gap-2">
-                  <Link
-                    href={`/products/${id}/edit`}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
-                  >
-                    Rediger produkt
-                  </Link>
+                {isAdmin && (
+                  <div className="w-full flex flex-col gap-2">
+                    <Link
+                      href={`/products/${id}/edit`}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center"
+                    >
+                      Rediger produkt
+                    </Link>
 
-                  <button
-                    type="button"
-                    onClick={handleMainActionClick}
-                    disabled={isPending}
-                    className={`w-full px-4 py-2 rounded-lg border font-medium transition
-                      ${
-                        active
-                          ? "border-red-400 text-red-600 hover:bg-red-50"
-                          : "border-green-400 text-green-600 hover:bg-green-50"
-                      }
-                      ${isPending ? "opacity-70 cursor-wait" : ""}
-                    `}
-                  >
-                    {isPending
-                      ? "Opdaterer..."
-                      : active
-                      ? "Arkiver"
-                      : "Genaktiver"}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={handleMainActionClick}
+                      disabled={isPending}
+                      className={`w-full px-4 py-2 rounded-lg border font-medium transition
+        ${
+          active
+            ? "border-red-400 text-red-600 hover:bg-red-50"
+            : "border-green-400 text-green-600 hover:bg-green-50"
+        }
+        ${isPending ? "opacity-70 cursor-wait" : ""}
+      `}
+                    >
+                      {isPending
+                        ? "Opdaterer..."
+                        : active
+                        ? "Arkiver"
+                        : "Genaktiver"}
+                    </button>
 
-                  <button
-                    onClick={() => setShowDelete(true)}
-                    className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                  >
-                    Slet produkt
-                  </button>
-                </div>
+                    <button
+                      onClick={() => setShowDelete(true)}
+                      className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                    >
+                      Slet produkt
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
