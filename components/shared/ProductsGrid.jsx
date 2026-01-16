@@ -9,6 +9,7 @@ export default function ProductsGrid({
   products,
   variant = "products",
   onAddToOrder,
+  isAdmin,
 }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -49,6 +50,7 @@ export default function ProductsGrid({
           key={selectedProduct.id}
           product={selectedProduct}
           onClose={handleClose}
+          isAdmin={isAdmin}
         />
       )}
 

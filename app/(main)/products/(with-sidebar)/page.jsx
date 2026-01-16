@@ -1,12 +1,17 @@
 import { getAllProducts } from "@/lib/products";
 import ProductsGrid from "@/components/shared/ProductsGrid";
 import NotificationBanner from "@/components/system/NotificationBanner";
+import { getProfile } from "@/lib/authorization";
 
 export const dynamic = "force-dynamic";
 
 const DEFAULT_CATEGORY = "Brød";
 
 export default async function ProductsPage(props) {
+
+  const { profile } = await getProfile();
+  const isAdmin = profile?.admin;
+  
   const params = await props.searchParams;
 
   const rawCategory = params?.category;
@@ -50,7 +55,7 @@ export default async function ProductsPage(props) {
         <h1 className="page-title">Produkter</h1>
       </header>
 
-      <ProductsGrid products={filteredProducts} variant="products" />
+      <ProductsGrid products={filteredProducts} variant="products" isAdmin={isAdmin} />
 
       <NotificationBanner />
     </main>
